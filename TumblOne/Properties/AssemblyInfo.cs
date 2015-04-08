@@ -1,0 +1,17 @@
+﻿// Assembly TumblOne, Version 1.0.4.0
+
+[assembly: System.Runtime.CompilerServices.RuntimeCompatibility(WrapNonExceptionThrows=true)]
+[assembly: System.Reflection.AssemblyCopyright("Copyright \x00a9  2013 by Helena")]
+[assembly: System.Runtime.CompilerServices.CompilationRelaxations(8)]
+[assembly: System.Reflection.AssemblyTitle("TumblCrawl")]
+[assembly: System.Reflection.AssemblyDescription("This is a litte Tool to Crawl Tumblr Blogs for Images. Use on own Risk. This Product is Freeware!")]
+[assembly: System.Reflection.AssemblyConfiguration("")]
+[assembly: System.Reflection.AssemblyCompany("I'm not rich, i don't own a Company....")]
+[assembly: System.Reflection.AssemblyProduct("TumblOne")]
+//[assembly: System.Runtime.Versioning.TargetFramework(".NETFramework,Version=v4.0", FrameworkDisplayName=".NET Framework 4")]
+[assembly: System.Reflection.AssemblyTrademark("")]
+[assembly: System.Runtime.InteropServices.ComVisible(true)]
+[assembly: System.Runtime.InteropServices.Guid("6a73a9ba-9dae-4be9-a7e5-fdd73413dd9f")]
+[assembly: System.Reflection.AssemblyFileVersion("1.0.4.0")]
+[assembly: System.Resources.NeutralResourcesLanguage("en-US")]
+[assembly: System.Diagnostics.Debuggable(System.Diagnostics.DebuggableAttribute.DebuggingModes.IgnoreSymbolStoreSequencePoints)]
