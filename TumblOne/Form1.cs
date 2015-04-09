@@ -53,7 +53,7 @@
                 if ((this.worker != null) && !this.worker.IsCompleted)
                 {
                     TumblrBlog ThreadBlog = new TumblrBlog();
-                    base.Invoke((Action)delegate
+                    this.Invoke((Action)delegate
                     {
                         ThreadBlog._URL = this.ExtractUrl(this.tBlogUrl.Text);
                         ThreadBlog.TOTAL_COUNT = 0;
@@ -394,7 +394,7 @@
                 ApiUrl = ApiUrl + "api/read?start=";
             }
             this.CreateDataFolder(_blog._Name);
-            base.Invoke((Action)delegate
+            this.BeginInvoke((Action)delegate
             {
                 this.pgBar.Minimum = 0;
                 this.pgBar.Maximum = _blog.TOTAL_COUNT;
@@ -428,7 +428,7 @@
                                 this.pgBar.Maximum = _blog.TOTAL_COUNT;
                             };
                         }
-                        base.Invoke(method);
+                        this.BeginInvoke(method);
                     }
                     catch
                     {
@@ -466,7 +466,7 @@
                                     }
                                 };
                             }
-                            base.Invoke(invoker3);
+                            this.BeginInvoke(invoker3);
                             try
                             {
                                 if (this.Download(FileLocation, p.Value))
@@ -484,7 +484,7 @@
                                             }
                                         };
                                     }
-                                    base.Invoke(invoker);
+                                    this.BeginInvoke(invoker);
                                 }
                             }
                             catch (Exception)
@@ -560,7 +560,7 @@
         private void toolPause_Click(object sender, EventArgs e)
         {
             this.wait_handle.Reset();
-            base.Invoke((Action)delegate
+            this.Invoke((Action)delegate
             {
                 this.lblProcess.Text = "PAUSE! Click on Resume Button to continue...";
                 this.toolPause.Enabled = false;
@@ -572,7 +572,7 @@
         private void toolResume_Click(object sender, EventArgs e)
         {
             this.wait_handle.Set();
-            base.Invoke((Action)delegate
+            this.Invoke((Action)delegate
             {
                 //Fixme
                 this.lblProcess.Text = "Crawling Blogs - " + this.crawlingBlogs;
@@ -607,7 +607,7 @@
                         this.contextBlog.Items[3].Enabled = false;
                     };
                 }
-                base.Invoke(method);
+                this.Invoke(method);
             }
             catch (Exception)
             {
