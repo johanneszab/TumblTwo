@@ -301,6 +301,7 @@
         {
             //this.worker = new Thread(new ParameterizedThreadStart(this.RunParser));
             cts = new CancellationTokenSource();
+            crawlingBlogs = "";
             for (int i = 0; i < Properties.Settings.Default.configSimultaneousDownloads; i++ )
                 this.worker = Task.Run(() => runProducer(bin, cts.Token));
             //this.worker.Name = "TumblOne Thread";
@@ -313,7 +314,7 @@
             this.toolStop.Enabled = true;
             this.toolCrawl.Enabled = false;
             this.toolRemoveBlog.Enabled = false;
-            this.contextBlog.Items[2].Enabled = false;
+            this.contextBlog.Items[3].Enabled = false;
         }
 
         private void mnuShowFilesInExplorer_Click(object sender, EventArgs e)
@@ -500,6 +501,24 @@
                     // Finished Blog
                     _blog._LastCrawled = DateTime.Now;
                     _blog._finishedCrawl = true;
+                    // Update UI
+                    this.BeginInvoke((MethodInvoker)delegate
+                    {
+                        foreach (ListViewItem item in this.lvBlog.Items)
+                        {
+                            if (item.Text == _blog._Name)
+                            {
+                                // Update Listview about completed blog
+                                item.SubItems[4].Text = DateTime.Now.ToString();
+                                item.SubItems[5].Text = "True";
+                                // Update current crawling progress label
+                                int indexBlogInProgress = crawlingBlogs.IndexOf(_blog._Name);
+                                int lengthBlogInProgress = _blog._Name.Length;
+                                this.crawlingBlogs = crawlingBlogs.Remove(indexBlogInProgress, (lengthBlogInProgress+1));
+                                this.lblProcess.Text = "Crawling Blogs - " + this.crawlingBlogs;
+                            }
+                        }
+                    });
                     return;
                 }
                 num += num3;
@@ -556,7 +575,7 @@
             base.Invoke((Action)delegate
             {
                 //Fixme
-                this.lblProcess.Text = "Crawl selected Blog - " + this.crawlingBlogs;
+                this.lblProcess.Text = "Crawling Blogs - " + this.crawlingBlogs;
                 this.toolPause.Enabled = true;
                 this.toolResume.Enabled = false;
                 this.toolStop.Enabled = true;
@@ -585,7 +604,7 @@
                         this.toolStop.Enabled = false;
                         this.toolCrawl.Enabled = true;
                         this.toolRemoveBlog.Enabled = true;
-                        this.contextBlog.Items[2].Enabled = false;
+                        this.contextBlog.Items[3].Enabled = false;
                     };
                 }
                 base.Invoke(method);
@@ -713,14 +732,12 @@
 
                         this.BeginInvoke((MethodInvoker)delegate
                         {
-                            lvQueue.Items.RemoveAt(0);
-                            // Update UI
-                            crawlingBlogs = "";
-                            foreach (TumblrBlog active in TumblrActiveList)
-                            {
-                                this.crawlingBlogs += active._Name + " ";
-                            }
+                            // Update UI:
+                            // Processlabel
+                            this.crawlingBlogs += this.lvQueue.Items[0].Text + " ";
                             this.lblProcess.Text = "Crawling Blogs - " + this.crawlingBlogs;
+                            // Queue
+                            lvQueue.Items.RemoveAt(0);
                         });
 
                         this.RunParser(nextBlog);
