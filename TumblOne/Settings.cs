@@ -20,8 +20,8 @@ namespace TumblOne
 
             if (result == DialogResult.OK)
             {
-                Properties.Settings.Default.configDownloadLocation = fbd.SelectedPath;
-                this.tbDownloadLocation.Text = fbd.SelectedPath;
+                Properties.Settings.Default.configDownloadLocation = fbd.SelectedPath + "\\";
+                this.tbDownloadLocation.Text = fbd.SelectedPath + "\\";
             }
 
 //            string[] files = Directory.GetFiles(fbd.SelectedPath);
