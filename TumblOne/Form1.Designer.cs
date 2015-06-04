@@ -177,15 +177,15 @@
             this.mnuCrawl,
             this.mnuVisit});
             this.contextBlog.Name = "contextBlog";
-            this.contextBlog.Size = new System.Drawing.Size(265, 162);
+            this.contextBlog.Size = new System.Drawing.Size(254, 162);
             // 
             // mnuShowFilesInExplorer
             // 
             this.mnuShowFilesInExplorer.Image = global::TumblOne.Properties.Resources.Explorer;
             this.mnuShowFilesInExplorer.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.mnuShowFilesInExplorer.Name = "mnuShowFilesInExplorer";
-            this.mnuShowFilesInExplorer.Size = new System.Drawing.Size(264, 38);
-            this.mnuShowFilesInExplorer.Text = "Show Files in Windows Explorer...";
+            this.mnuShowFilesInExplorer.Size = new System.Drawing.Size(253, 38);
+            this.mnuShowFilesInExplorer.Text = "Show files in Windows Explorer";
             this.mnuShowFilesInExplorer.Click += new System.EventHandler(this.mnuShowFilesInExplorer_Click);
             // 
             // mnuRemoveBlog2
@@ -193,29 +193,29 @@
             this.mnuRemoveBlog2.Image = global::TumblOne.Properties.Resources.Remove;
             this.mnuRemoveBlog2.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.mnuRemoveBlog2.Name = "mnuRemoveBlog2";
-            this.mnuRemoveBlog2.Size = new System.Drawing.Size(264, 38);
-            this.mnuRemoveBlog2.Text = "Remove Blog";
+            this.mnuRemoveBlog2.Size = new System.Drawing.Size(253, 38);
+            this.mnuRemoveBlog2.Text = "Remove selected blogs";
             this.mnuRemoveBlog2.Click += new System.EventHandler(this.RemoveBlog);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(261, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(250, 6);
             // 
             // mnuCrawl
             // 
             this.mnuCrawl.Image = global::TumblOne.Properties.Resources.Scan;
             this.mnuCrawl.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.mnuCrawl.Name = "mnuCrawl";
-            this.mnuCrawl.Size = new System.Drawing.Size(264, 38);
+            this.mnuCrawl.Size = new System.Drawing.Size(253, 38);
             this.mnuCrawl.Text = "Start Crawling";
             this.mnuCrawl.Click += new System.EventHandler(this.mnuRescanBlog_Click);
             // 
             // mnuVisit
             // 
             this.mnuVisit.Name = "mnuVisit";
-            this.mnuVisit.Size = new System.Drawing.Size(264, 38);
-            this.mnuVisit.Text = "Visit in Internet Browser...";
+            this.mnuVisit.Size = new System.Drawing.Size(253, 38);
+            this.mnuVisit.Text = "Visit blogs in Internet Browser";
             this.mnuVisit.Click += new System.EventHandler(this.mnuVisit_Click);
             // 
             // toolStrip1
@@ -239,10 +239,10 @@
             this.toolSettings,
             this.toolStripSeparator3,
             this.toolAbout});
-            this.toolStrip1.Location = new System.Drawing.Point(778, 0);
+            this.toolStrip1.Location = new System.Drawing.Point(771, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.toolStrip1.Size = new System.Drawing.Size(86, 620);
+            this.toolStrip1.Size = new System.Drawing.Size(93, 620);
             this.toolStrip1.TabIndex = 6;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -251,10 +251,10 @@
             this.toolAddBlog.Image = global::TumblOne.Properties.Resources.AddBlog;
             this.toolAddBlog.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolAddBlog.Name = "toolAddBlog";
-            this.toolAddBlog.Size = new System.Drawing.Size(83, 51);
+            this.toolAddBlog.Size = new System.Drawing.Size(90, 51);
             this.toolAddBlog.Text = "Add Blog";
             this.toolAddBlog.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.toolAddBlog.ToolTipText = "Add a new Blog to Library...";
+            this.toolAddBlog.ToolTipText = "Add a new blog to the library";
             this.toolAddBlog.Click += new System.EventHandler(this.AddBlog);
             // 
             // toolRemoveBlog
@@ -262,10 +262,10 @@
             this.toolRemoveBlog.Image = global::TumblOne.Properties.Resources.Remove;
             this.toolRemoveBlog.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolRemoveBlog.Name = "toolRemoveBlog";
-            this.toolRemoveBlog.Size = new System.Drawing.Size(83, 51);
+            this.toolRemoveBlog.Size = new System.Drawing.Size(90, 51);
             this.toolRemoveBlog.Text = "Remove Blog";
             this.toolRemoveBlog.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.toolRemoveBlog.ToolTipText = "Remove current Blog and all dowloaded Images...";
+            this.toolRemoveBlog.ToolTipText = "Remove selected blogs with all dowloaded images";
             this.toolRemoveBlog.Click += new System.EventHandler(this.RemoveBlog);
             // 
             // toolShowExplorer
@@ -274,26 +274,26 @@
             this.toolShowExplorer.Image = global::TumblOne.Properties.Resources.Explorer;
             this.toolShowExplorer.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolShowExplorer.Name = "toolShowExplorer";
-            this.toolShowExplorer.Size = new System.Drawing.Size(83, 51);
+            this.toolShowExplorer.Size = new System.Drawing.Size(90, 51);
             this.toolShowExplorer.Text = "Show Files";
             this.toolShowExplorer.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.toolShowExplorer.ToolTipText = "Show Files of selected Blog in Windows Explorer...";
+            this.toolShowExplorer.ToolTipText = "Show files of the selected blogs in the Windows Explorer";
             this.toolShowExplorer.Click += new System.EventHandler(this.mnuShowFilesInExplorer_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(83, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(90, 6);
             // 
             // toolAddQueue
             // 
             this.toolAddQueue.Image = global::TumblOne.Properties.Resources.AddBlog;
             this.toolAddQueue.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolAddQueue.Name = "toolAddQueue";
-            this.toolAddQueue.Size = new System.Drawing.Size(83, 51);
+            this.toolAddQueue.Size = new System.Drawing.Size(90, 51);
             this.toolAddQueue.Text = "Add to Queue";
             this.toolAddQueue.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.toolAddQueue.ToolTipText = "Queue a Blog for Crawling";
+            this.toolAddQueue.ToolTipText = "Queue selected blogs for crawling";
             this.toolAddQueue.Click += new System.EventHandler(this.toolAddQueue_Click);
             // 
             // toolRemoveQueue
@@ -301,10 +301,10 @@
             this.toolRemoveQueue.Image = global::TumblOne.Properties.Resources.Remove;
             this.toolRemoveQueue.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolRemoveQueue.Name = "toolRemoveQueue";
-            this.toolRemoveQueue.Size = new System.Drawing.Size(83, 51);
-            this.toolRemoveQueue.Text = "Remove First";
+            this.toolRemoveQueue.Size = new System.Drawing.Size(90, 51);
+            this.toolRemoveQueue.Text = "Remove Queue";
             this.toolRemoveQueue.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.toolRemoveQueue.ToolTipText = "Remove First Blog from Queue";
+            this.toolRemoveQueue.ToolTipText = "Remove selected blogs from the queue";
             this.toolRemoveQueue.Click += new System.EventHandler(this.toolRemoveQueue_Click);
             // 
             // toolCrawl
@@ -312,16 +312,16 @@
             this.toolCrawl.Image = global::TumblOne.Properties.Resources.Scan;
             this.toolCrawl.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolCrawl.Name = "toolCrawl";
-            this.toolCrawl.Size = new System.Drawing.Size(83, 51);
+            this.toolCrawl.Size = new System.Drawing.Size(90, 51);
             this.toolCrawl.Text = "Crawl";
             this.toolCrawl.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.toolCrawl.ToolTipText = "Crawl current Blog for Images...";
+            this.toolCrawl.ToolTipText = "Crawl blogs in the queue for images";
             this.toolCrawl.Click += new System.EventHandler(this.mnuRescanBlog_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(83, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(90, 6);
             // 
             // toolPause
             // 
@@ -329,10 +329,10 @@
             this.toolPause.Image = global::TumblOne.Properties.Resources.Pause;
             this.toolPause.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolPause.Name = "toolPause";
-            this.toolPause.Size = new System.Drawing.Size(83, 51);
+            this.toolPause.Size = new System.Drawing.Size(90, 51);
             this.toolPause.Text = "Pause";
             this.toolPause.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.toolPause.ToolTipText = "Pause current Process...";
+            this.toolPause.ToolTipText = "Pause crawling";
             this.toolPause.Click += new System.EventHandler(this.toolPause_Click);
             // 
             // toolResume
@@ -341,10 +341,10 @@
             this.toolResume.Image = global::TumblOne.Properties.Resources.Resume;
             this.toolResume.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolResume.Name = "toolResume";
-            this.toolResume.Size = new System.Drawing.Size(83, 51);
+            this.toolResume.Size = new System.Drawing.Size(90, 51);
             this.toolResume.Text = "Resume";
             this.toolResume.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.toolResume.ToolTipText = "Continue last Process...";
+            this.toolResume.ToolTipText = "Continue crawling";
             this.toolResume.Click += new System.EventHandler(this.toolResume_Click);
             // 
             // toolStop
@@ -353,10 +353,10 @@
             this.toolStop.Image = global::TumblOne.Properties.Resources.Stop;
             this.toolStop.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStop.Name = "toolStop";
-            this.toolStop.Size = new System.Drawing.Size(83, 51);
+            this.toolStop.Size = new System.Drawing.Size(90, 51);
             this.toolStop.Text = "Stop";
             this.toolStop.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.toolStop.ToolTipText = "Stop current Process...";
+            this.toolStop.ToolTipText = "Terminates the currently running crawl process";
             this.toolStop.Click += new System.EventHandler(this.toolStop_Click);
             // 
             // toolSettings
@@ -364,25 +364,26 @@
             this.toolSettings.Image = global::TumblOne.Properties.Resources.Settings;
             this.toolSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolSettings.Name = "toolSettings";
-            this.toolSettings.Size = new System.Drawing.Size(83, 51);
+            this.toolSettings.Size = new System.Drawing.Size(90, 51);
             this.toolSettings.Text = "Settings";
             this.toolSettings.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.toolSettings.ToolTipText = "Open Settings";
+            this.toolSettings.ToolTipText = "Opens Settings";
             this.toolSettings.Click += new System.EventHandler(this.toolSettings_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(83, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(90, 6);
             // 
             // toolAbout
             // 
             this.toolAbout.Image = global::TumblOne.Properties.Resources.About;
             this.toolAbout.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolAbout.Name = "toolAbout";
-            this.toolAbout.Size = new System.Drawing.Size(83, 51);
+            this.toolAbout.Size = new System.Drawing.Size(44, 51);
             this.toolAbout.Text = "About";
             this.toolAbout.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.toolAbout.ToolTipText = "Opens the about window";
             this.toolAbout.Click += new System.EventHandler(this.toolAbout_Click);
             // 
             // columnHeader5
@@ -477,7 +478,6 @@
             this.lvQueue.FullRowSelect = true;
             this.lvQueue.HideSelection = false;
             this.lvQueue.Location = new System.Drawing.Point(12, 271);
-            this.lvQueue.MultiSelect = false;
             this.lvQueue.Name = "lvQueue";
             this.lvQueue.Size = new System.Drawing.Size(746, 147);
             this.lvQueue.TabIndex = 12;
@@ -513,7 +513,6 @@
             this.lvBlog.FullRowSelect = true;
             this.lvBlog.HideSelection = false;
             this.lvBlog.Location = new System.Drawing.Point(12, 42);
-            this.lvBlog.MultiSelect = false;
             this.lvBlog.Name = "lvBlog";
             this.lvBlog.Size = new System.Drawing.Size(746, 223);
             this.lvBlog.Sorting = System.Windows.Forms.SortOrder.Ascending;

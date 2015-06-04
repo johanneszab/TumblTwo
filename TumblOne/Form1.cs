@@ -24,9 +24,11 @@
         string crawlingBlogs = "";
         //public TumblrBlog blog;
         private Task worker;
-        private BlockingCollection<TumblrBlog> bin = new BlockingCollection<TumblrBlog>();
+        //private BlockingCollection<TumblrBlog> bin = new BlockingCollection<TumblrBlog>();
         //private QueuedTaskScheduler qts = new QueuedTaskScheduler(TaskScheduler.Default, 2); 
         private CancellationTokenSource cts = new CancellationTokenSource();
+
+        private List<TumblrBlog> bin = new List<TumblrBlog>();
 
         public Form1()
         {
@@ -44,7 +46,7 @@
                 {
                     if (item.Text.Equals(str))
                     {
-                        MessageBox.Show("Entered Url is always in Library!", Application.ProductName);
+                        MessageBox.Show("The entered URL is already in the library!", Application.ProductName);
                         this.tBlogUrl.Text = string.Empty;
                         return;
                     }
@@ -161,12 +163,12 @@
         {
             if ((url == null) || (url.Length < 0x11))
             {
-                MessageBox.Show("Incomplete Url detected!", Application.ProductName);
+                MessageBox.Show("Incomplete URL entered!", Application.ProductName);
                 return null;
             }
             if (!url.Contains(".tumblr.com"))
             {
-                MessageBox.Show("No valid Tumblr Url detected!", Application.ProductName);
+                MessageBox.Show("No valid Tumblr URL entered!", Application.ProductName);
                 return null;
             }
             string[] source = url.Split(new char[] { '.' });
@@ -174,7 +176,7 @@
             {
                 return source[0].Replace("http://", string.Empty);
             }
-            MessageBox.Show("Invalid Url detected!", Application.ProductName);
+            MessageBox.Show("Invalid URL entered!", Application.ProductName);
             return null;
         }
 
@@ -206,7 +208,7 @@
                 }
                 catch (ThreadAbortException exception)
                 {
-                    MessageBox.Show("Process stopped by User. " + exception.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show("Process stopped by the user. " + exception.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
                 this.worker = null;
                 this.wait_handle = null;
@@ -321,13 +323,16 @@
         {
             if (this.lvBlog.SelectedItems.Count > 0)
             {
-                try
+                foreach (ListViewItem eachItem in this.lvBlog.SelectedItems)
                 {
-                    Process.Start("explorer.exe", Application.StartupPath + @"\Blogs\" + this.lvBlog.SelectedItems[0].Text);
-                }
-                catch (Exception exception)
-                {
-                    MessageBox.Show(exception.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                    try
+                    {
+                        Process.Start("explorer.exe", Application.StartupPath + @"\Blogs\" + eachItem.Text);
+                    }
+                    catch (Exception exception)
+                    {
+                        MessageBox.Show(exception.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                    }
                 }
             }
         }
@@ -336,13 +341,16 @@
         {
             if (this.lvBlog.SelectedItems.Count >= 0)
             {
-                try
+                foreach (ListViewItem eachItem in this.lvBlog.SelectedItems)
                 {
-                    Process.Start(this.lvBlog.SelectedItems[0].SubItems[2].Text);
-                }
-                catch (Exception exception)
-                {
-                    MessageBox.Show(exception.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                    try
+                    {
+                        Process.Start(eachItem.SubItems[2].Text);
+                    }
+                    catch (Exception exception)
+                    {
+                        MessageBox.Show(exception.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                    }
                 }
             }
         }
@@ -351,27 +359,30 @@
         {
             if ((this.worker != null) && !this.worker.IsCompleted)
             {
-                MessageBox.Show("During a active Crawl Process it is not possible to remove a Blog!", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show("During an active crawl, it's not possible to remove a blog!", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else if ((this.lvBlog.SelectedItems != null) && (this.lvBlog.SelectedItems.Count != 0))
             {
-                string path = Properties.Settings.Default.configDownloadLocation.ToString() + "Index/" + this.lvBlog.SelectedItems[0].Text + ".tumblr";
-                string str2 = Properties.Settings.Default.configDownloadLocation.ToString() + this.lvBlog.SelectedItems[0].Text;
-                try
+                if (MessageBox.Show("Should the selected Blog really be deleted from Library?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
-                    if (MessageBox.Show("Should the selected Blog really deleted from Library?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    foreach (ListViewItem eachItem in this.lvBlog.SelectedItems)
                     {
-                        if (System.IO.File.Exists(path))
+                        string path = Properties.Settings.Default.configDownloadLocation.ToString() + "Index/" + eachItem.Text + ".tumblr";
+                        string str2 = Properties.Settings.Default.configDownloadLocation.ToString() + eachItem.Text;
+                        try
                         {
-                            System.IO.File.Delete(path);
+                            if (System.IO.File.Exists(path))
+                            {
+                                System.IO.File.Delete(path);
+                            }
+                            Directory.Delete(str2, true);
+                            this.LoadLibrary();
                         }
-                        Directory.Delete(str2, true);
-                        this.LoadLibrary();
+                        catch (Exception exception)
+                        {
+                            MessageBox.Show(exception.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                        }
                     }
-                }
-                catch (Exception exception)
-                {
-                    MessageBox.Show(exception.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
                 }
             }
         }
@@ -543,7 +554,7 @@
             }
             catch (Exception)
             {
-                MessageBox.Show("Current Blog cannot saved to Disk!\nBe sure, that u have enough Memory and User Permission...", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                MessageBox.Show("The blog cannot be saved to disk!\nBe sure, that you have enough memory and proper file permissions", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
                 return false;
             }
             return true;
@@ -619,9 +630,9 @@
                     this.SaveBlog(tumblr);
                 }
                 this.TumblrActiveList.Clear();
-                while (bin.Count > 0)
+                if (bin.Count > 0)
                     {
-                        var obj = bin.Take();
+                        bin.Clear();
                     }
                 this.lvQueue.Items.Clear();
             }
@@ -676,24 +687,22 @@
             AddBlogtoQueue(bin, cts.Token);
         }
 
-        private void AddBlogtoQueue(BlockingCollection<TumblrBlog> bin, CancellationToken ct) 
+        private void AddBlogtoQueue(List<TumblrBlog> bin, CancellationToken ct) 
         {
-            bool success = false;
-
             // Cancellation causes OCE. 
             try
             {
                 if (this.lvBlog.SelectedItems.Count > 0)
                 {
-                    TumblrBlog blog = this.LoadBlog(this.ExtractBlogname(this.lvBlog.SelectedItems[0].SubItems[2].Text));
-                    string text = this.lvBlog.SelectedItems[0].SubItems[2].Text;
-                    //blog.Links.Clear();
-
-                    //this.worker = new Thread(new ParameterizedThreadStart(this.RunParser));
-                    //success = bin.TryAdd(blog, 2, ct);
-                    success = bin.TryAdd(blog);
-                    if (success)
+                    foreach (ListViewItem eachItem in this.lvBlog.SelectedItems)
                     {
+                        TumblrBlog blog = this.LoadBlog(this.ExtractBlogname(eachItem.SubItems[2].Text));
+                        string text = eachItem.SubItems[2].Text;
+                        //blog.Links.Clear();
+
+                        //this.worker = new Thread(new ParameterizedThreadStart(this.RunParser));
+                        //success = bin.TryAdd(blog, 2, ct);
+                        bin.Add(blog);
                         this.addToQueueUI(blog);
                     }
                 }
@@ -704,31 +713,28 @@
             }
         }
 
-        private void runProducer(BlockingCollection<TumblrBlog> bin, CancellationToken ct)
+        private void runProducer(List<TumblrBlog> bin, CancellationToken ct)
         {
-            // IsCompleted == (IsAddingCompleted && Count == 0) 
-            while (!bin.IsCompleted)
+            try
             {
-                TumblrBlog nextBlog;
-                try
-                {
-                    if (!bin.TryTake(out nextBlog, 4000, ct))
-                    {
-
-                    }
-                    else
-                    {
+                while (true) {
+                    if (bin.Any()) {
+                        bool locked = false;
+                        TumblrBlog nextBlog;
+                        System.Threading.Monitor.Enter(bin, ref locked);
+                        nextBlog = bin.First<TumblrBlog>();
+                        bin.RemoveAt(0);
                         TumblrActiveList.Add(nextBlog);
 
-//                        if (TumblrActiveList.Count > Properties.Settings.Default.configSimultaneousDownloads)
-//                        {
-//                            TumblrBlog finishedBlog = (TumblrList.Find(x => x.Equals(TumblrActiveList.Take(1))));
-//                            finishedBlog._LastCrawled = DateTime.Now;
-//                            finishedBlog._finishedCrawl = true;
-//                        }
-//                        else
-//                        {
-//                        }
+                        //                        if (TumblrActiveList.Count > Properties.Settings.Default.configSimultaneousDownloads)
+                        //                        {
+                        //                            TumblrBlog finishedBlog = (TumblrList.Find(x => x.Equals(TumblrActiveList.Take(1))));
+                        //                            finishedBlog._LastCrawled = DateTime.Now;
+                        //                            finishedBlog._finishedCrawl = true;
+                        //                        }
+                        //                        else
+                        //                        {
+                        //                        }
 
                         this.BeginInvoke((MethodInvoker)delegate
                         {
@@ -739,38 +745,55 @@
                             // Queue
                             lvQueue.Items.RemoveAt(0);
                         });
-
+                        System.Threading.Monitor.Exit(bin);
                         this.RunParser(nextBlog);
 
                         //IEnumerable<TumblrBlog> differenceQuery = this.TumblrList.Except(this.bin);
                         //foreach (TumblrBlog active in differenceQuery)
                         //    foreach (string active._Name  in lvQueue.Items. (active._Name.Equals())
                     }
+                    else
+                    {
+                       Thread.Sleep(4000);
+                       //Task.Delay(4000);              
+                    }
                 }
-
-                catch (OperationCanceledException)
-                {
-                    Console.WriteLine("Taking canceled.");
-                    break;
-                }
-
-
-                // Slow down consumer just a little to cause 
-                // collection to fill up faster, and lead to "AddBlocked"
-                // Thread.SpinWait(500000);
+                    
             }
+
+            catch (OperationCanceledException)
+            {
+                Console.WriteLine("Taking canceled.");
+            }
+
+
+            // Slow down consumer just a little to cause 
+            // collection to fill up faster, and lead to "AddBlocked"
+            // Thread.SpinWait(500000);
         }
 
-        private void RemoveBlogFromQueue(BlockingCollection<TumblrBlog> bin, CancellationToken ct)
+        private void RemoveBlogFromQueue(List<TumblrBlog> bin, CancellationToken ct)
         {
-            // IsCompleted == (IsAddingCompleted && Count == 0) 
-            if (bin.Count != 0)
+
+
+            // Cancellation causes OCE. 
+            try
             {
-                TumblrBlog nextBlog = null;
-                bin.TryTake(out nextBlog, 0, ct);
-                this.lvQueue.Items.RemoveAt(0);
-                //this.TumblrList.RemoveAt(TumblrList.Count - 1);
-                //this.lvQueue.Items.RemoveAt(lvQueue.Items.Count - 1);
+                if (bin.Count != 0)
+                {
+                    foreach (ListViewItem eachItem in lvQueue.SelectedItems)
+                    {
+                        bin.RemoveAt(eachItem.Index);
+                        lvQueue.Items.Remove(eachItem);
+                    }
+                    //TumblrBlog nextBlog = null;
+                    //this.TumblrList.RemoveAt(TumblrList.Count - 1);
+                    //this.lvQueue.Items.RemoveAt(lvQueue.Items.Count - 1);
+                }
+            }
+            catch (OperationCanceledException exception)
+            {
+                MessageBox.Show(exception.Message);
             }
         }
 
