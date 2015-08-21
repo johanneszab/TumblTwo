@@ -153,10 +153,11 @@
                 }
                 catch (Exception)
                 {
-                    return false;
+                    return true;
                 }
+                return true;
             }
-            return true;
+            return false;
         }
 
         private string ExtractBlogname(string url)
@@ -391,6 +392,7 @@
         {
             MethodInvoker method = null;
             MethodInvoker invoker3 = null;
+            bool readDataBase = false;
             int num = 0;
             int num2 = 0;
             int num3 = 0;
@@ -496,6 +498,18 @@
                                         };
                                     }
                                     this.BeginInvoke(invoker);
+                                }
+                                else
+                                {
+                                    if (!readDataBase)
+                                    {
+                                        readDataBase = true;
+                                        this.BeginInvoke((MethodInvoker)delegate
+                                        {
+                                            this.lblUrl.Text = "Skip previously downloaded files - " + _blog._Name;
+                                        });
+                                    }
+
                                 }
                             }
                             catch (Exception)
@@ -718,44 +732,54 @@
             try
             {
                 while (true) {
-                    if (bin.Any()) {
-                        bool locked = false;
-                        TumblrBlog nextBlog;
-                        System.Threading.Monitor.Enter(bin, ref locked);
-                        nextBlog = bin.First<TumblrBlog>();
-                        bin.RemoveAt(0);
-                        TumblrActiveList.Add(nextBlog);
-
-                        //                        if (TumblrActiveList.Count > Properties.Settings.Default.configSimultaneousDownloads)
-                        //                        {
-                        //                            TumblrBlog finishedBlog = (TumblrList.Find(x => x.Equals(TumblrActiveList.Take(1))));
-                        //                            finishedBlog._LastCrawled = DateTime.Now;
-                        //                            finishedBlog._finishedCrawl = true;
-                        //                        }
-                        //                        else
-                        //                        {
-                        //                        }
-
-                        this.BeginInvoke((MethodInvoker)delegate
-                        {
-                            // Update UI:
-                            // Processlabel
-                            this.crawlingBlogs += this.lvQueue.Items[0].Text + " ";
-                            this.lblProcess.Text = "Crawling Blogs - " + this.crawlingBlogs;
-                            // Queue
-                            lvQueue.Items.RemoveAt(0);
-                        });
-                        System.Threading.Monitor.Exit(bin);
-                        this.RunParser(nextBlog);
-
-                        //IEnumerable<TumblrBlog> differenceQuery = this.TumblrList.Except(this.bin);
-                        //foreach (TumblrBlog active in differenceQuery)
-                        //    foreach (string active._Name  in lvQueue.Items. (active._Name.Equals())
-                    }
-                    else
+                    try
                     {
-                       Thread.Sleep(4000);
-                       //Task.Delay(4000);              
+                        System.Threading.Monitor.Enter(bin);
+                        if (bin.Any())
+                        {
+                            TumblrBlog nextBlog;
+
+                            nextBlog = bin.First<TumblrBlog>();
+                            bin.RemoveAt(0);
+                            TumblrActiveList.Add(nextBlog);
+
+                            //                        if (TumblrActiveList.Count > Properties.Settings.Default.configSimultaneousDownloads)
+                            //                        {
+                            //                            TumblrBlog finishedBlog = (TumblrList.Find(x => x.Equals(TumblrActiveList.Take(1))));
+                            //                            finishedBlog._LastCrawled = DateTime.Now;
+                            //                            finishedBlog._finishedCrawl = true;
+                            //                        }
+                            //                        else
+                            //                        {
+                            //                        }
+
+                            this.BeginInvoke((MethodInvoker)delegate
+                            {
+                                // Update UI:
+                                // Processlabel
+                                this.crawlingBlogs += this.lvQueue.Items[0].Text + " ";
+                                this.lblProcess.Text = "Crawling Blogs - " + this.crawlingBlogs;
+                                // Queue
+                                lvQueue.Items.RemoveAt(0);
+                            });
+                            System.Threading.Monitor.Exit(bin);
+                            this.RunParser(nextBlog);
+
+                            //IEnumerable<TumblrBlog> differenceQuery = this.TumblrList.Except(this.bin);
+                            //foreach (TumblrBlog active in differenceQuery)
+                            //    foreach (string active._Name  in lvQueue.Items. (active._Name.Equals())
+                        }
+                        else
+                        {
+                            System.Threading.Monitor.Exit(bin);
+                            Thread.Sleep(4000);
+                            //Task.Delay(4000);   
+                        }
+
+                    }
+                    catch (Exception)
+                    {
+                        Thread.Sleep(4000);
                     }
                 }
                     
