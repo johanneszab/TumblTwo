@@ -464,31 +464,24 @@
                         if (!this.chkGIF.Checked || (Path.GetExtension(fileName).ToLower() != ".gif"))
                         {
                             FileLocation = Properties.Settings.Default.configDownloadLocation.ToString() + _blog._Name + "/" + fileName;
-                            _blog.Links.Add(new Post(p.Value, fileName));
-                            if (invoker3 == null)
-                            {
-                                invoker3 = delegate
-                                {
-                                    foreach (ListViewItem item in this.lvBlog.Items)
-                                    {
-                                        if (item.Text == _blog._Name)
-                                        {
-                                            item.SubItems[1].Text = Directory.GetFiles(Properties.Settings.Default.configDownloadLocation.ToString() + _blog._Name + "/").Length.ToString();
-                                            break;
-                                        }
-                                    }
-                                };
-                            }
-                            this.BeginInvoke(invoker3);
                             try
                             {
                                 if (this.Download(FileLocation, p.Value))
                                 {
+                                    _blog.Links.Add(new Post(p.Value, fileName));
                                     num2++;
                                     if (invoker == null)
                                     {
                                         invoker = delegate
                                         {
+                                            foreach (ListViewItem item in this.lvBlog.Items)
+                                            {
+                                                if (item.Text == _blog._Name)
+                                                {
+                                                    item.SubItems[1].Text = Directory.GetFiles(Properties.Settings.Default.configDownloadLocation.ToString() + _blog._Name + "/").Length.ToString();
+                                                    break;
+                                                }
+                                            }
                                             this.lblUrl.Text = p.Value;
                                             this.smallImage.ImageLocation = FileLocation;
                                             if ((this.pgBar.Value + 1) < (this.pgBar.Maximum + 1))
