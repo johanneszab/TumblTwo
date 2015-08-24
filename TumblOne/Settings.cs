@@ -85,6 +85,11 @@ namespace TumblOne
             Properties.Settings.Default.configSimultaneousDownloads = Convert.ToInt32(this.nudSimultaneousDownloads.Value);
             Properties.Settings.Default.configImageSize = Convert.ToInt32(this.cbImagesize.SelectedItem);
             Properties.Settings.Default.Save();
+            // Reload Settings and Blogs
+            if (_Form1.TumblrActiveList.Count == 0)
+            {
+                _Form1.LoadLibrary();
+            }
             this.Close();
         }
 

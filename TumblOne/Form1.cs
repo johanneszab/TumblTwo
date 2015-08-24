@@ -20,7 +20,7 @@
 
     public partial class Form1 : Form
     {
-        private List<TumblrBlog> TumblrActiveList = new List<TumblrBlog>();
+        public List<TumblrBlog> TumblrActiveList = new List<TumblrBlog>();
         string crawlingBlogs = "";
         //public TumblrBlog blog;
         private Task worker;
@@ -52,7 +52,7 @@
                     }
                 }
                 lvItem = new ListViewItem();
-                if ((this.worker != null) && !this.worker.IsCompleted)
+                if (this.worker != null)
                 {
                     TumblrBlog ThreadBlog = new TumblrBlog();
                     this.Invoke((Action)delegate
@@ -188,7 +188,7 @@
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if ((this.worker != null) && !this.worker.IsCompleted)
+            //if (this.worker != null)
             {
                 try
                 {
@@ -246,7 +246,7 @@
             return blog;
         }
 
-        private void LoadLibrary()
+        public void LoadLibrary()
         {
             this.lvBlog.Items.Clear();
             this.lblProcess.Text = "";
@@ -358,7 +358,7 @@
 
         private void RemoveBlog(object sender, EventArgs e)
         {
-            if ((this.worker != null) && !this.worker.IsCompleted)
+            if (TumblrActiveList.Count != 0)
             {
                 MessageBox.Show("During an active crawl, it's not possible to remove a blog!", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
@@ -519,6 +519,8 @@
                     // Finished Blog
                     _blog._LastCrawled = DateTime.Now;
                     _blog._finishedCrawl = true;
+                    this.SaveBlog(_blog);
+                    TumblrActiveList.Remove(_blog);
                     // Update UI
                     this.BeginInvoke((MethodInvoker)delegate
                     {
@@ -537,6 +539,24 @@
                             }
                         }
                     });
+
+                    if (TumblrActiveList.Count == 0)
+                    {
+                        this.BeginInvoke((MethodInvoker)delegate
+                        {
+                            foreach (ListViewItem item in this.lvBlog.Items)
+                            {
+                                if (item.Text == _blog._Name)
+                                {
+                                    // Update current crawling progress label
+                                    this.smallImage.ImageLocation = "";
+                                    this.crawlingBlogs = "";
+                                    this.lblUrl.Text = "";
+                                    this.lblProcess.Text = "Queue finished";
+                                }
+                            }
+                        });
+                    }
                     return;
                 }
                 num += num3;
@@ -662,7 +682,7 @@
 
         private void loadPreferences()
         {
-            if ((this.worker != null) && !this.worker.IsCompleted) 
+            if (this.worker != null) 
             {
 
 
