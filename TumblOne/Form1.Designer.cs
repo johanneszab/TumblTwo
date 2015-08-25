@@ -79,6 +79,7 @@
             this.chDateAdded = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chLastCrawled = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chFinished = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chPostCount = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextBlog.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -380,7 +381,7 @@
             this.toolAbout.Image = global::TumblOne.Properties.Resources.About;
             this.toolAbout.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolAbout.Name = "toolAbout";
-            this.toolAbout.Size = new System.Drawing.Size(44, 51);
+            this.toolAbout.Size = new System.Drawing.Size(90, 51);
             this.toolAbout.Text = "About";
             this.toolAbout.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolAbout.ToolTipText = "Opens the about window";
@@ -442,7 +443,7 @@
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.label2.Font = new System.Drawing.Font("Forte", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.IndianRed;
             this.label2.Location = new System.Drawing.Point(0, 0);
             this.label2.Name = "label2";
@@ -504,6 +505,7 @@
             this.lvBlog.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.chName,
             this.chDownloadedImages,
+            this.chPostCount,
             this.chURL,
             this.chDateAdded,
             this.chLastCrawled,
@@ -534,7 +536,7 @@
             // chURL
             // 
             this.chURL.Text = "Url";
-            this.chURL.Width = 209;
+            this.chURL.Width = 89;
             // 
             // chDateAdded
             // 
@@ -549,6 +551,11 @@
             // chFinished
             // 
             this.chFinished.Text = "Finished";
+            // 
+            // chPostCount
+            // 
+            this.chPostCount.Text = "Number of Posts";
+            this.chPostCount.Width = 120;
             // 
             // Form1
             // 
@@ -629,5 +636,6 @@
         private ListView lvQueue;
         private ColumnHeader chQueueName;
         private ColumnHeader chQueueStatus;
+        private ColumnHeader chPostCount;
     }
 }

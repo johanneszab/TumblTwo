@@ -9,28 +9,31 @@
         public string _Discription;
         public string _Name;
         public string _URL;
-        public List<Post> Links;
-        public int TOTAL_COUNT;
+        public int _DownloadedImages;
+        public int _TotalCount;
         public DateTime _DateAdded;
         public DateTime _LastCrawled;
         public bool _finishedCrawl;
+        public List<Post> Links;
 
         public TumblrBlog()
         {
+            this._Discription = null;
             this._Name = null;
             this._URL = null;
-            this._Discription = null;
-            this.Links = new List<Post>();
-            //this._DateAdded = null;
-            //this._LastCrawled = null;
+            this._DownloadedImages = 0;
+            this._TotalCount = 0;
+            this._DateAdded = System.DateTime.MinValue;
+            this._LastCrawled = System.DateTime.MinValue;
             this._finishedCrawl = false;
+            this.Links = new List<Post>();
         }
 
         public TumblrBlog(string blogname)
         {
             this._Name = blogname;
-            this.Links = new List<Post>();
             this._DateAdded = DateTime.Today;
+            this.Links = new List<Post>();
         }
     }
 }
