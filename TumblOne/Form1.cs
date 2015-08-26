@@ -494,7 +494,7 @@
                                         break;
                                     }
                                 }
-                                this.pgBar.Minimum = 0;
+                                this.pgBar.Minimum = _blog._DownloadedImages;
                                 this.pgBar.Maximum = _blog._TotalCount;
                             };
                         }
