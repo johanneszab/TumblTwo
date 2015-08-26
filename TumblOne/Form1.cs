@@ -221,6 +221,29 @@
                 this.worker = null;
                 this.wait_handle = null;
             }
+            // Save Window Postion and Size
+            if (WindowState == FormWindowState.Maximized)
+            {
+                Properties.Settings.Default.Location = RestoreBounds.Location;
+                Properties.Settings.Default.Size = RestoreBounds.Size;
+                Properties.Settings.Default.Maximised = true;
+                Properties.Settings.Default.Minimised = false;
+            }
+            else if (WindowState == FormWindowState.Normal)
+            {
+                Properties.Settings.Default.Location = Location;
+                Properties.Settings.Default.Size = Size;
+                Properties.Settings.Default.Maximised = false;
+                Properties.Settings.Default.Minimised = false;
+            }
+            else
+            {
+                Properties.Settings.Default.Location = RestoreBounds.Location;
+                Properties.Settings.Default.Size = RestoreBounds.Size;
+                Properties.Settings.Default.Maximised = false;
+                Properties.Settings.Default.Minimised = true;
+            }
+
             // Save Settings
             Properties.Settings.Default.Save();
         }
@@ -230,6 +253,23 @@
             using (SplashScreen screen = new SplashScreen())
             {
                 screen.ShowDialog();
+            }
+            if (Properties.Settings.Default.Maximised)
+            {
+                WindowState = FormWindowState.Maximized;
+                Location = Properties.Settings.Default.Location;
+                Size = Properties.Settings.Default.Size;
+            }
+            else if (Properties.Settings.Default.Minimised)
+            {
+                WindowState = FormWindowState.Minimized;
+                Location = Properties.Settings.Default.Location;
+                Size = Properties.Settings.Default.Size;
+            }
+            else
+            {
+                Location = Properties.Settings.Default.Location;
+                Size = Properties.Settings.Default.Size;
             }
         }
 
@@ -312,7 +352,13 @@
         {
             //this.worker = new Thread(new ParameterizedThreadStart(this.RunParser));
             cts = new CancellationTokenSource();
-            crawlingBlogs = "";
+            this.BeginInvoke((MethodInvoker)delegate
+            {
+                this.smallImage.ImageLocation = "";
+                this.crawlingBlogs = "";
+                this.lblUrl.Text = "";
+                this.lblProcess.Text = "Crawling Blogs - " + this.crawlingBlogs;
+            });
             for (int i = 0; i < Properties.Settings.Default.configSimultaneousDownloads; i++ )
                 this.worker = Task.Run(() => runProducer(bin, cts.Token));
             //this.worker.Name = "TumblOne Thread";
@@ -326,14 +372,6 @@
             this.toolCrawl.Enabled = false;
             this.toolRemoveBlog.Enabled = false;
             this.contextBlog.Items[3].Enabled = false;
-            this.BeginInvoke((MethodInvoker)delegate
-            {
-                this.smallImage.ImageLocation = "";
-                this.crawlingBlogs = "";
-                this.lblUrl.Text = "";
-                this.lblProcess.Text = "Crawling Blogs - " + this.crawlingBlogs;
-            });
-
         }
 
         private void mnuShowFilesInExplorer_Click(object sender, EventArgs e)

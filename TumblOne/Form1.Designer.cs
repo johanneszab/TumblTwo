@@ -75,11 +75,11 @@
             this.lvBlog = new TumblOne.ListViewEx();
             this.chName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chDownloadedImages = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chPostCount = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chURL = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chDateAdded = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chLastCrawled = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chFinished = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.chPostCount = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextBlog.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -107,7 +107,7 @@
             this.tBlogUrl.ForeColor = System.Drawing.Color.Black;
             this.tBlogUrl.Location = new System.Drawing.Point(135, 16);
             this.tBlogUrl.Name = "tBlogUrl";
-            this.tBlogUrl.Size = new System.Drawing.Size(622, 21);
+            this.tBlogUrl.Size = new System.Drawing.Size(822, 21);
             this.tBlogUrl.TabIndex = 1;
             this.tBlogUrl.Text = "http://";
             // 
@@ -126,7 +126,7 @@
             this.chkGIF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.chkGIF.AutoSize = true;
             this.chkGIF.Checked = global::TumblOne.Properties.Settings.Default.configChkGIFState;
-            this.chkGIF.Location = new System.Drawing.Point(485, 19);
+            this.chkGIF.Location = new System.Drawing.Point(685, 19);
             this.chkGIF.Name = "chkGIF";
             this.chkGIF.Size = new System.Drawing.Size(91, 17);
             this.chkGIF.TabIndex = 8;
@@ -141,7 +141,7 @@
             this.lblUrl.ForeColor = System.Drawing.Color.Yellow;
             this.lblUrl.Location = new System.Drawing.Point(6, 93);
             this.lblUrl.Name = "lblUrl";
-            this.lblUrl.Size = new System.Drawing.Size(570, 49);
+            this.lblUrl.Size = new System.Drawing.Size(770, 49);
             this.lblUrl.TabIndex = 7;
             this.lblUrl.Text = "       ";
             this.lblUrl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -240,7 +240,7 @@
             this.toolSettings,
             this.toolStripSeparator3,
             this.toolAbout});
-            this.toolStrip1.Location = new System.Drawing.Point(771, 0);
+            this.toolStrip1.Location = new System.Drawing.Point(971, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
             this.toolStrip1.Size = new System.Drawing.Size(93, 620);
@@ -408,7 +408,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pgBar.Location = new System.Drawing.Point(6, 155);
             this.pgBar.Name = "pgBar";
-            this.pgBar.Size = new System.Drawing.Size(570, 23);
+            this.pgBar.Size = new System.Drawing.Size(770, 23);
             this.pgBar.TabIndex = 9;
             // 
             // groupBox1
@@ -424,7 +424,7 @@
             this.groupBox1.ForeColor = System.Drawing.Color.White;
             this.groupBox1.Location = new System.Drawing.Point(12, 424);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(582, 184);
+            this.groupBox1.Size = new System.Drawing.Size(782, 184);
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Download";
@@ -436,7 +436,7 @@
             this.panelInfo.Controls.Add(this.label2);
             this.panelInfo.Location = new System.Drawing.Point(12, 424);
             this.panelInfo.Name = "panelInfo";
-            this.panelInfo.Size = new System.Drawing.Size(745, 184);
+            this.panelInfo.Size = new System.Drawing.Size(945, 184);
             this.panelInfo.TabIndex = 11;
             // 
             // label2
@@ -444,13 +444,13 @@
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = System.Drawing.Color.IndianRed;
+            this.label2.ForeColor = System.Drawing.Color.Gainsboro;
             this.label2.Location = new System.Drawing.Point(0, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(745, 184);
+            this.label2.Size = new System.Drawing.Size(945, 184);
             this.label2.TabIndex = 0;
-            this.label2.Text = "Click on a Blog, add it to the Queue and hit the \'Crawl\' Button to start the Craw" +
-    "l Process. ";
+            this.label2.Text = "To start, click on a blog, add it to the queue and hit the \'Crawl\' button to star" +
+    "t the crawl process. ";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // smallImage
@@ -458,7 +458,7 @@
             this.smallImage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.smallImage.BackColor = System.Drawing.Color.LightSteelBlue;
             this.smallImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.smallImage.Location = new System.Drawing.Point(600, 424);
+            this.smallImage.Location = new System.Drawing.Point(800, 424);
             this.smallImage.Name = "smallImage";
             this.smallImage.Size = new System.Drawing.Size(157, 184);
             this.smallImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -480,7 +480,7 @@
             this.lvQueue.HideSelection = false;
             this.lvQueue.Location = new System.Drawing.Point(12, 271);
             this.lvQueue.Name = "lvQueue";
-            this.lvQueue.Size = new System.Drawing.Size(746, 147);
+            this.lvQueue.Size = new System.Drawing.Size(946, 147);
             this.lvQueue.TabIndex = 12;
             this.lvQueue.UseCompatibleStateImageBehavior = false;
             this.lvQueue.View = System.Windows.Forms.View.Details;
@@ -516,7 +516,7 @@
             this.lvBlog.HideSelection = false;
             this.lvBlog.Location = new System.Drawing.Point(12, 42);
             this.lvBlog.Name = "lvBlog";
-            this.lvBlog.Size = new System.Drawing.Size(746, 223);
+            this.lvBlog.Size = new System.Drawing.Size(946, 223);
             this.lvBlog.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lvBlog.TabIndex = 0;
             this.lvBlog.UseCompatibleStateImageBehavior = false;
@@ -525,7 +525,7 @@
             // chName
             // 
             this.chName.Text = "Name";
-            this.chName.Width = 133;
+            this.chName.Width = 160;
             // 
             // chDownloadedImages
             // 
@@ -533,34 +533,36 @@
             this.chDownloadedImages.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.chDownloadedImages.Width = 119;
             // 
+            // chPostCount
+            // 
+            this.chPostCount.Text = "Number of Posts";
+            this.chPostCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.chPostCount.Width = 100;
+            // 
             // chURL
             // 
             this.chURL.Text = "Url";
-            this.chURL.Width = 89;
+            this.chURL.Width = 210;
             // 
             // chDateAdded
             // 
             this.chDateAdded.Text = "Date Added";
-            this.chDateAdded.Width = 110;
+            this.chDateAdded.Width = 130;
             // 
             // chLastCrawled
             // 
             this.chLastCrawled.Text = "Last Crawled";
-            this.chLastCrawled.Width = 110;
+            this.chLastCrawled.Width = 130;
             // 
             // chFinished
             // 
             this.chFinished.Text = "Finished";
-            // 
-            // chPostCount
-            // 
-            this.chPostCount.Text = "Number of Posts";
-            this.chPostCount.Width = 120;
+            this.chFinished.Width = 80;
             // 
             // Form1
             // 
             this.BackColor = System.Drawing.Color.LightSlateGray;
-            this.ClientSize = new System.Drawing.Size(864, 620);
+            this.ClientSize = new System.Drawing.Size(1064, 620);
             this.Controls.Add(this.lvQueue);
             this.Controls.Add(this.panelInfo);
             this.Controls.Add(this.groupBox1);
