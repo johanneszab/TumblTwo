@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace TumblOne
@@ -30,6 +31,10 @@ namespace TumblOne
 
         private void tbDownloadLocation_TextChanged(object sender, EventArgs e)
         {
+            if (!this.tbDownloadLocation.Text.EndsWith("\\"))
+            {
+                this.tbDownloadLocation.Text = this.tbDownloadLocation.Text + "\\";
+            }
             Properties.Settings.Default.configDownloadLocation = this.tbDownloadLocation.Text;
         }
 
@@ -76,20 +81,50 @@ namespace TumblOne
 
         private void Settings_FormClosing(object sender, FormClosingEventArgs e)
         {
+            // Reload Settings and Blogs
+            if (_Form1.tasks[0] == null)
+            {
+                _Form1.LoadLibrary();
+            }
+            if (Convert.ToInt32(this.nudSimultaneousDownloads.Value) > Properties.Settings.Default.configSimultaneousDownloads)
+            {
+                Array.Resize(ref _Form1.tasks, _Form1.tasks.Length + (Convert.ToInt32(this.nudSimultaneousDownloads.Value) - Properties.Settings.Default.configSimultaneousDownloads));
+            }
+            else
+            {
+                if (_Form1.tasks[0] == null)
+                {
+                    Array.Resize(ref _Form1.tasks, Convert.ToInt32(this.nudSimultaneousDownloads.Value));
+                }
+            }
             // Save Settings
+            Properties.Settings.Default.configSimultaneousDownloads = Convert.ToInt32(this.nudSimultaneousDownloads.Value);
+            Properties.Settings.Default.configImageSize = Convert.ToInt32(this.cbImagesize.SelectedItem);
             Properties.Settings.Default.Save();
         }
 
         private void buttonOk_Click(object sender, EventArgs e)
         {
-            Properties.Settings.Default.configSimultaneousDownloads = Convert.ToInt32(this.nudSimultaneousDownloads.Value);
-            Properties.Settings.Default.configImageSize = Convert.ToInt32(this.cbImagesize.SelectedItem);
-            Properties.Settings.Default.Save();
             // Reload Settings and Blogs
-            if (_Form1.TumblrActiveList.Count == 0)
+            if (_Form1.tasks[0] == null)
             {
                 _Form1.LoadLibrary();
             }
+            if (Convert.ToInt32(this.nudSimultaneousDownloads.Value) > Properties.Settings.Default.configSimultaneousDownloads)
+            {
+                Array.Resize(ref _Form1.tasks, _Form1.tasks.Length + (Convert.ToInt32(this.nudSimultaneousDownloads.Value) - Properties.Settings.Default.configSimultaneousDownloads));
+            }
+            else
+            {
+                if (_Form1.tasks[0] == null)
+                {
+                    Array.Resize(ref _Form1.tasks, Convert.ToInt32(this.nudSimultaneousDownloads.Value));
+                }
+            }
+            // Save Settings
+            Properties.Settings.Default.configSimultaneousDownloads = Convert.ToInt32(this.nudSimultaneousDownloads.Value);
+            Properties.Settings.Default.configImageSize = Convert.ToInt32(this.cbImagesize.SelectedItem);
+            Properties.Settings.Default.Save();
             this.Close();
         }
 

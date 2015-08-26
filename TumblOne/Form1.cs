@@ -21,13 +21,13 @@
     public partial class Form1 : Form
     {
         public List<TumblrBlog> TumblrActiveList = new List<TumblrBlog>();
+        public Task[] tasks = new Task[Properties.Settings.Default.configSimultaneousDownloads];
         string crawlingBlogs = "";
         //public TumblrBlog blog;
-        private Task worker;
+        //private Task worker;
         //private BlockingCollection<TumblrBlog> bin = new BlockingCollection<TumblrBlog>();
         //private QueuedTaskScheduler qts = new QueuedTaskScheduler(TaskScheduler.Default, 2); 
         private CancellationTokenSource cts = new CancellationTokenSource();
-
         private List<TumblrBlog> bin = new List<TumblrBlog>();
 
         public Form1()
@@ -52,7 +52,7 @@
                     }
                 }
                 lvItem = new ListViewItem();
-                if (this.worker != null)
+                if ((this.tasks[0] != null) && tasks[0].Status == TaskStatus.Running )
                 {
                     TumblrBlog ThreadBlog = new TumblrBlog();
                     this.Invoke((Action)delegate
@@ -195,7 +195,7 @@
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            //if (this.worker != null)
+            if ((this.tasks[0] != null) && tasks[0].Status == TaskStatus.Running)
             {
                 try
                 {
@@ -218,7 +218,8 @@
                 {
                     MessageBox.Show("Process stopped by the user. " + exception.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
-                this.worker = null;
+                for (int i = 0; i < Properties.Settings.Default.configSimultaneousDownloads; i++)
+                    this.tasks[i] = null;
                 this.wait_handle = null;
             }
             // Save Window Postion and Size
@@ -272,8 +273,6 @@
                 Size = Properties.Settings.Default.Size;
             }
         }
-
-
 
         private TumblrBlog LoadBlog(string blogname)
         {
@@ -360,7 +359,7 @@
                 this.lblProcess.Text = "Crawling Blogs - " + this.crawlingBlogs;
             });
             for (int i = 0; i < Properties.Settings.Default.configSimultaneousDownloads; i++ )
-                this.worker = Task.Run(() => runProducer(bin, cts.Token));
+                this.tasks[i] = Task.Run(() => runProducer(bin, cts.Token));
             //this.worker.Name = "TumblOne Thread";
             //this.worker.IsBackground = true;
             this.wait_handle = new ManualResetEvent(true);
@@ -412,7 +411,7 @@
 
         private void RemoveBlog(object sender, EventArgs e)
         {
-            if (TumblrActiveList.Count != 0)
+            if ((this.tasks[0] != null) && tasks[0].Status == TaskStatus.Running)
             {
                 MessageBox.Show("During an active crawl, it's not possible to remove a blog!", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
@@ -445,7 +444,6 @@
         private void RunParser(TumblrBlog _blog)
         {
             MethodInvoker method = null;
-            MethodInvoker invoker3 = null;
             bool readDataBase = false;
             int num = 0;
             int num2 = 0;
@@ -740,11 +738,6 @@
 
         private void loadPreferences()
         {
-            if (this.worker != null) 
-            {
-
-
-            }
 
         }
 
@@ -800,9 +793,16 @@
 
         private void runProducer(List<TumblrBlog> bin, CancellationToken ct)
         {
+            ct.ThrowIfCancellationRequested();
             try
             {
                 while (true) {
+                    this.wait_handle.WaitOne();
+                    if (ct.IsCancellationRequested)
+                    {
+                        // Clean up here, then...
+                        ct.ThrowIfCancellationRequested();
+                    }
                     try
                     {
                         System.Threading.Monitor.Enter(bin);
