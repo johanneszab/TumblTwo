@@ -557,7 +557,7 @@
                                         readDataBase = true;
                                         this.BeginInvoke((MethodInvoker)delegate
                                         {
-                                            this.lblUrl.Text = "Skip previously downloaded files - " + _blog._Name;
+                                            this.lblUrl.Text = "Skipping previously downloaded images - " + _blog._Name;
                                         });
                                     }
 

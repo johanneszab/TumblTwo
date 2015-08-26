@@ -91,6 +91,7 @@
             // 
             this.label21.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label21.AutoSize = true;
+            this.label21.ForeColor = System.Drawing.SystemColors.InfoText;
             this.label21.Location = new System.Drawing.Point(6, 73);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(63, 13);
@@ -101,7 +102,7 @@
             // 
             this.tBlogUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tBlogUrl.BackColor = System.Drawing.Color.LightSteelBlue;
+            this.tBlogUrl.BackColor = System.Drawing.SystemColors.Menu;
             this.tBlogUrl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.tBlogUrl.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tBlogUrl.ForeColor = System.Drawing.Color.Black;
@@ -114,7 +115,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.ForeColor = System.Drawing.SystemColors.InfoText;
             this.label1.Location = new System.Drawing.Point(9, 19);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(120, 13);
@@ -125,20 +126,22 @@
             // 
             this.chkGIF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.chkGIF.AutoSize = true;
+            this.chkGIF.BackColor = System.Drawing.SystemColors.Window;
             this.chkGIF.Checked = global::TumblOne.Properties.Settings.Default.configChkGIFState;
             this.chkGIF.Location = new System.Drawing.Point(685, 19);
             this.chkGIF.Name = "chkGIF";
             this.chkGIF.Size = new System.Drawing.Size(91, 17);
             this.chkGIF.TabIndex = 8;
             this.chkGIF.Text = "Skip GIF-Files";
-            this.chkGIF.UseVisualStyleBackColor = true;
+            this.chkGIF.UseVisualStyleBackColor = false;
             this.chkGIF.CheckedChanged += new System.EventHandler(this.chkGIF_CheckedChanged);
             // 
             // lblUrl
             // 
             this.lblUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblUrl.ForeColor = System.Drawing.Color.Yellow;
+            this.lblUrl.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblUrl.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.lblUrl.Location = new System.Drawing.Point(6, 93);
             this.lblUrl.Name = "lblUrl";
             this.lblUrl.Size = new System.Drawing.Size(770, 49);
@@ -152,7 +155,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblProcess.AutoSize = true;
             this.lblProcess.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblProcess.ForeColor = System.Drawing.Color.Yellow;
+            this.lblProcess.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.lblProcess.Location = new System.Drawing.Point(6, 49);
             this.lblProcess.Name = "lblProcess";
             this.lblProcess.Size = new System.Drawing.Size(79, 13);
@@ -163,6 +166,7 @@
             // 
             this.lbl23.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lbl23.AutoSize = true;
+            this.lbl23.ForeColor = System.Drawing.SystemColors.InfoText;
             this.lbl23.Location = new System.Drawing.Point(6, 27);
             this.lbl23.Name = "lbl23";
             this.lbl23.Size = new System.Drawing.Size(85, 13);
@@ -221,7 +225,7 @@
             // 
             // toolStrip1
             // 
-            this.toolStrip1.BackColor = System.Drawing.Color.SlateGray;
+            this.toolStrip1.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Right;
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
@@ -249,6 +253,7 @@
             // 
             // toolAddBlog
             // 
+            this.toolAddBlog.BackColor = System.Drawing.SystemColors.Menu;
             this.toolAddBlog.Image = global::TumblOne.Properties.Resources.AddBlog;
             this.toolAddBlog.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolAddBlog.Name = "toolAddBlog";
@@ -260,6 +265,7 @@
             // 
             // toolRemoveBlog
             // 
+            this.toolRemoveBlog.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.toolRemoveBlog.Image = global::TumblOne.Properties.Resources.Remove;
             this.toolRemoveBlog.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolRemoveBlog.Name = "toolRemoveBlog";
@@ -283,6 +289,8 @@
             // 
             // toolStripSeparator1
             // 
+            this.toolStripSeparator1.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.toolStripSeparator1.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(90, 6);
             // 
@@ -406,6 +414,8 @@
             // 
             this.pgBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.pgBar.BackColor = System.Drawing.SystemColors.Menu;
+            this.pgBar.ForeColor = System.Drawing.SystemColors.ActiveCaption;
             this.pgBar.Location = new System.Drawing.Point(6, 155);
             this.pgBar.Name = "pgBar";
             this.pgBar.Size = new System.Drawing.Size(770, 23);
@@ -421,7 +431,7 @@
             this.groupBox1.Controls.Add(this.pgBar);
             this.groupBox1.Controls.Add(this.lbl23);
             this.groupBox1.Controls.Add(this.lblProcess);
-            this.groupBox1.ForeColor = System.Drawing.Color.White;
+            this.groupBox1.ForeColor = System.Drawing.SystemColors.InfoText;
             this.groupBox1.Location = new System.Drawing.Point(12, 424);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(782, 184);
@@ -434,6 +444,7 @@
             this.panelInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelInfo.Controls.Add(this.label2);
+            this.panelInfo.ForeColor = System.Drawing.SystemColors.InfoText;
             this.panelInfo.Location = new System.Drawing.Point(12, 424);
             this.panelInfo.Name = "panelInfo";
             this.panelInfo.Size = new System.Drawing.Size(945, 184);
@@ -443,8 +454,9 @@
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.label2.BackColor = System.Drawing.SystemColors.Window;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = System.Drawing.Color.Gainsboro;
+            this.label2.ForeColor = System.Drawing.SystemColors.InfoText;
             this.label2.Location = new System.Drawing.Point(0, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(945, 184);
@@ -456,7 +468,7 @@
             // smallImage
             // 
             this.smallImage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.smallImage.BackColor = System.Drawing.Color.LightSteelBlue;
+            this.smallImage.BackColor = System.Drawing.SystemColors.Menu;
             this.smallImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.smallImage.Location = new System.Drawing.Point(800, 424);
             this.smallImage.Name = "smallImage";
@@ -470,7 +482,7 @@
             // 
             this.lvQueue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lvQueue.BackColor = System.Drawing.Color.LightSteelBlue;
+            this.lvQueue.BackColor = System.Drawing.SystemColors.Menu;
             this.lvQueue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lvQueue.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.chQueueName,
@@ -500,7 +512,7 @@
             this.lvBlog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lvBlog.BackColor = System.Drawing.Color.LightSteelBlue;
+            this.lvBlog.BackColor = System.Drawing.SystemColors.Menu;
             this.lvBlog.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lvBlog.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.chName,
@@ -561,7 +573,7 @@
             // 
             // Form1
             // 
-            this.BackColor = System.Drawing.Color.LightSlateGray;
+            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1064, 620);
             this.Controls.Add(this.lvQueue);
             this.Controls.Add(this.panelInfo);
@@ -573,7 +585,7 @@
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
-            this.Text = "TumblTwo - A Tumblr Image Crawler - Version 1.0.5";
+            this.Text = "TumblTwo - A Tumblr Image Crawler - Version 1.0.6";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.contextBlog.ResumeLayout(false);

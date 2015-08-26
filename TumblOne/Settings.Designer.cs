@@ -53,6 +53,7 @@
             // 
             this.tvSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.tvSettings.BackColor = System.Drawing.SystemColors.Menu;
             this.tvSettings.Location = new System.Drawing.Point(12, 12);
             this.tvSettings.Name = "tvSettings";
             treeNode1.Name = "settingsGeneral";
@@ -68,6 +69,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gbSettingsGeneral.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.gbSettingsGeneral.BackColor = System.Drawing.SystemColors.Window;
             this.gbSettingsGeneral.Controls.Add(this.buttonCancel);
             this.gbSettingsGeneral.Controls.Add(this.buttonOk);
             this.gbSettingsGeneral.Controls.Add(this.cbImagesize);
@@ -110,6 +112,7 @@
             // 
             this.cbImagesize.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbImagesize.BackColor = System.Drawing.SystemColors.Menu;
             this.cbImagesize.FormattingEnabled = true;
             this.cbImagesize.Items.AddRange(new object[] {
             "1280",
@@ -127,6 +130,7 @@
             // 
             this.nudSimultaneousDownloads.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.nudSimultaneousDownloads.BackColor = System.Drawing.SystemColors.Menu;
             this.nudSimultaneousDownloads.Location = new System.Drawing.Point(305, 153);
             this.nudSimultaneousDownloads.Minimum = new decimal(new int[] {
             1,
@@ -211,6 +215,7 @@
             // 
             this.tbDownloadLocation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbDownloadLocation.BackColor = System.Drawing.SystemColors.Menu;
             this.tbDownloadLocation.Location = new System.Drawing.Point(111, 9);
             this.tbDownloadLocation.Name = "tbDownloadLocation";
             this.tbDownloadLocation.Size = new System.Drawing.Size(217, 20);
@@ -231,7 +236,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.LightSlateGray;
+            this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(675, 467);
             this.Controls.Add(this.gbSettingsGeneral);
             this.Controls.Add(this.tvSettings);
