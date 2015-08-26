@@ -494,8 +494,9 @@
                                         break;
                                     }
                                 }
-                                this.pgBar.Minimum = _blog._DownloadedImages;
+                                this.pgBar.Minimum = 0;
                                 this.pgBar.Maximum = _blog._TotalCount;
+                                this.pgBar.Value = _blog._DownloadedImages;
                             };
                         }
                         this.BeginInvoke(method);
@@ -694,7 +695,6 @@
                         this.lblUrl.Text = "";
                         this.smallImage.ImageLocation = "";
                         this.crawlingBlogs = "";
-                        this.pgBar.Value = 0;
                         this.toolPause.Enabled = false;
                         this.toolResume.Enabled = false;
                         this.toolStop.Enabled = false;
