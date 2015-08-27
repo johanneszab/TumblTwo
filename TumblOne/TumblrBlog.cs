@@ -14,6 +14,7 @@
         public DateTime _DateAdded;
         public DateTime _LastCrawled;
         public bool _finishedCrawl;
+        public List<String> _Tags;
         public List<Post> Links;
 
         public TumblrBlog()
@@ -26,6 +27,7 @@
             this._DateAdded = System.DateTime.MinValue;
             this._LastCrawled = System.DateTime.MinValue;
             this._finishedCrawl = false;
+            this._Tags = new List<String>();
             this.Links = new List<Post>();
         }
 
@@ -33,6 +35,7 @@
         {
             this._Name = blogname;
             this._DateAdded = DateTime.Today;
+            this._Tags = new List<String>();
             this.Links = new List<Post>();
         }
     }

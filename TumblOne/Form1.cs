@@ -30,6 +30,7 @@
         private CancellationTokenSource cts = new CancellationTokenSource();
         private List<TumblrBlog> bin = new List<TumblrBlog>();
 
+
         public Form1()
         {
             this.InitializeComponent();
@@ -445,9 +446,9 @@
         {
             MethodInvoker method = null;
             bool readDataBase = false;
-            int num = 0;
-            int num2 = 0;
-            int num3 = 0;
+            int numberOfPostsCrawled = 0;
+            int numberOfPagesCrawled = 0;
+            int lastCrawledPageReached = 0;
             //string blogname = ExtractBlogname(ApiUrl.ToString());
             String ApiUrl = _blog._URL ;
             if (ApiUrl.Last<char>() != '/')
@@ -465,14 +466,14 @@
                 XDocument document = null;
                 try
                 {
-                    document = XDocument.Load(ApiUrl.ToString() + num.ToString() + "&num=50");
+                    document = XDocument.Load(ApiUrl.ToString() + numberOfPostsCrawled.ToString() + "&num=50");
                 }
                 catch (WebException)
                 {
                     //this.toolStop_Click(this, null);
                     break;
                 }
-                if (num == 0)
+                if (numberOfPostsCrawled == 0)
                 {
                     try
                     {
@@ -506,71 +507,103 @@
                         break;
                     }
                 }
-                using (IEnumerator<XElement> enumerator2 = (from s in document.Descendants("photo-url")
-                                                            where (s.HasAttributes && s.Attribute("max-width").Value.Equals(Properties.Settings.Default.configImageSize.ToString())) && !s.Value.Contains("www.tumblr.com")
-                                                            select s).GetEnumerator())
-                {
-                    while (enumerator2.MoveNext())
-                    {
-                        XElement p = enumerator2.Current;
-                        MethodInvoker invoker = null;
-                        string FileLocation;
-                        this.wait_handle.WaitOne();
-                        string fileName = Path.GetFileName(new Uri(p.Value).LocalPath);
-                        if (!this.chkGIF.Checked || (Path.GetExtension(fileName).ToLower() != ".gif"))
-                        {
-                            FileLocation = Properties.Settings.Default.configDownloadLocation.ToString() + _blog._Name + "/" + fileName;
-                            try
-                            {
-                                if (this.Download(_blog, FileLocation, p.Value, fileName))
-                                {
-                                    _blog.Links.Add(new Post(p.Value, fileName));
-                                    num2++;
-                                    _blog._DownloadedImages = _blog.Links.Count;
-                                    if (invoker == null)
-                                    {
-                                        invoker = delegate
-                                        {
-                                            foreach (ListViewItem item in this.lvBlog.Items)
-                                            {
-                                                if (item.Text == _blog._Name)
-                                                {
-                                                    item.SubItems[1].Text = _blog.Links.Count.ToString();
-                                                    break;
-                                                }
-                                            }
-                                            this.lblUrl.Text = p.Value;
-                                            this.smallImage.ImageLocation = FileLocation;
-                                            if ((this.pgBar.Value + 1) < (this.pgBar.Maximum + 1))
-                                            {
-                                                this.pgBar.Value++;
-                                            }
-                                        };
-                                    }
-                                    this.BeginInvoke(invoker);
-                                }
-                                else
-                                {
-                                    if (!readDataBase)
-                                    {
-                                        readDataBase = true;
-                                        this.BeginInvoke((MethodInvoker)delegate
-                                        {
-                                            this.lblUrl.Text = "Skipping previously downloaded images - " + _blog._Name;
-                                        });
-                                    }
 
-                                }
-                            }
-                            catch (Exception)
-                            {
-                                continue;
-                            }
-                            num3++;
-                        }
+                IEnumerable<XElement> query;
+                try
+                {
+                    if (_blog._Tags.Any())
+                    {
+                        query = (from n in document.Descendants("post")
+                                 where n.Elements("photo-url").Where(x => x.Attribute("max-width").Value == Properties.Settings.Default.configImageSize.ToString()).Any() &&
+                                 !n.Elements("photo-url").Where(x => x.Value == "www.tumblr.com").Any() &&
+                                 n.Elements("tag").Where(x => _blog._Tags.Contains(x.Value)).Any()
+                                 select n.Element("photo-url"));
+                    }
+                    else
+                    {
+                        query = (from n in document.Descendants("post")
+                                where n.Elements("photo-url").Where(x => x.Attribute("max-width").Value == Properties.Settings.Default.configImageSize.ToString()).Any() &&
+                                !n.Elements("photo-url").Where(x => x.Value == "www.tumblr.com").Any()
+                                select n.Element("photo-url"));
                     }
                 }
-                if (num3 == 0)
+                catch (Exception)
+                {
+                    query = (from n in document.Descendants("post")
+                             where n.Elements("photo-url").Where(x => x.Attribute("max-width").Value == Properties.Settings.Default.configImageSize.ToString()).Any() &&
+                             !n.Elements("photo-url").Where(x => x.Value == "www.tumblr.com").Any()
+                             select n.Element("photo-url"));
+                }
+                using (IEnumerator<XElement> enumerator = query.GetEnumerator())
+                {
+                    numberOfPagesCrawled++;
+                    numberOfPostsCrawled = 50 * numberOfPagesCrawled;
+                    try
+                    {
+                        while (enumerator.MoveNext())
+                        {
+                            XElement p = enumerator.Current;
+                            MethodInvoker invoker = null;
+                            string FileLocation;
+                            this.wait_handle.WaitOne();
+                            string fileName = Path.GetFileName(new Uri(p.Value).LocalPath);
+                            if (!this.chkGIF.Checked || (Path.GetExtension(fileName).ToLower() != ".gif"))
+                            {
+                                FileLocation = Properties.Settings.Default.configDownloadLocation.ToString() + _blog._Name + "/" + fileName;
+                                try
+                                {
+                                    if (this.Download(_blog, FileLocation, p.Value, fileName))
+                                    {
+                                        _blog.Links.Add(new Post(p.Value, fileName));
+                                        _blog._DownloadedImages = _blog.Links.Count;
+                                        if (invoker == null)
+                                        {
+                                            invoker = delegate
+                                            {
+                                                foreach (ListViewItem item in this.lvBlog.Items)
+                                                {
+                                                    if (item.Text == _blog._Name)
+                                                    {
+                                                        item.SubItems[1].Text = _blog.Links.Count.ToString();
+                                                        break;
+                                                    }
+                                                }
+                                                this.lblUrl.Text = p.Value;
+                                                this.smallImage.ImageLocation = FileLocation;
+                                                if ((this.pgBar.Value + 1) < (this.pgBar.Maximum + 1))
+                                                {
+                                                    this.pgBar.Value++;
+                                                }
+                                            };
+                                        }
+                                        this.BeginInvoke(invoker);
+                                    }
+                                    else
+                                    {
+                                        if (!readDataBase)
+                                        {
+                                            readDataBase = true;
+                                            this.BeginInvoke((MethodInvoker)delegate
+                                            {
+                                                this.lblUrl.Text = "Skipping previously downloaded images - " + _blog._Name;
+                                            });
+                                        }
+
+                                    }
+                                }
+                                catch (Exception)
+                                {
+                                    continue;
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        continue;
+                    }
+                }
+                if (numberOfPostsCrawled >= _blog._TotalCount)
                 {
                     //this.toolStop_Click(this, null);
                     // Finished Blog
@@ -616,8 +649,6 @@
                     }
                     return;
                 }
-                num += num3;
-                num3 = 0;
             }
         }
 
@@ -717,7 +748,7 @@
                     {
                         bin.Clear();
                     }
-                this.lvQueue.Items.Clear();
+                this.lvQueue.Rows.Clear();
             }
             try
             {
@@ -809,9 +840,15 @@
                         if (bin.Any())
                         {
                             TumblrBlog nextBlog;
-
                             nextBlog = bin.First<TumblrBlog>();
                             bin.RemoveAt(0);
+                            try
+                            {
+                                nextBlog._Tags = lvQueue.Rows[0].Cells["chTags"].Value.ToString().Split(',').ToList();
+                            }
+                            catch (Exception)
+                            {
+                            }
                             TumblrActiveList.Add(nextBlog);
 
                             //                        if (TumblrActiveList.Count > Properties.Settings.Default.configSimultaneousDownloads)
@@ -828,10 +865,10 @@
                             {
                                 // Update UI:
                                 // Processlabel
-                                this.crawlingBlogs += this.lvQueue.Items[0].Text + " ";
+                                this.crawlingBlogs += this.lvQueue.Rows[0].Cells[0].Value + " ";
                                 this.lblProcess.Text = "Crawling Blogs - " + this.crawlingBlogs;
                                 // Queue
-                                lvQueue.Items.RemoveAt(0);
+                                lvQueue.Rows.RemoveAt(0);
                             });
                             System.Threading.Monitor.Exit(bin);
                             this.RunParser(nextBlog);
@@ -876,10 +913,22 @@
             {
                 if (bin.Count != 0)
                 {
-                    foreach (ListViewItem eachItem in lvQueue.SelectedItems)
+                    foreach (DataGridViewRow eachItem in lvQueue.SelectedRows)
                     {
                         bin.RemoveAt(eachItem.Index);
-                        lvQueue.Items.Remove(eachItem);
+                        lvQueue.Rows.RemoveAt(eachItem.Index);
+                    }
+
+                    List<DataGridViewRow> rowCollection = new List<DataGridViewRow>();
+                    foreach(DataGridViewCell cell in lvQueue.SelectedCells)
+                    {
+                        rowCollection.Add(lvQueue.Rows[cell.RowIndex]);
+                    }
+
+                    foreach (DataGridViewRow eachItem in rowCollection)
+                    {
+                        bin.RemoveAt(eachItem.Index);
+                        lvQueue.Rows.RemoveAt(eachItem.Index);
                     }
                     //TumblrBlog nextBlog = null;
                     //this.TumblrList.RemoveAt(TumblrList.Count - 1);
@@ -900,12 +949,19 @@
         private void addToQueueUI(TumblrBlog _blog)
         {
             //Update UI
-            ListViewItem lvQueueItem = new ListViewItem();
-            lvQueueItem.Text = _blog._Name;
+            DataGridViewRow lvQueueItem = new DataGridViewRow();
+            this.lvQueue.Rows.Add(lvQueueItem);
+            int index = lvQueue.Rows.Count - 1;
+            lvQueue.Rows[index] .Cells[0].Value = _blog._Name;
             //lvQueueItem.SubItems.Add("");
-            lvQueueItem.SubItems.Add("queued");
-            this.lvQueue.Items.Add(lvQueueItem);
+            lvQueue.Rows[index].Cells[1].Value = "queued";
+            try
+            {
+                lvQueue.Rows[index].Cells[2].Value = String.Join(",", _blog._Tags);
+            }
+            catch (Exception)
+            {
+            }
         }
     }
 }
-

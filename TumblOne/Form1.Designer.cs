@@ -32,6 +32,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.label21 = new System.Windows.Forms.Label();
             this.tBlogUrl = new System.Windows.Forms.TextBox();
@@ -69,9 +72,10 @@
             this.panelInfo = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.smallImage = new System.Windows.Forms.PictureBox();
-            this.lvQueue = new System.Windows.Forms.ListView();
-            this.chQueueName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.chQueueStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lvQueue = new TumblOne.GridLineDataGridView();
+            this.chQueueName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.chQueueStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.chTags = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lvBlog = new TumblOne.ListViewEx();
             this.chName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chDownloadedImages = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -85,6 +89,7 @@
             this.groupBox1.SuspendLayout();
             this.panelInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.smallImage)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lvQueue)).BeginInit();
             this.SuspendLayout();
             // 
             // label21
@@ -480,32 +485,65 @@
             // 
             // lvQueue
             // 
+            this.lvQueue.AllowUserToAddRows = false;
+            this.lvQueue.AllowUserToDeleteRows = false;
             this.lvQueue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lvQueue.BackColor = System.Drawing.SystemColors.Menu;
-            this.lvQueue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lvQueue.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.lvQueue.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.lvQueue.BackgroundColor = System.Drawing.SystemColors.Menu;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.lvQueue.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            this.lvQueue.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.lvQueue.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.chQueueName,
-            this.chQueueStatus});
-            this.lvQueue.ContextMenuStrip = this.contextBlog;
-            this.lvQueue.FullRowSelect = true;
-            this.lvQueue.HideSelection = false;
+            this.chQueueStatus,
+            this.chTags});
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Menu;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.lvQueue.DefaultCellStyle = dataGridViewCellStyle2;
             this.lvQueue.Location = new System.Drawing.Point(12, 271);
             this.lvQueue.Name = "lvQueue";
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Menu;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.lvQueue.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.lvQueue.Size = new System.Drawing.Size(946, 147);
             this.lvQueue.TabIndex = 12;
-            this.lvQueue.UseCompatibleStateImageBehavior = false;
-            this.lvQueue.View = System.Windows.Forms.View.Details;
             // 
             // chQueueName
             // 
-            this.chQueueName.Text = "Name";
-            this.chQueueName.Width = 133;
+            this.chQueueName.HeaderText = "Name";
+            this.chQueueName.Name = "chQueueName";
+            this.chQueueName.ReadOnly = true;
+            this.chQueueName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // chQueueStatus
             // 
-            this.chQueueStatus.Text = "Queue Status";
-            this.chQueueStatus.Width = 289;
+            this.chQueueStatus.HeaderText = "Queue Status";
+            this.chQueueStatus.Name = "chQueueStatus";
+            this.chQueueStatus.ReadOnly = true;
+            this.chQueueStatus.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // chTags
+            // 
+            this.chTags.HeaderText = "Tags for Crawling Pictures (Comma Separated List)";
+            this.chTags.Name = "chTags";
+            this.chTags.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // lvBlog
             // 
@@ -595,6 +633,7 @@
             this.groupBox1.PerformLayout();
             this.panelInfo.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.smallImage)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lvQueue)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -647,9 +686,10 @@
         private ColumnHeader chDateAdded;
         private ColumnHeader chLastCrawled;
         private ColumnHeader chFinished;
-        private ListView lvQueue;
-        private ColumnHeader chQueueName;
-        private ColumnHeader chQueueStatus;
         private ColumnHeader chPostCount;
+        private GridLineDataGridView lvQueue;
+        private DataGridViewTextBoxColumn chQueueName;
+        private DataGridViewTextBoxColumn chQueueStatus;
+        private DataGridViewTextBoxColumn chTags;
     }
 }
