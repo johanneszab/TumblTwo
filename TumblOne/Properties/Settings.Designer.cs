@@ -109,7 +109,7 @@ namespace TumblOne.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1080, 659")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1080, 710")]
         public global::System.Drawing.Size Size {
             get {
                 return ((global::System.Drawing.Size)(this["Size"]));
@@ -140,6 +140,18 @@ namespace TumblOne.Properties {
             }
             set {
                 this["Minimised"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool CheckClipboard {
+            get {
+                return ((bool)(this["CheckClipboard"]));
+            }
+            set {
+                this["CheckClipboard"] = value;
             }
         }
     }

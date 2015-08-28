@@ -58,6 +58,7 @@
             this.toolPause = new System.Windows.Forms.ToolStripButton();
             this.toolResume = new System.Windows.Forms.ToolStripButton();
             this.toolStop = new System.Windows.Forms.ToolStripButton();
+            this.toolCheckClipboard = new System.Windows.Forms.ToolStripButton();
             this.toolSettings = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolAbout = new System.Windows.Forms.ToolStripButton();
@@ -127,7 +128,6 @@
             this.chkGIF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.chkGIF.AutoSize = true;
             this.chkGIF.BackColor = System.Drawing.SystemColors.Window;
-            this.chkGIF.Checked = global::TumblOne.Properties.Settings.Default.configChkGIFState;
             this.chkGIF.Location = new System.Drawing.Point(685, 19);
             this.chkGIF.Name = "chkGIF";
             this.chkGIF.Size = new System.Drawing.Size(91, 17);
@@ -241,13 +241,14 @@
             this.toolPause,
             this.toolResume,
             this.toolStop,
+            this.toolCheckClipboard,
             this.toolSettings,
             this.toolStripSeparator3,
             this.toolAbout});
-            this.toolStrip1.Location = new System.Drawing.Point(971, 0);
+            this.toolStrip1.Location = new System.Drawing.Point(964, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.toolStrip1.Size = new System.Drawing.Size(93, 620);
+            this.toolStrip1.Size = new System.Drawing.Size(100, 671);
             this.toolStrip1.TabIndex = 6;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -257,7 +258,7 @@
             this.toolAddBlog.Image = global::TumblOne.Properties.Resources.AddBlog;
             this.toolAddBlog.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolAddBlog.Name = "toolAddBlog";
-            this.toolAddBlog.Size = new System.Drawing.Size(90, 51);
+            this.toolAddBlog.Size = new System.Drawing.Size(97, 51);
             this.toolAddBlog.Text = "Add Blog";
             this.toolAddBlog.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolAddBlog.ToolTipText = "Add a new blog to the library";
@@ -269,7 +270,7 @@
             this.toolRemoveBlog.Image = global::TumblOne.Properties.Resources.Remove;
             this.toolRemoveBlog.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolRemoveBlog.Name = "toolRemoveBlog";
-            this.toolRemoveBlog.Size = new System.Drawing.Size(90, 51);
+            this.toolRemoveBlog.Size = new System.Drawing.Size(97, 51);
             this.toolRemoveBlog.Text = "Remove Blog";
             this.toolRemoveBlog.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolRemoveBlog.ToolTipText = "Remove selected blogs with all dowloaded images";
@@ -281,7 +282,7 @@
             this.toolShowExplorer.Image = global::TumblOne.Properties.Resources.Explorer;
             this.toolShowExplorer.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolShowExplorer.Name = "toolShowExplorer";
-            this.toolShowExplorer.Size = new System.Drawing.Size(90, 51);
+            this.toolShowExplorer.Size = new System.Drawing.Size(97, 51);
             this.toolShowExplorer.Text = "Show Files";
             this.toolShowExplorer.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolShowExplorer.ToolTipText = "Show files of the selected blogs in the Windows Explorer";
@@ -292,14 +293,14 @@
             this.toolStripSeparator1.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.toolStripSeparator1.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(90, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(97, 6);
             // 
             // toolAddQueue
             // 
             this.toolAddQueue.Image = global::TumblOne.Properties.Resources.AddBlog;
             this.toolAddQueue.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolAddQueue.Name = "toolAddQueue";
-            this.toolAddQueue.Size = new System.Drawing.Size(90, 51);
+            this.toolAddQueue.Size = new System.Drawing.Size(97, 51);
             this.toolAddQueue.Text = "Add to Queue";
             this.toolAddQueue.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolAddQueue.ToolTipText = "Queue selected blogs for crawling";
@@ -310,7 +311,7 @@
             this.toolRemoveQueue.Image = global::TumblOne.Properties.Resources.Remove;
             this.toolRemoveQueue.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolRemoveQueue.Name = "toolRemoveQueue";
-            this.toolRemoveQueue.Size = new System.Drawing.Size(90, 51);
+            this.toolRemoveQueue.Size = new System.Drawing.Size(97, 51);
             this.toolRemoveQueue.Text = "Remove Queue";
             this.toolRemoveQueue.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolRemoveQueue.ToolTipText = "Remove selected blogs from the queue";
@@ -321,7 +322,7 @@
             this.toolCrawl.Image = global::TumblOne.Properties.Resources.Scan;
             this.toolCrawl.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolCrawl.Name = "toolCrawl";
-            this.toolCrawl.Size = new System.Drawing.Size(90, 51);
+            this.toolCrawl.Size = new System.Drawing.Size(97, 51);
             this.toolCrawl.Text = "Crawl";
             this.toolCrawl.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolCrawl.ToolTipText = "Crawl blogs in the queue for images";
@@ -330,7 +331,7 @@
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(90, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(97, 6);
             // 
             // toolPause
             // 
@@ -338,7 +339,7 @@
             this.toolPause.Image = global::TumblOne.Properties.Resources.Pause;
             this.toolPause.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolPause.Name = "toolPause";
-            this.toolPause.Size = new System.Drawing.Size(90, 51);
+            this.toolPause.Size = new System.Drawing.Size(97, 51);
             this.toolPause.Text = "Pause";
             this.toolPause.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolPause.ToolTipText = "Pause crawling";
@@ -350,7 +351,7 @@
             this.toolResume.Image = global::TumblOne.Properties.Resources.Resume;
             this.toolResume.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolResume.Name = "toolResume";
-            this.toolResume.Size = new System.Drawing.Size(90, 51);
+            this.toolResume.Size = new System.Drawing.Size(97, 51);
             this.toolResume.Text = "Resume";
             this.toolResume.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolResume.ToolTipText = "Continue crawling";
@@ -362,18 +363,32 @@
             this.toolStop.Image = global::TumblOne.Properties.Resources.Stop;
             this.toolStop.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStop.Name = "toolStop";
-            this.toolStop.Size = new System.Drawing.Size(90, 51);
+            this.toolStop.Size = new System.Drawing.Size(97, 51);
             this.toolStop.Text = "Stop";
             this.toolStop.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolStop.ToolTipText = "Terminates the currently running crawl process";
             this.toolStop.Click += new System.EventHandler(this.toolStop_Click);
+            // 
+            // toolCheckClipboard
+            // 
+            this.toolCheckClipboard.Checked = true;
+            this.toolCheckClipboard.CheckOnClick = true;
+            this.toolCheckClipboard.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.toolCheckClipboard.Image = global::TumblOne.Properties.Resources.Clipboard;
+            this.toolCheckClipboard.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolCheckClipboard.Name = "toolCheckClipboard";
+            this.toolCheckClipboard.Size = new System.Drawing.Size(97, 51);
+            this.toolCheckClipboard.Text = "Check Clipboard";
+            this.toolCheckClipboard.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.toolCheckClipboard.ToolTipText = "Check the Content of the Clipboard for Tumblr Blogs";
+            this.toolCheckClipboard.Click += new System.EventHandler(this.toolCheckClipboard_Click);
             // 
             // toolSettings
             // 
             this.toolSettings.Image = global::TumblOne.Properties.Resources.Settings;
             this.toolSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolSettings.Name = "toolSettings";
-            this.toolSettings.Size = new System.Drawing.Size(90, 51);
+            this.toolSettings.Size = new System.Drawing.Size(97, 51);
             this.toolSettings.Text = "Settings";
             this.toolSettings.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolSettings.ToolTipText = "Opens Settings";
@@ -382,14 +397,14 @@
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(90, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(97, 6);
             // 
             // toolAbout
             // 
             this.toolAbout.Image = global::TumblOne.Properties.Resources.About;
             this.toolAbout.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolAbout.Name = "toolAbout";
-            this.toolAbout.Size = new System.Drawing.Size(90, 51);
+            this.toolAbout.Size = new System.Drawing.Size(44, 51);
             this.toolAbout.Text = "About";
             this.toolAbout.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolAbout.ToolTipText = "Opens the about window";
@@ -432,7 +447,7 @@
             this.groupBox1.Controls.Add(this.lbl23);
             this.groupBox1.Controls.Add(this.lblProcess);
             this.groupBox1.ForeColor = System.Drawing.SystemColors.InfoText;
-            this.groupBox1.Location = new System.Drawing.Point(12, 424);
+            this.groupBox1.Location = new System.Drawing.Point(12, 475);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(782, 184);
             this.groupBox1.TabIndex = 10;
@@ -445,7 +460,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelInfo.Controls.Add(this.label2);
             this.panelInfo.ForeColor = System.Drawing.SystemColors.InfoText;
-            this.panelInfo.Location = new System.Drawing.Point(12, 424);
+            this.panelInfo.Location = new System.Drawing.Point(12, 475);
             this.panelInfo.Name = "panelInfo";
             this.panelInfo.Size = new System.Drawing.Size(945, 184);
             this.panelInfo.TabIndex = 11;
@@ -470,13 +485,12 @@
             this.smallImage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.smallImage.BackColor = System.Drawing.SystemColors.Menu;
             this.smallImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.smallImage.Location = new System.Drawing.Point(800, 424);
+            this.smallImage.Location = new System.Drawing.Point(800, 475);
             this.smallImage.Name = "smallImage";
             this.smallImage.Size = new System.Drawing.Size(157, 184);
             this.smallImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.smallImage.TabIndex = 7;
             this.smallImage.TabStop = false;
-            this.smallImage.Visible = global::TumblOne.Properties.Settings.Default.configPreviewVisible;
             // 
             // lvQueue
             // 
@@ -490,7 +504,7 @@
             this.lvQueue.ContextMenuStrip = this.contextBlog;
             this.lvQueue.FullRowSelect = true;
             this.lvQueue.HideSelection = false;
-            this.lvQueue.Location = new System.Drawing.Point(12, 271);
+            this.lvQueue.Location = new System.Drawing.Point(12, 322);
             this.lvQueue.Name = "lvQueue";
             this.lvQueue.Size = new System.Drawing.Size(946, 147);
             this.lvQueue.TabIndex = 12;
@@ -528,7 +542,7 @@
             this.lvBlog.HideSelection = false;
             this.lvBlog.Location = new System.Drawing.Point(12, 42);
             this.lvBlog.Name = "lvBlog";
-            this.lvBlog.Size = new System.Drawing.Size(946, 223);
+            this.lvBlog.Size = new System.Drawing.Size(946, 274);
             this.lvBlog.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lvBlog.TabIndex = 0;
             this.lvBlog.UseCompatibleStateImageBehavior = false;
@@ -574,7 +588,7 @@
             // Form1
             // 
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1064, 620);
+            this.ClientSize = new System.Drawing.Size(1064, 671);
             this.Controls.Add(this.lvQueue);
             this.Controls.Add(this.panelInfo);
             this.Controls.Add(this.groupBox1);
@@ -651,5 +665,6 @@
         private ColumnHeader chQueueName;
         private ColumnHeader chQueueStatus;
         private ColumnHeader chPostCount;
+        private ToolStripButton toolCheckClipboard;
     }
 }

@@ -188,6 +188,24 @@
             return null;
         }
 
+        private string ExtractBlogname_paste(string url)
+        {
+            if ((url == null) || (url.Length < 0x11))
+            {
+                return null;
+            }
+            if (!url.Contains(".tumblr.com"))
+            {
+                return null;
+            }
+            string[] source = url.Split(new char[] { '.' });
+            if ((source.Count<string>() >= 3) && source[0].StartsWith("http://", true, null))
+            {
+                return source[0].Replace("http://", string.Empty);
+            }
+            return null;
+        }
+
         private string ExtractUrl(string url)
         {
             return ("http://" + this.ExtractBlogname(url) + ".tumblr.com/");
@@ -245,16 +263,23 @@
                 Properties.Settings.Default.Minimised = true;
             }
 
+            if (Properties.Settings.Default.CheckClipboard)
+            {
+                Properties.Settings.Default.CheckClipboard = true;
+                // Terminate Clipboard Monitor 
+                ClipboardMonitor.Stop();
+            }
+            else
+            {
+                Properties.Settings.Default.CheckClipboard = false;
+            }
+
             // Save Settings
             Properties.Settings.Default.Save();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            using (SplashScreen screen = new SplashScreen())
-            {
-                screen.ShowDialog();
-            }
             if (Properties.Settings.Default.Maximised)
             {
                 WindowState = FormWindowState.Maximized;
@@ -271,6 +296,126 @@
             {
                 Location = Properties.Settings.Default.Location;
                 Size = Properties.Settings.Default.Size;
+            }
+
+            // Setup Clipboard Monitor Listener
+            if (Properties.Settings.Default.CheckClipboard)
+            {
+                this.toolCheckClipboard.Checked = true;
+                ClipboardMonitor.Start();
+                ClipboardMonitor.OnClipboardChange += ClipboardMonitor_OnClipboardChange;
+            }
+            else
+            {
+                this.toolCheckClipboard.Checked = false;
+            }
+        }
+
+        private void ClipboardMonitor_OnClipboardChange(ClipboardFormat format, object data)
+        {
+            // Do Something...
+            if (format.ToString() == "Text") 
+            {
+                string[] URLs = data.ToString().Split(new char[0]);
+                foreach (string _url in URLs)
+                {
+                    ListViewItem lvItem;
+                    bool blogExists = false;
+                    string str = this.ExtractBlogname_paste(_url);
+                    if (str != null)
+                    {
+                        this.Invoke((Action)delegate
+                        {
+                            foreach (ListViewItem item in this.lvBlog.Items)
+                            {
+                                if (item.Text.Equals(str))
+                                {
+                                    blogExists = true;
+                                    return;
+                                }
+                            }
+                        });
+                        if (blogExists)
+                        {
+
+                        }
+                        else
+                        {
+                            lvItem = new ListViewItem();
+                            if ((this.tasks[0] != null) && tasks[0].Status == TaskStatus.Running)
+                            {
+                                TumblrBlog ThreadBlog = new TumblrBlog();
+                                this.Invoke((Action)delegate
+                                {
+                                    ThreadBlog._URL = this.ExtractUrl(_url);
+                                    ThreadBlog._TotalCount = 0;
+                                    ThreadBlog._DownloadedImages = 0;
+                                    ThreadBlog._Name = this.ExtractBlogname(_url);
+                                    ThreadBlog._DateAdded = DateTime.Now;
+                                    ThreadBlog._LastCrawled = System.DateTime.MinValue;
+                                    ThreadBlog._finishedCrawl = false;
+                                    lvItem.Text = ThreadBlog._Name;
+                                    lvItem.SubItems.Add("");
+                                    lvItem.SubItems.Add("");
+                                    lvItem.SubItems.Add(_url);
+                                    lvItem.SubItems.Add(ThreadBlog._DateAdded.ToString("G"));
+                                    lvItem.SubItems.Add(ThreadBlog._LastCrawled.ToString("G"));
+                                    lvItem.SubItems.Add(ThreadBlog._finishedCrawl.ToString());
+                                    this.lvBlog.Items.Add(lvItem);
+                                });
+                                this.SaveBlog(ThreadBlog);
+                                ThreadBlog = null;
+                            }
+                            else
+                            {
+                                TumblrBlog newBlog = new TumblrBlog
+                                {
+                                    _Name = str,
+                                    _URL = this.ExtractUrl(_url),
+                                    _DateAdded = DateTime.Now,
+                                    _DownloadedImages = 0,
+                                    _TotalCount = 0,
+                                    _LastCrawled = System.DateTime.MinValue,
+                                    _finishedCrawl = false
+                                };
+                                lvItem.Text = newBlog._Name;
+                                lvItem.SubItems.Add("");
+                                lvItem.SubItems.Add("");
+                                lvItem.SubItems.Add(newBlog._URL);
+                                lvItem.SubItems.Add(newBlog._DateAdded.ToString("G"));
+                                lvItem.SubItems.Add(newBlog._LastCrawled.ToString("G"));
+                                lvItem.SubItems.Add(newBlog._finishedCrawl.ToString());
+                                this.SaveBlog(newBlog);
+                                newBlog = null;
+                                this.Invoke((Action)delegate
+                                {
+                                    this.lvBlog.Items.Add(lvItem);
+                                });
+                            }
+                            if (Directory.Exists(Properties.Settings.Default.configDownloadLocation.ToString() + "Index/"))
+                            {
+                                if (Directory.GetFiles(Properties.Settings.Default.configDownloadLocation.ToString() + "Index/", "*.tumblr").Count<string>() > 0)
+                                {
+                                    this.Invoke((Action)delegate
+                                    {
+                                        this.toolShowExplorer.Enabled = true;
+                                        this.toolRemoveBlog.Enabled = true;
+                                        this.toolCrawl.Enabled = true;
+                                    });
+                                }
+                                else
+                                {
+                                    this.Invoke((Action)delegate
+                                    {
+                                        this.toolShowExplorer.Enabled = false;
+                                        this.toolRemoveBlog.Enabled = false;
+                                        this.toolCrawl.Enabled = false;
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -912,6 +1057,21 @@
             //lvQueueItem.SubItems.Add("");
             lvQueueItem.SubItems.Add("queued");
             this.lvQueue.Items.Add(lvQueueItem);
+        }
+
+        private void toolCheckClipboard_Click(object sender, EventArgs e)
+        {
+            if (this.toolCheckClipboard.Checked == true)
+            {
+                Properties.Settings.Default.CheckClipboard = true;
+                ClipboardMonitor.Start();
+                ClipboardMonitor.OnClipboardChange += ClipboardMonitor_OnClipboardChange;
+            }
+            else
+            {
+                Properties.Settings.Default.CheckClipboard = false;
+                ClipboardMonitor.Stop();
+            }
         }
     }
 }
