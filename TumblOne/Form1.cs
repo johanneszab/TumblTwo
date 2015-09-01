@@ -550,7 +550,6 @@
             bool readingDataBase = false;
             int numberOfPostsCrawled = 0;
             int numberOfPagesCrawled = 0;
-            int lastCrawledPageReached = 0;
             //string blogname = ExtractBlogname(ApiUrl.ToString());
             String ApiUrl = _blog._URL ;
             if (ApiUrl.Last<char>() != '/')
@@ -650,7 +649,9 @@
                 using (IEnumerator<XElement> enumerator2 = (from n in document.Descendants("post")
                                                             where n.Elements("photo-url").Where(x => x.Attribute("max-width").Value == Properties.Settings.Default.configImageSize.ToString()).Any() &&
                                                             !n.Elements("photo-url").Where(x => x.Value == "www.tumblr.com").Any()
-                                                            select n.Element("photo-url")).GetEnumerator())
+                                                            from m in n.Descendants("photo-url")
+                                                            where m.Attribute("max-width").Value == Properties.Settings.Default.configImageSize.ToString()
+                                                            select m).GetEnumerator())
                 {
                     numberOfPagesCrawled++;
                     numberOfPostsCrawled = 50 * numberOfPagesCrawled;
