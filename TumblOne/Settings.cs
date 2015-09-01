@@ -7,6 +7,7 @@ namespace TumblOne
     public partial class Settings : Form
     {
         Form1 _Form1;
+        bool DownloadLocationChanged = false;
 
         public Settings(Form1 _theForm1)
         {
@@ -23,6 +24,7 @@ namespace TumblOne
             {
                 Properties.Settings.Default.configDownloadLocation = fbd.SelectedPath + "\\";
                 this.tbDownloadLocation.Text = fbd.SelectedPath + "\\";
+                DownloadLocationChanged = true;
             }
 
 //            string[] files = Directory.GetFiles(fbd.SelectedPath);
@@ -36,6 +38,7 @@ namespace TumblOne
                 this.tbDownloadLocation.Text = this.tbDownloadLocation.Text + "\\";
             }
             Properties.Settings.Default.configDownloadLocation = this.tbDownloadLocation.Text;
+            DownloadLocationChanged = true;
         }
 
         private void cbPicturePreview_CheckedChanged(object sender, EventArgs e)
@@ -82,7 +85,7 @@ namespace TumblOne
         private void Settings_FormClosing(object sender, FormClosingEventArgs e)
         {
             // Reload Settings and Blogs
-            if (_Form1.tasks[0] == null)
+            if (_Form1.tasks[0] == null && DownloadLocationChanged)
             {
                 _Form1.LoadLibrary();
             }
@@ -106,7 +109,7 @@ namespace TumblOne
         private void buttonOk_Click(object sender, EventArgs e)
         {
             // Reload Settings and Blogs
-            if (_Form1.tasks[0] == null)
+            if (_Form1.tasks[0] == null && DownloadLocationChanged)
             {
                 _Form1.LoadLibrary();
             }
