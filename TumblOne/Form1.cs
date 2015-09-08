@@ -99,7 +99,7 @@
             {
                 return false;
             }
-            string path = "./Blogs";
+            string path = Properties.Settings.Default.configDownloadLocation.ToString();
             try
             {
                 if (!Directory.Exists(path))
