@@ -380,6 +380,17 @@
                     blog = (TumblrBlog)formatter.Deserialize(stream);
                 }
             }
+            catch (SerializationException SerializationException)
+            {
+                using (Stream stream = new FileStream(Properties.Settings.Default.configDownloadLocation.ToString() + "Index/" + blogname + ".tumblr", FileMode.Open, FileAccess.Read, FileShare.Read))
+                {
+                    IFormatter formatter = new BinaryFormatter();
+
+                    //Set formatters binder property to TumblOne 1.0.4.0 Version
+                    formatter.Binder = new TumblOne.Typeconvertor();
+                    blog = (TumblrBlog)formatter.Deserialize(stream);
+                }
+            }
             catch (Exception exception)
             {
                 MessageBox.Show(exception.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
