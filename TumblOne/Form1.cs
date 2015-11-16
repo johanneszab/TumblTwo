@@ -67,10 +67,19 @@
                     lvItem.SubItems.Add("");
                     lvItem.SubItems.Add("");
                     lvItem.SubItems.Add(newBlog._URL);
+                    // Progressbar
+                    lvItem.SubItems.Add("");
+                    ProgressBar pb = new ProgressBar();
+                    pb.Minimum = 0;
+                    pb.Value = 0;
+                    //pb.Click += new EventHandler(pb_Click);
+
+                    // Embed the ProgressBar in Column 5
                     lvItem.SubItems.Add(newBlog._DateAdded.ToString());
                     lvItem.SubItems.Add("Not yet completely crawled!");
                     //lvItem.SubItems.Add(newBlog._finishedCrawl.ToString());
                     this.lvBlog.Items.Add(lvItem);
+                    this.lvBlog.AddEmbeddedControl(pb, 4, this.lvBlog.Items.Count - 1);
                     this.SaveBlog(newBlog);
                     newBlog = null;
                 }
@@ -332,6 +341,16 @@
                                 lvItem.SubItems.Add("");
                                 lvItem.SubItems.Add("");
                                 lvItem.SubItems.Add(newBlog._URL);
+
+                                // Progressbar
+                                lvItem.SubItems.Add("");
+                                ProgressBar pb = new ProgressBar();
+                                pb.Minimum = 0;
+                                pb.Value = 0;
+                                //pb.Click += new EventHandler(pb_Click);
+
+                                // Embed the ProgressBar in Column 5
+
                                 lvItem.SubItems.Add(newBlog._DateAdded.ToString());
                                 lvItem.SubItems.Add("Not yet completely crawled!");
                                 //lvItem.SubItems.Add(newBlog._finishedCrawl.ToString());
@@ -340,7 +359,9 @@
                                 this.Invoke((Action)delegate
                                 {
                                     this.lvBlog.Items.Add(lvItem);
+                                    this.lvBlog.AddEmbeddedControl(pb, 4, this.lvBlog.Items.Count - 1);
                                 });
+
                             }
                             if (Directory.Exists(Properties.Settings.Default.configDownloadLocation.ToString() + "Index/"))
                             {
@@ -403,6 +424,7 @@
             this.lvBlog.Items.Clear();
             this.lblProcess.Text = "";
             this.lblUrl.Text = "";
+            int iterate = 0;
             if (Directory.Exists(Properties.Settings.Default.configDownloadLocation.ToString() + "Index/"))
             {
                 string[] files = Directory.GetFiles(Properties.Settings.Default.configDownloadLocation.ToString() + "Index/", "*.tumblr");
@@ -428,16 +450,31 @@
                         {
                             Text = blog._Name
                         };
+                        ProgressBar pb = new ProgressBar();
+                        pb.Minimum = 0;
                         if (blog._DownloadedImages > 0)
                         {
                             item.SubItems.Add(blog._DownloadedImages.ToString());
+                            pb.Maximum = blog._TotalCount;
                         }
                         else
                         {
                             item.SubItems.Add("Not yet crawled!");
+                            pb.Maximum = 100;
                         }
                         item.SubItems.Add(blog._TotalCount.ToString());
                         item.SubItems.Add(blog._URL);
+
+                        // Set Progressbar
+                        item.SubItems.Add("");
+                        try
+                        {
+                            pb.Value = blog._DownloadedImages;
+                        }
+                        catch (ArgumentOutOfRangeException)
+                        {
+                            pb.Style = ProgressBarStyle.Marquee;
+                        }
                         item.SubItems.Add(blog._DateAdded.ToString());
                         if (blog._LastCrawled == System.DateTime.MinValue)
                         {
@@ -449,6 +486,9 @@
                         }
                         //item.SubItems.Add(blog._finishedCrawl.ToString());
                         this.lvBlog.Items.Add(item);
+                        // Embed the ProgressBar in Column 5
+                        this.lvBlog.AddEmbeddedControl(pb, 4, iterate);
+                        iterate++;
                         blog = null;
                     }
                 }
@@ -606,6 +646,10 @@
                                             if (item.Text == _blog._Name)
                                             {
                                                 item.SubItems[2].Text = _blog._TotalCount.ToString();
+                                                ProgressBar pb = this.lvBlog.GetEmbeddedControl(4, item.Index) as ProgressBar;
+                                                pb.Minimum = 0;
+                                                pb.Maximum = _blog._TotalCount;
+                                                pb.Value = _blog._DownloadedImages;
                                                 break;
                                             }
                                         }
@@ -632,6 +676,17 @@
                                             if (item.Text == _blog._Name)
                                             {
                                                 item.SubItems[2].Text = _blog._TotalCount.ToString();
+                                                ProgressBar pb = this.lvBlog.GetEmbeddedControl(4, item.Index) as ProgressBar;
+                                                pb.Minimum = 0;
+                                                pb.Maximum = _blog._TotalCount;
+                                                try
+                                                {
+                                                    pb.Value++;
+                                                }
+                                                catch (ArgumentOutOfRangeException)
+                                                {
+                                                    pb.Style = ProgressBarStyle.Marquee;
+                                                }
                                                 break;
                                             }
                                         }
@@ -693,6 +748,15 @@
                                                     if (item.Text == _blog._Name)
                                                     {
                                                         item.SubItems[1].Text = _blog.Links.Count.ToString();
+                                                        ProgressBar pb = this.lvBlog.GetEmbeddedControl(4, item.Index) as ProgressBar;
+                                                        try
+                                                        {
+                                                            pb.Value++;
+                                                        }
+                                                        catch (ArgumentOutOfRangeException)
+                                                        {
+                                                            pb.Style = ProgressBarStyle.Marquee;
+                                                        }
                                                         break;
                                                     }
                                                 }
@@ -749,8 +813,8 @@
                             if (item.Text == _blog._Name)
                             {
                                 // Update Listview about completed blog
-                                item.SubItems[5].Text = DateTime.Now.ToString();
-                                //item.SubItems[6].Text = "True";
+                                item.SubItems[6].Text = DateTime.Now.ToString();
+                                //item.SubItems[7].Text = "True";
                                 // Update current crawling progress label
                                 int indexBlogInProgress = crawlingBlogs.IndexOf(_blog._Name);
                                 int lengthBlogInProgress = _blog._Name.Length;
