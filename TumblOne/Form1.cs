@@ -30,6 +30,9 @@
         private CancellationTokenSource cts = new CancellationTokenSource();
         private List<TumblrBlog> bin = new List<TumblrBlog>();
 
+        // The column we are currently using for sorting.
+        private ColumnHeader SortingColumn = null;
+
         public Form1()
         {
             this.InitializeComponent();
@@ -67,6 +70,7 @@
                     lvItem.SubItems.Add("");
                     lvItem.SubItems.Add("");
                     lvItem.SubItems.Add(newBlog._URL);
+                    lvItem.SubItems.Add("0.00");
                     lvItem.SubItems.Add(newBlog._DateAdded.ToString());
                     lvItem.SubItems.Add("Not yet completely crawled!");
                     //lvItem.SubItems.Add(newBlog._finishedCrawl.ToString());
@@ -332,6 +336,7 @@
                                 lvItem.SubItems.Add("");
                                 lvItem.SubItems.Add("");
                                 lvItem.SubItems.Add(newBlog._URL);
+                                lvItem.SubItems.Add("0.00");
                                 lvItem.SubItems.Add(newBlog._DateAdded.ToString());
                                 lvItem.SubItems.Add("Not yet completely crawled!");
                                 //lvItem.SubItems.Add(newBlog._finishedCrawl.ToString());
@@ -438,6 +443,19 @@
                         }
                         item.SubItems.Add(blog._TotalCount.ToString());
                         item.SubItems.Add(blog._URL);
+
+                        // Set Progressbar
+                        double progress = (double) blog._DownloadedImages / (double) blog._TotalCount * 100;
+                        if (progress < 101)
+                        {
+                            progress = System.Math.Round(progress, 2);
+                            item.SubItems.Add(progress.ToString());
+                        }
+                        else
+                        {
+                            item.SubItems.Add("Inf");
+                        }
+
                         item.SubItems.Add(blog._DateAdded.ToString());
                         if (blog._LastCrawled == System.DateTime.MinValue)
                         {
@@ -529,26 +547,54 @@
             //}
             if ((this.lvBlog.SelectedItems != null) && (this.lvBlog.SelectedItems.Count != 0))
             {
-                if (MessageBox.Show("Should the selected Blog really be deleted from Library?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                if (Properties.Settings.Default.configDeleteIndexOnly)
                 {
-                    foreach (ListViewItem eachItem in this.lvBlog.SelectedItems)
+                    if (MessageBox.Show("Should the selected Blog really be deleted from Library (only removes Index Files, no downloaded images)?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
-                        string path = Properties.Settings.Default.configDownloadLocation.ToString() + "Index/" + eachItem.Text + ".tumblr";
-                        string str2 = Properties.Settings.Default.configDownloadLocation.ToString() + eachItem.Text;
-                        try
+                        foreach (ListViewItem eachItem in this.lvBlog.SelectedItems)
                         {
-                            if (System.IO.File.Exists(path))
+                            string path = Properties.Settings.Default.configDownloadLocation.ToString() + "Index/" + eachItem.Text + ".tumblr";
+                            string str2 = Properties.Settings.Default.configDownloadLocation.ToString() + eachItem.Text;
+                            try
                             {
-                                System.IO.File.Delete(path);
+                                if (System.IO.File.Exists(path))
+                                {
+                                    System.IO.File.Delete(path);
+                                }
+                                //this.LoadLibrary();
+                                // Update UI
+                                eachItem.Remove();
                             }
-                            Directory.Delete(str2, true);
-                            //this.LoadLibrary();
-                            // Update UI
-                            eachItem.Remove();
+                            catch (Exception exception)
+                            {
+                                MessageBox.Show(exception.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                            }
                         }
-                        catch (Exception exception)
+                    }
+                }
+                else
+                {
+                    if (MessageBox.Show("Should the selected Blog and all images really be deleted from Library?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    {
+                        foreach (ListViewItem eachItem in this.lvBlog.SelectedItems)
                         {
-                            MessageBox.Show(exception.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                            string path = Properties.Settings.Default.configDownloadLocation.ToString() + "Index/" + eachItem.Text + ".tumblr";
+                            string str2 = Properties.Settings.Default.configDownloadLocation.ToString() + eachItem.Text;
+                            try
+                            {
+                                if (System.IO.File.Exists(path))
+                                {
+                                    System.IO.File.Delete(path);
+                                }
+                                Directory.Delete(str2, true);
+                                //this.LoadLibrary();
+                                // Update UI
+                                eachItem.Remove();
+                            }
+                            catch (Exception exception)
+                            {
+                                MessageBox.Show(exception.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                            }
                         }
                     }
                 }
@@ -675,7 +721,7 @@
                             string FileLocation;
                             this.wait_handle.WaitOne();
                             string fileName = Path.GetFileName(new Uri(p.Value).LocalPath);
-                            if (!this.chkGIF.Checked || (Path.GetExtension(fileName).ToLower() != ".gif"))
+                            if (!Properties.Settings.Default.configChkGIFState || (Path.GetExtension(fileName).ToLower() != ".gif"))
                             {
                                 FileLocation = Properties.Settings.Default.configDownloadLocation.ToString() + _blog._Name + "/" + fileName;
                                 try
@@ -693,6 +739,16 @@
                                                     if (item.Text == _blog._Name)
                                                     {
                                                         item.SubItems[1].Text = _blog.Links.Count.ToString();
+                                                        double progress = (double) _blog._DownloadedImages / (double) _blog._TotalCount * 100;
+                                                        if (progress < 101)
+                                                        {
+                                                            progress = System.Math.Round(progress, 2);
+                                                            item.SubItems[4].Text = progress.ToString();
+                                                        }
+                                                        else
+                                                        {
+                                                            item.SubItems[4].Text = "Inf";
+                                                        }
                                                         break;
                                                     }
                                                 }
@@ -749,8 +805,8 @@
                             if (item.Text == _blog._Name)
                             {
                                 // Update Listview about completed blog
-                                item.SubItems[5].Text = DateTime.Now.ToString();
-                                //item.SubItems[6].Text = "True";
+                                item.SubItems[6].Text = DateTime.Now.ToString();
+                                //item.SubItems[7].Text = "True";
                                 // Update current crawling progress label
                                 int indexBlogInProgress = crawlingBlogs.IndexOf(_blog._Name);
                                 int lengthBlogInProgress = _blog._Name.Length;
@@ -759,6 +815,28 @@
                             }
                         }
                     });
+
+                    // remove index from listview after completed crawl 
+                    if (Properties.Settings.Default.configRemoveFinishedBlogs)
+                    {
+                        this.BeginInvoke((MethodInvoker)delegate
+                        {
+                            foreach (ListViewItem item in this.lvBlog.Items)
+                            {
+                                if (item.Text == _blog._Name)
+                                {
+                                    string path = Properties.Settings.Default.configDownloadLocation.ToString() + "Index/" + item.Text + ".tumblr";
+                                    if (System.IO.File.Exists(path))
+                                    {
+                                        System.IO.File.Delete(path);
+                                    }
+                                    //this.LoadLibrary();
+                                    // Update UI
+                                    item.Remove();
+                                }
+                            }
+                        });
+                    }
 
                     if (TumblrActiveList.Count == 1)
                     {
@@ -1073,6 +1151,62 @@
                 Properties.Settings.Default.CheckClipboard = false;
                 ClipboardMonitor.Stop();
             }
+        }
+        private void lvBlog_ColumnClick(object sender, System.Windows.Forms.ColumnClickEventArgs e)
+        {
+
+            // Get the new sorting column.
+            ColumnHeader new_sorting_column = lvBlog.Columns[e.Column];
+
+            // Figure out the new sorting order.
+            System.Windows.Forms.SortOrder sort_order;
+            if (SortingColumn == null)
+            {
+                // New column. Sort ascending.
+                sort_order = SortOrder.Ascending;
+            }
+            else
+            {
+                // See if this is the same column.
+                if (new_sorting_column == SortingColumn)
+                {
+                    // Same column. Switch the sort order.
+                    if (SortingColumn.Text.StartsWith("> "))
+                    {
+                        sort_order = SortOrder.Descending;
+                    }
+                    else
+                    {
+                        sort_order = SortOrder.Ascending;
+                    }
+                }
+                else
+                {
+                    // New column. Sort ascending.
+                    sort_order = SortOrder.Ascending;
+                }
+
+                // Remove the old sort indicator.
+                SortingColumn.Text = SortingColumn.Text.Substring(2);
+            }
+
+            // Display the new sort order.
+            SortingColumn = new_sorting_column;
+            if (sort_order == SortOrder.Ascending)
+            {
+                SortingColumn.Text = "> " + SortingColumn.Text;
+            }
+            else
+            {
+                SortingColumn.Text = "< " + SortingColumn.Text;
+            }
+
+            // Create a comparer.
+            lvBlog.ListViewItemSorter =
+                new ListViewComparer(e.Column, sort_order);
+
+            // Sort.
+            lvBlog.Sort();
         }
     }
 }

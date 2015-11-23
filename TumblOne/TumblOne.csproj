@@ -122,6 +122,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ListViewComparer.cs" />
     <Compile Include="Typeconvertor.cs" />
     <Compile Include="ClipboardMonitor.cs" />
     <Compile Include="Form1.cs">
