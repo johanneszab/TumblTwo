@@ -840,7 +840,8 @@
                     numberOfPostsCrawled = 50 * numberOfPagesCrawled;
                     try
                     {
-                        while (enumerator2.MoveNext())
+                        Func<bool> whileCondEnumerator = enumerator2.MoveNext;
+                        TumblOne.ParallelUtils.While(whileCondEnumerator, delegate()
                         {
                             XElement p = enumerator2.Current;
                             MethodInvoker invoker = null;
@@ -865,7 +866,7 @@
                                                     if (item.Text == _blog._Name)
                                                     {
                                                         item.SubItems[1].Text = _blog.Links.Count.ToString();
-                                                        double progress = (double) _blog._DownloadedImages / (double) _blog._TotalCount * 100;
+                                                        double progress = (double)_blog._DownloadedImages / (double)_blog._TotalCount * 100;
                                                         if (progress < 101)
                                                         {
                                                             progress = System.Math.Round(progress, 2);
@@ -904,10 +905,11 @@
                                 }
                                 catch (Exception)
                                 {
-                                    continue;
+                                    //continue;
                                 }
                             }
-                        }
+
+                        });
                     }
                     catch (Exception)
                     {
