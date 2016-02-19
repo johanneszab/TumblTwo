@@ -459,7 +459,18 @@
                             item.SubItems.Add("Inf");
                         }
 
-                        item.SubItems.Add("");
+                        checkIfBlogIsOnline(blog);
+                        if (blog._Online == true)
+                        {
+                            item.SubItems.Add("Online");
+
+                        }
+                        else 
+                        {
+                            item.SubItems.Add("Offline");
+
+                        }
+
                         item.SubItems.Add(blog._DateAdded.ToString());
                         if (blog._LastCrawled == System.DateTime.MinValue)
                         {
@@ -1122,6 +1133,54 @@
         private void toolAddQueue_Click(object sender, EventArgs e)
         {
             AddBlogtoQueue(bin, cts.Token);
+        }
+
+        private void checkIfBlogIsOnline(TumblrBlog _blog)
+        {
+            String ApiUrl = _blog._URL;
+            if (ApiUrl.Last<char>() != '/')
+            {
+                ApiUrl = ApiUrl + "/api/read?start=";
+            }
+            else
+            {
+                ApiUrl = ApiUrl + "api/read?start=";
+            }
+
+            if (_blog._Description == null)
+            {
+                XmlDocument tumblelog = new XmlDocument();
+                tumblelog.Load(ApiUrl.ToString() + "0" + "&num=50");
+
+                XmlNode tumblblog = tumblelog.DocumentElement.SelectSingleNode("tumblelog");
+                //_blog._Name = tumblblog.Attributes["name"].InnerText;
+                _blog._Description = tumblblog.Attributes["title"].InnerText;
+                _blog._Text = tumblblog.InnerText;
+                _blog._Online = true;
+
+            }
+
+            else if (_blog._Description != null)
+            {
+                bool newBlogDetected = false;
+                XmlDocument tumblelog = new XmlDocument();
+                tumblelog.Load(ApiUrl.ToString() + "0" + "&num=50");
+
+                XmlNode tumblblog = tumblelog.DocumentElement.SelectSingleNode("tumblelog");
+                //_blog._Name = tumblblog.Attributes["name"].InnerText;
+                if (!_blog._Description.Equals(tumblblog.Attributes["title"].InnerText))
+                {
+                    _blog._Online = false;
+                }
+                if (!_blog._Text.Equals(tumblblog.InnerText))
+                {
+                    _blog._Online = false;
+                }
+                else
+                {
+                    _blog._Online = true;
+                }
+            }
         }
 
         private void AddBlogtoQueue(List<TumblrBlog> bin, CancellationToken ct) 

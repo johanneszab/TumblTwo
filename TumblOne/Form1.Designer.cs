@@ -79,9 +79,9 @@
             this.chPostCount = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chURL = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chProgress = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chDateAdded = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chLastCrawled = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.chOnline = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextBlog.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -537,7 +537,7 @@
             this.chPostCount,
             this.chURL,
             this.chProgress,
-            this.chOnline,
+            this.chStatus,
             this.chDateAdded,
             this.chLastCrawled});
             this.lvBlog.ContextMenuStrip = this.contextBlog;
@@ -578,6 +578,10 @@
             // 
             this.chProgress.Text = "Progress";
             // 
+            // chStatus
+            // 
+            this.chStatus.Text = "Status";
+            // 
             // chDateAdded
             // 
             this.chDateAdded.Text = "Date Added";
@@ -587,10 +591,6 @@
             // 
             this.chLastCrawled.Text = "Last Complete Crawl";
             this.chLastCrawled.Width = 150;
-            // 
-            // chOnline
-            // 
-            this.chOnline.Text = "Online";
             // 
             // Form1
             // 
@@ -673,6 +673,6 @@
         private ColumnHeader chPostCount;
         private ToolStripButton toolCheckClipboard;
         private ColumnHeader chProgress;
-        private ColumnHeader chOnline;
+        private ColumnHeader chStatus;
     }
 }
