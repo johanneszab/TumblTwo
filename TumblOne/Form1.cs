@@ -647,22 +647,80 @@
                     //this.toolStop_Click(this, null);
                     break;
                 }
-                
+
                 if (numberOfPostsCrawled == 0)
                 {
                     // set title and name of the blog
                     // check if blogaddress is alive of someone else is using it now
 
+                    bool newBlogDetected = false;
                     if (_blog._Description == null && checkedIfBlogIsAlive == false)
                     {
                         XmlDocument tumblelog = new XmlDocument();
-                        tumblelog.Load(ApiUrl.ToString() + numberOfPostsCrawled.ToString() + "&num=50");
 
-                        XmlNode tumblblog = tumblelog.DocumentElement.SelectSingleNode("tumblelog");
-                        //_blog._Name = tumblblog.Attributes["name"].InnerText;
-                        _blog._Description = tumblblog.Attributes["title"].InnerText;
-                        _blog._Text = tumblblog.InnerText;
+                        try
+                        {
+                            tumblelog.Load(ApiUrl.ToString() + numberOfPostsCrawled.ToString() + "&num=50");
+                            XmlNode tumblblog = tumblelog.DocumentElement.SelectSingleNode("tumblelog");
+                            try
+                            {
+                                _blog._Description = tumblblog.Attributes["title"].InnerText;
+                                _blog._Text = tumblblog.InnerText;
+                                _blog._Online = true;
+                            }
+                            catch (NullReferenceException)
+                            {
+                                _blog._Online = true;
+                            }
+                        }
+                        catch (WebException)
+                        {
+                            _blog._Online = false;
+                            newBlogDetected = true;
+                        }
+                        checkedIfBlogIsAlive = true;
+                    }
 
+                    else if (_blog._Description != null && checkedIfBlogIsAlive == false)
+                    {
+                        XmlDocument tumblelog = new XmlDocument();
+
+                        try
+                        {
+                            tumblelog.Load(ApiUrl.ToString() + numberOfPostsCrawled.ToString() + "&num=50");
+                            XmlNode tumblblog = tumblelog.DocumentElement.SelectSingleNode("tumblelog");
+                            try
+                            {
+                                if (!_blog._Description.Equals(tumblblog.Attributes["title"].InnerText))
+                                {
+                                    newBlogDetected = true;
+                                    _blog._Online = false;
+                                }
+                                if (!_blog._Text.Equals(tumblblog.InnerText))
+                                {
+                                    newBlogDetected = true;
+                                    _blog._Online = false;
+                                }
+
+                                _blog._Description = tumblblog.Attributes["title"].InnerText;
+                                _blog._Text = tumblblog.InnerText;
+                                _blog._Online = true;
+                            }
+                            catch (NullReferenceException)
+                            {
+                                _blog._Online = true;
+                            }
+                        }
+                        catch (WebException)
+                        {
+                            _blog._Online = false;
+                            newBlogDetected = true;
+                        }
+                        checkedIfBlogIsAlive = true;
+                    }
+
+                    if (!newBlogDetected)
+                    {
                         this.BeginInvoke((MethodInvoker)delegate
                         {
                             foreach (ListViewItem item in this.lvBlog.Items)
@@ -673,46 +731,39 @@
                                 }
                             }
                         });
-                        checkedIfBlogIsAlive = true;
                     }
-
-                    else if (_blog._Description != null && checkedIfBlogIsAlive == false)
+                    else
                     {
-                        bool newBlogDetected = false;
-                        XmlDocument tumblelog = new XmlDocument();
-                        tumblelog.Load(ApiUrl.ToString() + numberOfPostsCrawled.ToString() + "&num=50");
-
-                        XmlNode tumblblog = tumblelog.DocumentElement.SelectSingleNode("tumblelog");
-                        //_blog._Name = tumblblog.Attributes["name"].InnerText;
-                        if (!_blog._Description.Equals(tumblblog.Attributes["title"].InnerText))
+                        this.SaveBlog(_blog);
+                        TumblrActiveList.Remove(_blog);
+                        // Update UI
+                        this.BeginInvoke((MethodInvoker)delegate
                         {
-                            newBlogDetected = true;
-                        }
-                        if (!_blog._Text.Equals(tumblblog.InnerText))
-                        {
-                            newBlogDetected = true;
-                        }
+                            foreach (ListViewItem item in this.lvBlog.Items)
+                            {
+                                if (item.Text == _blog._Name)
+                                {
+                                    // Update current crawling progress label
+                                    item.SubItems[5].Text = "Offline";
 
-                        checkedIfBlogIsAlive = true;
+                                    int indexBlogInProgress = crawlingBlogs.IndexOf(_blog._Name);
+                                    int lengthBlogInProgress = _blog._Name.Length;
+                                    this.crawlingBlogs = crawlingBlogs.Remove(indexBlogInProgress, (lengthBlogInProgress + 1));
+                                    this.lblProcess.Text = "Crawling Blogs - " + this.crawlingBlogs;
+                                }
+                            }
+                        });
 
-                        if (!newBlogDetected)
+                        if (TumblrActiveList.Count == 1)
                         {
                             this.BeginInvoke((MethodInvoker)delegate
                             {
-                                foreach (ListViewItem item in this.lvBlog.Items)
-                                {
-                                    if (item.Text == _blog._Name)
-                                    {
-                                        item.SubItems[5].Text = "Online";
-                                    }
-                                }
+                                this.pgBar.Style = ProgressBarStyle.Continuous;
                             });
                         }
-                        else
+
+                        if (TumblrActiveList.Count == 0)
                         {
-                            this.SaveBlog(_blog);
-                            TumblrActiveList.Remove(_blog);
-                            // Update UI
                             this.BeginInvoke((MethodInvoker)delegate
                             {
                                 foreach (ListViewItem item in this.lvBlog.Items)
@@ -720,43 +771,15 @@
                                     if (item.Text == _blog._Name)
                                     {
                                         // Update current crawling progress label
-                                        item.SubItems[5].Text = "Offline";
-
-                                        int indexBlogInProgress = crawlingBlogs.IndexOf(_blog._Name);
-                                        int lengthBlogInProgress = _blog._Name.Length;
-                                        this.crawlingBlogs = crawlingBlogs.Remove(indexBlogInProgress, (lengthBlogInProgress + 1));
-                                        this.lblProcess.Text = "Crawling Blogs - " + this.crawlingBlogs;
+                                        this.smallImage.ImageLocation = "";
+                                        this.crawlingBlogs = "";
+                                        this.lblUrl.Text = "";
+                                        this.lblProcess.Text = "Queue finished";
                                     }
                                 }
                             });
-
-                            if (TumblrActiveList.Count == 1)
-                            {
-                                this.BeginInvoke((MethodInvoker)delegate
-                                {
-                                    this.pgBar.Style = ProgressBarStyle.Continuous;
-                                });
-                            }
-
-                            if (TumblrActiveList.Count == 0)
-                            {
-                                this.BeginInvoke((MethodInvoker)delegate
-                                {
-                                    foreach (ListViewItem item in this.lvBlog.Items)
-                                    {
-                                        if (item.Text == _blog._Name)
-                                        {
-                                            // Update current crawling progress label
-                                            this.smallImage.ImageLocation = "";
-                                            this.crawlingBlogs = "";
-                                            this.lblUrl.Text = "";
-                                            this.lblProcess.Text = "Queue finished";
-                                        }
-                                    }
-                                });
-                            }
-                            return;
                         }
+                        return;
                     }
 
                     // Update image (blog post) count
@@ -832,8 +855,8 @@
                     }
                 }
                 using (IEnumerator<XElement> enumerator2 = (from n in document.Descendants("post")
-                                                            where 
-                                                            
+                                                            where
+
                                                             // Identify Posts
                                                             n.Elements("photo-url").Where(x => x.Attribute("max-width").Value == Properties.Settings.Default.configImageSize.ToString()).Any() &&
                                                             !n.Elements("photo-url").Where(x => x.Value == "www.tumblr.com").Any() ||
@@ -841,8 +864,8 @@
                                                             // Identify Photosets
                                                             n.Elements("photoset").Where(photoset => photoset.Descendants("photo-url")
                                                                 .Any(photourl => (string)photourl.Attribute("max-width").Value
-                                                                    ==  Properties.Settings.Default.configImageSize.ToString() &&
-                                                                    photourl.Value != "www.tumblr.com" )).Any()
+                                                                    == Properties.Settings.Default.configImageSize.ToString() &&
+                                                                    photourl.Value != "www.tumblr.com")).Any()
                                                             from m in n.Descendants("photo-url")
                                                             where m.Attribute("max-width").Value == Properties.Settings.Default.configImageSize.ToString()
                                                             select m).GetEnumerator())
@@ -919,7 +942,6 @@
                                     //continue;
                                 }
                             }
-
                         });
                     }
                     catch (Exception)
@@ -949,7 +971,7 @@
                                 // Update current crawling progress label
                                 int indexBlogInProgress = crawlingBlogs.IndexOf(_blog._Name);
                                 int lengthBlogInProgress = _blog._Name.Length;
-                                this.crawlingBlogs = crawlingBlogs.Remove(indexBlogInProgress, (lengthBlogInProgress+1));
+                                this.crawlingBlogs = crawlingBlogs.Remove(indexBlogInProgress, (lengthBlogInProgress + 1));
                                 this.lblProcess.Text = "Crawling Blogs - " + this.crawlingBlogs;
                             }
                         }
@@ -1005,6 +1027,52 @@
                     return;
                 }
             }
+            this.SaveBlog(_blog);
+            TumblrActiveList.Remove(_blog);
+            // Update UI
+            this.BeginInvoke((MethodInvoker)delegate
+            {
+                foreach (ListViewItem item in this.lvBlog.Items)
+                {
+                    if (item.Text == _blog._Name)
+                    {
+                        // Update current crawling progress label
+                        item.SubItems[5].Text = "Offline";
+
+                        int indexBlogInProgress = crawlingBlogs.IndexOf(_blog._Name);
+                        int lengthBlogInProgress = _blog._Name.Length;
+                        this.crawlingBlogs = crawlingBlogs.Remove(indexBlogInProgress, (lengthBlogInProgress + 1));
+                        this.lblProcess.Text = "Crawling Blogs - " + this.crawlingBlogs;
+                    }
+                }
+            });
+
+            if (TumblrActiveList.Count == 1)
+            {
+                this.BeginInvoke((MethodInvoker)delegate
+                {
+                    this.pgBar.Style = ProgressBarStyle.Continuous;
+                });
+            }
+
+            if (TumblrActiveList.Count == 0)
+            {
+                this.BeginInvoke((MethodInvoker)delegate
+                {
+                    foreach (ListViewItem item in this.lvBlog.Items)
+                    {
+                        if (item.Text == _blog._Name)
+                        {
+                            // Update current crawling progress label
+                            this.smallImage.ImageLocation = "";
+                            this.crawlingBlogs = "";
+                            this.lblUrl.Text = "";
+                            this.lblProcess.Text = "Queue finished";
+                        }
+                    }
+                });
+            }
+            return;
         }
 
         private bool SaveBlog(TumblrBlog newBlog)
@@ -1150,33 +1218,63 @@
             if (_blog._Description == null)
             {
                 XmlDocument tumblelog = new XmlDocument();
-                tumblelog.Load(ApiUrl.ToString() + "0" + "&num=50");
+
+                try
+                {
+                    tumblelog.Load(ApiUrl.ToString() + "0" + "&num=50");
+                }
+                catch (WebException)
+                {
+                    _blog._Online = false;
+                    return;
+                }
 
                 XmlNode tumblblog = tumblelog.DocumentElement.SelectSingleNode("tumblelog");
                 //_blog._Name = tumblblog.Attributes["name"].InnerText;
-                _blog._Description = tumblblog.Attributes["title"].InnerText;
-                _blog._Text = tumblblog.InnerText;
-                _blog._Online = true;
-
+                try
+                {
+                    _blog._Description = tumblblog.Attributes["title"].InnerText;
+                    _blog._Text = tumblblog.InnerText;
+                    _blog._Online = true;
+                }
+                catch (NullReferenceException)
+                {
+                    _blog._Online = true;
+                }
             }
 
             else if (_blog._Description != null)
             {
-                bool newBlogDetected = false;
                 XmlDocument tumblelog = new XmlDocument();
-                tumblelog.Load(ApiUrl.ToString() + "0" + "&num=50");
+
+                try
+                {
+                    tumblelog.Load(ApiUrl.ToString() + "0" + "&num=50");
+                }
+                catch (WebException)
+                {
+                    _blog._Online = false;
+                    return;
+                }
 
                 XmlNode tumblblog = tumblelog.DocumentElement.SelectSingleNode("tumblelog");
-                //_blog._Name = tumblblog.Attributes["name"].InnerText;
-                if (!_blog._Description.Equals(tumblblog.Attributes["title"].InnerText))
+
+                try
                 {
-                    _blog._Online = false;
+                    if (!_blog._Description.Equals(tumblblog.Attributes["title"].InnerText))
+                    {
+                        _blog._Online = false;
+                    }
+                    if (!_blog._Text.Equals(tumblblog.InnerText))
+                    {
+                        _blog._Online = false;
+                    }
+                    else
+                    {
+                        _blog._Online = true;
+                    }
                 }
-                if (!_blog._Text.Equals(tumblblog.InnerText))
-                {
-                    _blog._Online = false;
-                }
-                else
+                catch (NullReferenceException)
                 {
                     _blog._Online = true;
                 }
