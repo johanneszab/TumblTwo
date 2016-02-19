@@ -16,6 +16,7 @@
     using System.Threading.Tasks;
     //using System.Threading.Tasks.Schedulers;
     using System.Windows.Forms;
+    using System.Xml;
     using System.Xml.Linq;
 
     public partial class Form1 : Form
@@ -71,6 +72,7 @@
                     lvItem.SubItems.Add("");
                     lvItem.SubItems.Add(newBlog._URL);
                     lvItem.SubItems.Add("0.00");
+                    lvItem.SubItems.Add("");
                     lvItem.SubItems.Add(newBlog._DateAdded.ToString());
                     lvItem.SubItems.Add("Not yet completely crawled!");
                     //lvItem.SubItems.Add(newBlog._finishedCrawl.ToString());
@@ -337,6 +339,7 @@
                                 lvItem.SubItems.Add("");
                                 lvItem.SubItems.Add(newBlog._URL);
                                 lvItem.SubItems.Add("0.00");
+                                lvItem.SubItems.Add("");
                                 lvItem.SubItems.Add(newBlog._DateAdded.ToString());
                                 lvItem.SubItems.Add("Not yet completely crawled!");
                                 //lvItem.SubItems.Add(newBlog._finishedCrawl.ToString());
@@ -456,6 +459,7 @@
                             item.SubItems.Add("Inf");
                         }
 
+                        item.SubItems.Add("");
                         item.SubItems.Add(blog._DateAdded.ToString());
                         if (blog._LastCrawled == System.DateTime.MinValue)
                         {
@@ -605,6 +609,7 @@
         {
             MethodInvoker method = null;
             bool readingDataBase = false;
+            bool checkedIfBlogIsAlive = false;
             int numberOfPostsCrawled = 0;
             int numberOfPagesCrawled = 0;
             //string blogname = ExtractBlogname(ApiUrl.ToString());
@@ -631,6 +636,88 @@
                     //this.toolStop_Click(this, null);
                     break;
                 }
+
+                // set title and name of the blog
+                // check if blogaddress is alive of someone else is using it now
+
+                if (_blog._Description == null && checkedIfBlogIsAlive == false)
+                {
+                    XmlDocument tumblelog = new XmlDocument();
+                    tumblelog.Load(ApiUrl.ToString() + numberOfPostsCrawled.ToString() + "&num=50");
+
+                    XmlNode tumblblog = tumblelog.DocumentElement.SelectSingleNode("tumblelog");
+                    //_blog._Name = tumblblog.Attributes["name"].InnerText;
+                    _blog._Description = tumblblog.Attributes["title"].InnerText;
+                    _blog._Text = tumblblog.InnerText;
+
+                    this.BeginInvoke((MethodInvoker)delegate
+                    {
+                        foreach (ListViewItem item in this.lvBlog.Items)
+                        {
+                            if (item.Text == _blog._Name)
+                            {
+                                item.SubItems[5].Text = "Online";
+                            }
+                        }
+                    });
+                    checkedIfBlogIsAlive = true;
+                }
+
+                else if (_blog._Description != null && checkedIfBlogIsAlive == false)
+                {
+                    bool newBlogDetected = false;
+                    XmlDocument tumblelog = new XmlDocument();
+                    tumblelog.Load(ApiUrl.ToString() + numberOfPostsCrawled.ToString() + "&num=50");
+
+                    XmlNode tumblblog = tumblelog.DocumentElement.SelectSingleNode("tumblelog");
+                    //_blog._Name = tumblblog.Attributes["name"].InnerText;
+                    if (!_blog._Description.Equals(tumblblog.Attributes["title"].InnerText)) {
+                        newBlogDetected = true;
+                    }
+                    if (!_blog._Text.Equals(tumblblog.InnerText)) {
+                        newBlogDetected = true;
+                    }
+
+                    checkedIfBlogIsAlive = true;
+
+                    if (!newBlogDetected) {
+                        this.BeginInvoke((MethodInvoker)delegate
+                        {
+                            foreach (ListViewItem item in this.lvBlog.Items)
+                            {
+                                if (item.Text == _blog._Name)
+                                {
+                                    item.SubItems[5].Text = "Online";
+                                }
+                            }
+                        });
+                    }
+                    else {
+                        this.SaveBlog(_blog);
+                        TumblrActiveList.Remove(_blog);
+                        // Update UI
+                        this.BeginInvoke((MethodInvoker)delegate
+                        {
+                            foreach (ListViewItem item in this.lvBlog.Items)
+                            {
+                                if (item.Text == _blog._Name)
+                                {
+                                    // Update current crawling progress label
+                                    item.SubItems[5].Text = "Offline";
+
+                                    int indexBlogInProgress = crawlingBlogs.IndexOf(_blog._Name);
+                                    int lengthBlogInProgress = _blog._Name.Length;
+                                    this.crawlingBlogs = crawlingBlogs.Remove(indexBlogInProgress, (lengthBlogInProgress + 1));
+                                    this.lblProcess.Text = "Crawling Blogs - " + this.crawlingBlogs;
+                                }
+                            }
+                        });
+
+                        goto Cleanup;
+                    }
+
+                }
+                
                 if (numberOfPostsCrawled == 0)
                 {
                     try
@@ -704,8 +791,17 @@
                     }
                 }
                 using (IEnumerator<XElement> enumerator2 = (from n in document.Descendants("post")
-                                                            where n.Elements("photo-url").Where(x => x.Attribute("max-width").Value == Properties.Settings.Default.configImageSize.ToString()).Any() &&
-                                                            !n.Elements("photo-url").Where(x => x.Value == "www.tumblr.com").Any()
+                                                            where 
+                                                            
+                                                            // Identify Posts
+                                                            n.Elements("photo-url").Where(x => x.Attribute("max-width").Value == Properties.Settings.Default.configImageSize.ToString()).Any() &&
+                                                            !n.Elements("photo-url").Where(x => x.Value == "www.tumblr.com").Any() ||
+
+                                                            // Identify Photosets
+                                                            n.Elements("photoset").Where(photoset => photoset.Descendants("photo-url")
+                                                                .Any(photourl => (string)photourl.Attribute("max-width").Value
+                                                                    ==  Properties.Settings.Default.configImageSize.ToString() &&
+                                                                    photourl.Value != "www.tumblr.com" )).Any()
                                                             from m in n.Descendants("photo-url")
                                                             where m.Attribute("max-width").Value == Properties.Settings.Default.configImageSize.ToString()
                                                             select m).GetEnumerator())
@@ -805,8 +901,8 @@
                             if (item.Text == _blog._Name)
                             {
                                 // Update Listview about completed blog
-                                item.SubItems[6].Text = DateTime.Now.ToString();
-                                //item.SubItems[7].Text = "True";
+                                item.SubItems[7].Text = DateTime.Now.ToString();
+                                //item.SubItems[8].Text = "True";
                                 // Update current crawling progress label
                                 int indexBlogInProgress = crawlingBlogs.IndexOf(_blog._Name);
                                 int lengthBlogInProgress = _blog._Name.Length;
@@ -837,34 +933,35 @@
                             }
                         });
                     }
-
-                    if (TumblrActiveList.Count == 1)
-                    {
-                        this.BeginInvoke((MethodInvoker)delegate
-                        {
-                            this.pgBar.Style = ProgressBarStyle.Continuous;
-                        });
-                    }
-
-                    if (TumblrActiveList.Count == 0)
-                    {
-                        this.BeginInvoke((MethodInvoker)delegate
-                        {
-                            foreach (ListViewItem item in this.lvBlog.Items)
-                            {
-                                if (item.Text == _blog._Name)
-                                {
-                                    // Update current crawling progress label
-                                    this.smallImage.ImageLocation = "";
-                                    this.crawlingBlogs = "";
-                                    this.lblUrl.Text = "";
-                                    this.lblProcess.Text = "Queue finished";
-                                }
-                            }
-                        });
-                    }
-                    return;
                 }
+                    
+            Cleanup:
+                if (TumblrActiveList.Count == 1)
+                {
+                    this.BeginInvoke((MethodInvoker)delegate
+                    {
+                        this.pgBar.Style = ProgressBarStyle.Continuous;
+                    });
+                }
+
+                if (TumblrActiveList.Count == 0)
+                {
+                    this.BeginInvoke((MethodInvoker)delegate
+                    {
+                        foreach (ListViewItem item in this.lvBlog.Items)
+                        {
+                            if (item.Text == _blog._Name)
+                            {
+                                // Update current crawling progress label
+                                this.smallImage.ImageLocation = "";
+                                this.crawlingBlogs = "";
+                                this.lblUrl.Text = "";
+                                this.lblProcess.Text = "Queue finished";
+                            }
+                        }
+                    });
+                }
+                return;
             }
         }
 

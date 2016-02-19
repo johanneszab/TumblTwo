@@ -24,7 +24,7 @@
       <Value Profile="(Default)">40, 40</Value>
     </Setting>
     <Setting Name="Size" Type="System.Drawing.Size" Scope="User">
-      <Value Profile="(Default)">1080, 710</Value>
+      <Value Profile="(Default)">1160, 710</Value>
     </Setting>
     <Setting Name="Maximised" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>

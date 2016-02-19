@@ -6,8 +6,9 @@
     [Serializable]
     public class TumblrBlog
     {
-        public string _Discription;
+        public string _Description;
         public string _Name;
+        public string _Text;
         public string _URL;
         public int _DownloadedImages;
         public int _TotalCount;
@@ -18,8 +19,9 @@
 
         public TumblrBlog()
         {
-            this._Discription = null;
+            this._Description = null;
             this._Name = null;
+            this._Text = null;
             this._URL = null;
             this._DownloadedImages = 0;
             this._TotalCount = 0;
