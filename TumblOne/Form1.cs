@@ -897,29 +897,38 @@
                         {
                             document2 = XDocument.Load(ApiUrl.ToString() + (i * 50).ToString() + "&num=50");
                         }
-                        catch (WebException)
+                        catch (Exception e)
                         {
-                            //this.toolStop_Click(this, null);
-                            //break;
+                            //Console.WriteLine(e.Data);
                         }
 
-                        List<string> Urllist = (from n in document2.Descendants("post")
-                                                where
+                        try
+                        {
+                            List<string> Urllist = (from n in document2.Descendants("post")
+                                                    where
 
-                                                // Identify Posts
-                                                n.Elements("photo-url").Where(x => x.Attribute("max-width").Value == Properties.Settings.Default.configImageSize.ToString()).Any() &&
-                                                !n.Elements("photo-url").Where(x => x.Value == "www.tumblr.com").Any() ||
+                                                    // Identify Posts
+                                                    n.Elements("photo-url").Where(x => x.Attribute("max-width").Value == Properties.Settings.Default.configImageSize.ToString()).Any() &&
+                                                    !n.Elements("photo-url").Where(x => x.Value == "www.tumblr.com").Any() ||
 
-                                                // Identify Photosets
-                                                n.Elements("photoset").Where(photoset => photoset.Descendants("photo-url")
-                                                    .Any(photourl => (string)photourl.Attribute("max-width").Value
-                                                        == Properties.Settings.Default.configImageSize.ToString() &&
-                                                        photourl.Value != "www.tumblr.com")).Any()
-                                                from m in n.Descendants("photo-url")
-                                                where m.Attribute("max-width").Value == Properties.Settings.Default.configImageSize.ToString()
-                                                select (string)m).ToList();
-                        crawledImageURLs.AddRange(Urllist);
-                        Urllist.Clear();
+                                                    // Identify Photosets
+                                                    n.Elements("photoset").Where(photoset => photoset.Descendants("photo-url")
+                                                        .Any(photourl => (string)photourl.Attribute("max-width").Value
+                                                            == Properties.Settings.Default.configImageSize.ToString() &&
+                                                            photourl.Value != "www.tumblr.com")).Any()
+                                                    from m in n.Descendants("photo-url")
+                                                    where m.Attribute("max-width").Value == Properties.Settings.Default.configImageSize.ToString()
+                                                    select (string)m).ToList();
+                            System.Threading.Monitor.Enter(crawledImageURLs);
+                            crawledImageURLs.AddRange(Urllist);
+                            System.Threading.Monitor.Exit(crawledImageURLs);
+                            Urllist.Clear();
+                        }
+                        catch (Exception e)
+                        {
+                            //Console.WriteLine(e.Data);
+                        }
+
                         {
                             //numberOfPagesCrawled = i;
                             numberOfPostsCrawled += 50;
