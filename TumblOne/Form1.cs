@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     //using System.ComponentModel;
     using System.Diagnostics;
     //using System.Drawing;
@@ -652,7 +653,7 @@
             bool readingDataBase = false;
             bool checkedIfBlogIsAlive = false;
             int numberOfPostsCrawled = 0;
-            int numberOfPagesCrawled = 0;
+            List<string> crawledImageURLs = new List<string>();
             //string blogname = ExtractBlogname(ApiUrl.ToString());
             String ApiUrl = _blog._URL ;
             if (ApiUrl.Last<char>() != '/')
@@ -884,42 +885,73 @@
                         break;
                     }
                 }
-                using (IEnumerator<XElement> enumerator2 = (from n in document.Descendants("post")
-                                                            where
 
-                                                            // Identify Posts
-                                                            n.Elements("photo-url").Where(x => x.Attribute("max-width").Value == Properties.Settings.Default.configImageSize.ToString()).Any() &&
-                                                            !n.Elements("photo-url").Where(x => x.Value == "www.tumblr.com").Any() ||
+                // Generate URL list of Images
+                // the api shows 50 posts at max, determine the number of pages to crawl
+                int numberOfPagesToCrawl = ((_blog._TotalCount / 50) + 1);
+                Parallel.For(0, numberOfPagesToCrawl, i =>
+                    {
 
-                                                            // Identify Photosets
-                                                            n.Elements("photoset").Where(photoset => photoset.Descendants("photo-url")
-                                                                .Any(photourl => (string)photourl.Attribute("max-width").Value
-                                                                    == Properties.Settings.Default.configImageSize.ToString() &&
-                                                                    photourl.Value != "www.tumblr.com")).Any()
-                                                            from m in n.Descendants("photo-url")
-                                                            where m.Attribute("max-width").Value == Properties.Settings.Default.configImageSize.ToString()
-                                                            select m).GetEnumerator())
+                        XDocument document2 = null;
+                        try
+                        {
+                            document2 = XDocument.Load(ApiUrl.ToString() + (i * 50).ToString() + "&num=50");
+                        }
+                        catch (WebException)
+                        {
+                            //this.toolStop_Click(this, null);
+                            //break;
+                        }
+
+                        List<string> Urllist = (from n in document2.Descendants("post")
+                                                where
+
+                                                // Identify Posts
+                                                n.Elements("photo-url").Where(x => x.Attribute("max-width").Value == Properties.Settings.Default.configImageSize.ToString()).Any() &&
+                                                !n.Elements("photo-url").Where(x => x.Value == "www.tumblr.com").Any() ||
+
+                                                // Identify Photosets
+                                                n.Elements("photoset").Where(photoset => photoset.Descendants("photo-url")
+                                                    .Any(photourl => (string)photourl.Attribute("max-width").Value
+                                                        == Properties.Settings.Default.configImageSize.ToString() &&
+                                                        photourl.Value != "www.tumblr.com")).Any()
+                                                from m in n.Descendants("photo-url")
+                                                where m.Attribute("max-width").Value == Properties.Settings.Default.configImageSize.ToString()
+                                                select (string)m).ToList();
+                        crawledImageURLs.AddRange(Urllist);
+                        Urllist.Clear();
+                        {
+                            //numberOfPagesCrawled = i;
+                            numberOfPostsCrawled += 50;
+                            this.BeginInvoke((MethodInvoker)delegate
+                            {
+                                this.lblUrl.Text = "Evaluated " + numberOfPostsCrawled + " Image URLs out of " + _blog._TotalCount + " Posts.";
+                            });
+                        }
+                    });
+
+                //if (numberOfPostsCrawled >= _blog._TotalCount)
                 {
-                    numberOfPagesCrawled++;
-                    numberOfPostsCrawled = 50 * numberOfPagesCrawled;
+                    crawledImageURLs = crawledImageURLs.Distinct().ToList();
+                    //crawledImageURLs = _blog.Links.Select(Posts => Posts.url).ToList().Intersect(crawledImageURLs).ToList();
+                    crawledImageURLs = crawledImageURLs.Except(_blog.Links.Select(Posts => Posts.Url).ToList()).ToList();
+
                     try
                     {
-                        Func<bool> whileCondEnumerator = enumerator2.MoveNext;
-                        TumblOne.ParallelUtils.While(whileCondEnumerator, delegate()
+                        Parallel.ForEach(crawledImageURLs, url =>
                         {
-                            XElement p = enumerator2.Current;
                             MethodInvoker invoker = null;
                             string FileLocation;
                             this.wait_handle.WaitOne();
-                            string fileName = Path.GetFileName(new Uri(p.Value).LocalPath);
+                            string fileName = Path.GetFileName(new Uri(url).LocalPath);
                             if (!Properties.Settings.Default.configChkGIFState || (Path.GetExtension(fileName).ToLower() != ".gif"))
                             {
                                 FileLocation = Properties.Settings.Default.configDownloadLocation.ToString() + _blog._Name + "/" + fileName;
                                 try
                                 {
-                                    if (this.Download(_blog, FileLocation, p.Value, fileName))
+                                    if (this.Download(_blog, FileLocation, url, fileName))
                                     {
-                                        _blog.Links.Add(new Post(p.Value, fileName));
+                                        _blog.Links.Add(new Post(url, fileName));
                                         _blog._DownloadedImages = _blog.Links.Count;
                                         if (invoker == null)
                                         {
@@ -943,7 +975,7 @@
                                                         break;
                                                     }
                                                 }
-                                                this.lblUrl.Text = p.Value;
+                                                this.lblUrl.Text = url;
                                                 this.smallImage.ImageLocation = FileLocation;
                                                 if ((this.pgBar.Value + 1) < (this.pgBar.Maximum + 1))
                                                 {
@@ -979,9 +1011,7 @@
                         continue;
                     }
 
-                }
-                if (numberOfPostsCrawled >= _blog._TotalCount)
-                {
+
                     //this.toolStop_Click(this, null);
                     // Finished Blog
                     _blog._LastCrawled = DateTime.Now;
