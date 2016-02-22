@@ -32,6 +32,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Settings));
             this.tvSettings = new System.Windows.Forms.TreeView();
             this.gbSettingsGeneral = new System.Windows.Forms.GroupBox();
+            this.cbCheckStatus = new System.Windows.Forms.CheckBox();
+            this.cbDeleteIndexOnly = new System.Windows.Forms.CheckBox();
+            this.chkGif = new System.Windows.Forms.CheckBox();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOk = new System.Windows.Forms.Button();
             this.cbImagesize = new System.Windows.Forms.ComboBox();
@@ -42,10 +45,8 @@
             this.cbPicturePreview = new System.Windows.Forms.CheckBox();
             this.panelSettingsGeneral = new System.Windows.Forms.Panel();
             this.bChooseDownloadLocation = new System.Windows.Forms.Button();
-            this.lbDownloadLocation = new System.Windows.Forms.Label();
-            this.chkGif = new System.Windows.Forms.CheckBox();
-            this.cbDeleteIndexOnly = new System.Windows.Forms.CheckBox();
             this.tbDownloadLocation = new System.Windows.Forms.TextBox();
+            this.lbDownloadLocation = new System.Windows.Forms.Label();
             this.gbSettingsGeneral.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudSimultaneousDownloads)).BeginInit();
             this.panelSettingsGeneral.SuspendLayout();
@@ -72,6 +73,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gbSettingsGeneral.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gbSettingsGeneral.BackColor = System.Drawing.SystemColors.Window;
+            this.gbSettingsGeneral.Controls.Add(this.cbCheckStatus);
             this.gbSettingsGeneral.Controls.Add(this.cbDeleteIndexOnly);
             this.gbSettingsGeneral.Controls.Add(this.chkGif);
             this.gbSettingsGeneral.Controls.Add(this.buttonCancel);
@@ -89,6 +91,41 @@
             this.gbSettingsGeneral.TabIndex = 1;
             this.gbSettingsGeneral.TabStop = false;
             this.gbSettingsGeneral.Text = "General";
+            // 
+            // cbCheckStatus
+            // 
+            this.cbCheckStatus.AutoSize = true;
+            this.cbCheckStatus.Location = new System.Drawing.Point(12, 181);
+            this.cbCheckStatus.Name = "cbCheckStatus";
+            this.cbCheckStatus.Size = new System.Drawing.Size(189, 17);
+            this.cbCheckStatus.TabIndex = 12;
+            this.cbCheckStatus.Text = "Check blog online status at startup";
+            this.cbCheckStatus.UseVisualStyleBackColor = true;
+            this.cbCheckStatus.CheckedChanged += new System.EventHandler(this.cbCheckStatus_CheckedChanged);
+            // 
+            // cbDeleteIndexOnly
+            // 
+            this.cbDeleteIndexOnly.AutoSize = true;
+            this.cbDeleteIndexOnly.Checked = true;
+            this.cbDeleteIndexOnly.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbDeleteIndexOnly.Location = new System.Drawing.Point(12, 158);
+            this.cbDeleteIndexOnly.Name = "cbDeleteIndexOnly";
+            this.cbDeleteIndexOnly.Size = new System.Drawing.Size(194, 17);
+            this.cbDeleteIndexOnly.TabIndex = 11;
+            this.cbDeleteIndexOnly.Text = "Delete Only Index Files (No Images)";
+            this.cbDeleteIndexOnly.UseVisualStyleBackColor = true;
+            this.cbDeleteIndexOnly.CheckedChanged += new System.EventHandler(this.cbDeleteIndexOnly_CheckedChanged);
+            // 
+            // chkGif
+            // 
+            this.chkGif.AutoSize = true;
+            this.chkGif.Location = new System.Drawing.Point(12, 134);
+            this.chkGif.Name = "chkGif";
+            this.chkGif.Size = new System.Drawing.Size(88, 17);
+            this.chkGif.TabIndex = 10;
+            this.chkGif.Text = "Skip .gif-Files";
+            this.chkGif.UseVisualStyleBackColor = true;
+            this.chkGif.CheckedChanged += new System.EventHandler(this.chkGif_CheckedChanged);
             // 
             // buttonCancel
             // 
@@ -125,7 +162,7 @@
             "250",
             "100",
             "75"});
-            this.cbImagesize.Location = new System.Drawing.Point(305, 219);
+            this.cbImagesize.Location = new System.Drawing.Point(305, 249);
             this.cbImagesize.Name = "cbImagesize";
             this.cbImagesize.Size = new System.Drawing.Size(111, 21);
             this.cbImagesize.TabIndex = 7;
@@ -135,7 +172,7 @@
             this.nudSimultaneousDownloads.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.nudSimultaneousDownloads.BackColor = System.Drawing.SystemColors.Menu;
-            this.nudSimultaneousDownloads.Location = new System.Drawing.Point(305, 192);
+            this.nudSimultaneousDownloads.Location = new System.Drawing.Point(305, 222);
             this.nudSimultaneousDownloads.Minimum = new decimal(new int[] {
             1,
             0,
@@ -153,7 +190,7 @@
             // lbImageSize
             // 
             this.lbImageSize.AutoSize = true;
-            this.lbImageSize.Location = new System.Drawing.Point(9, 222);
+            this.lbImageSize.Location = new System.Drawing.Point(9, 252);
             this.lbImageSize.Name = "lbImageSize";
             this.lbImageSize.Size = new System.Drawing.Size(117, 13);
             this.lbImageSize.TabIndex = 5;
@@ -162,7 +199,7 @@
             // lbSimultaneousDownloads
             // 
             this.lbSimultaneousDownloads.AutoSize = true;
-            this.lbSimultaneousDownloads.Location = new System.Drawing.Point(9, 194);
+            this.lbSimultaneousDownloads.Location = new System.Drawing.Point(9, 224);
             this.lbSimultaneousDownloads.Name = "lbSimultaneousDownloads";
             this.lbSimultaneousDownloads.Size = new System.Drawing.Size(129, 13);
             this.lbSimultaneousDownloads.TabIndex = 4;
@@ -215,39 +252,6 @@
             this.bChooseDownloadLocation.UseVisualStyleBackColor = true;
             this.bChooseDownloadLocation.Click += new System.EventHandler(this.bChooseDownloadLocation_Click);
             // 
-            // lbDownloadLocation
-            // 
-            this.lbDownloadLocation.AutoSize = true;
-            this.lbDownloadLocation.Location = new System.Drawing.Point(3, 13);
-            this.lbDownloadLocation.Name = "lbDownloadLocation";
-            this.lbDownloadLocation.Size = new System.Drawing.Size(102, 13);
-            this.lbDownloadLocation.TabIndex = 0;
-            this.lbDownloadLocation.Text = "Download Location:";
-            // 
-            // chkGif
-            // 
-            this.chkGif.AutoSize = true;
-            this.chkGif.Location = new System.Drawing.Point(12, 134);
-            this.chkGif.Name = "chkGif";
-            this.chkGif.Size = new System.Drawing.Size(88, 17);
-            this.chkGif.TabIndex = 10;
-            this.chkGif.Text = "Skip .gif-Files";
-            this.chkGif.UseVisualStyleBackColor = true;
-            this.chkGif.CheckedChanged += new System.EventHandler(this.chkGif_CheckedChanged);
-            // 
-            // cbDeleteIndexOnly
-            // 
-            this.cbDeleteIndexOnly.AutoSize = true;
-            this.cbDeleteIndexOnly.Checked = true;
-            this.cbDeleteIndexOnly.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbDeleteIndexOnly.Location = new System.Drawing.Point(12, 158);
-            this.cbDeleteIndexOnly.Name = "cbDeleteIndexOnly";
-            this.cbDeleteIndexOnly.Size = new System.Drawing.Size(194, 17);
-            this.cbDeleteIndexOnly.TabIndex = 11;
-            this.cbDeleteIndexOnly.Text = "Delete Only Index Files (No Images)";
-            this.cbDeleteIndexOnly.UseVisualStyleBackColor = true;
-            this.cbDeleteIndexOnly.CheckedChanged += new System.EventHandler(this.cbDeleteIndexOnly_CheckedChanged);
-            // 
             // tbDownloadLocation
             // 
             this.tbDownloadLocation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -259,6 +263,15 @@
             this.tbDownloadLocation.TabIndex = 1;
             this.tbDownloadLocation.Text = global::TumblOne.Properties.Settings.Default.configDownloadLocation;
             this.tbDownloadLocation.TextChanged += new System.EventHandler(this.tbDownloadLocation_TextChanged);
+            // 
+            // lbDownloadLocation
+            // 
+            this.lbDownloadLocation.AutoSize = true;
+            this.lbDownloadLocation.Location = new System.Drawing.Point(3, 13);
+            this.lbDownloadLocation.Name = "lbDownloadLocation";
+            this.lbDownloadLocation.Size = new System.Drawing.Size(102, 13);
+            this.lbDownloadLocation.TabIndex = 0;
+            this.lbDownloadLocation.Text = "Download Location:";
             // 
             // Settings
             // 
@@ -301,5 +314,6 @@
         private System.Windows.Forms.Label lbSimultaneousDownloads;
         private System.Windows.Forms.CheckBox cbDeleteIndexOnly;
         private System.Windows.Forms.CheckBox chkGif;
+        private System.Windows.Forms.CheckBox cbCheckStatus;
     }
 }

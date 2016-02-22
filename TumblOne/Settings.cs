@@ -89,7 +89,7 @@ namespace TumblOne
             // Reload Settings and Blogs
             if (_Form1.tasks[0] == null && DownloadLocationChanged)
             {
-                _Form1.LoadLibrary();
+                _Form1.LoadGUI();
             }
             if (Convert.ToInt32(this.nudSimultaneousDownloads.Value) > Properties.Settings.Default.configSimultaneousDownloads)
             {
@@ -113,7 +113,7 @@ namespace TumblOne
             // Reload Settings and Blogs
             if (_Form1.tasks[0] == null && DownloadLocationChanged)
             {
-                _Form1.LoadLibrary();
+                _Form1.LoadGUI();
             }
             if (Convert.ToInt32(this.nudSimultaneousDownloads.Value) > Properties.Settings.Default.configSimultaneousDownloads)
             {
@@ -159,6 +159,18 @@ namespace TumblOne
             else
             {
                 Properties.Settings.Default.configChkGIFState = false;
+            }
+        }
+
+        private void cbCheckStatus_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.cbCheckStatus.Checked)
+            {
+                Properties.Settings.Default.configCheckStatusAtStartup = true;
+            }
+            else
+            {
+                Properties.Settings.Default.configCheckStatusAtStartup = false;
             }
         }
     }

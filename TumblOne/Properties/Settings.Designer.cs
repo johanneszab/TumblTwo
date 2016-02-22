@@ -166,5 +166,17 @@ namespace TumblOne.Properties {
                 this["configDeleteIndexOnly"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool configCheckStatusAtStartup {
+            get {
+                return ((bool)(this["configCheckStatusAtStartup"]));
+            }
+            set {
+                this["configCheckStatusAtStartup"] = value;
+            }
+        }
     }
 }
