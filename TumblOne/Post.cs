@@ -4,18 +4,12 @@
     using System.ComponentModel;
 
     [Serializable]
-    public class Post: Object
+    public class Post : Object, INotifyPropertyChanged
     {
-        public string filename;
-        public string url;
+        private string filename;
+        private string url;
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        public Post()
-        {
-            this.url = null;
-            this.filename = null;
-        }
 
         public Post(string url, string filename)
         {

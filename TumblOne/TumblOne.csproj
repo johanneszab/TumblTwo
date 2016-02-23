@@ -123,6 +123,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataGridViewExtended.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DataGridViewProgressColumn.cs" />
     <Compile Include="ParallelUtils.cs" />
     <Compile Include="ListViewComparer.cs" />
     <Compile Include="SortableBindingList.cs" />

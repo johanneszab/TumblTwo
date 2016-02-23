@@ -26,10 +26,8 @@
         public List<TumblrBlog> TumblrActiveList = new List<TumblrBlog>();
         public Task[] tasks = new Task[Properties.Settings.Default.configSimultaneousDownloads];
         string crawlingBlogs = "";
-        //public TumblrBlog blog;
-        //private Task worker;
-        //private BlockingCollection<TumblrBlog> bin = new BlockingCollection<TumblrBlog>();
-        //private QueuedTaskScheduler qts = new QueuedTaskScheduler(TaskScheduler.Default, 2); 
+        BindingSource bsSmallImage = new BindingSource();
+        BindingSource bslblUrl = new BindingSource();
         private CancellationTokenSource cts = new CancellationTokenSource();
         private List<TumblrBlog> bin = new List<TumblrBlog>();
         private TumblOne.SortableBindingList<TumblrBlog> blogs = new TumblOne.SortableBindingList<TumblrBlog>();
@@ -84,6 +82,65 @@
                     this.toolShowExplorer.Enabled = false;
                     this.toolRemoveBlog.Enabled = false;
                     this.toolCrawl.Enabled = false;
+                }
+            }
+        }
+
+        private void ClipboardMonitor_OnClipboardChange(ClipboardFormat format, object data)
+        {
+            if (format.ToString() == "Text")
+            {
+                string[] URLs = data.ToString().Split(new char[0]);
+                foreach (string _url in URLs)
+                {
+                    string str = this.ExtractBlogname_paste(_url);
+                    if (str != null)
+                    {
+                        if (blogs.Select(blog => blog.Name).ToList().Contains(str))
+                        {
+                            return;
+                        }
+                        {
+                            TumblrBlog newBlog = new TumblrBlog
+                            {
+                                Name = str,
+                                Url = this.ExtractUrl(_url),
+                                DateAdded = DateTime.Now,
+                                DownloadedImages = 0,
+                                TotalCount = 0,
+                                LastCrawled = System.DateTime.MinValue,
+                                FinishedCrawl = false
+                            };
+                            this.SaveBlog(newBlog);
+                            this.Invoke((Action)delegate
+                            {
+                                blogs.Add(newBlog);
+                                if (blogs.Count == 1)
+                                    FormatDataSource();
+                            });
+                            newBlog = null;
+
+
+                            if (blogs.Any())
+                            {
+                                this.Invoke((Action)delegate
+                                {
+                                    this.toolShowExplorer.Enabled = true;
+                                    this.toolRemoveBlog.Enabled = true;
+                                    this.toolCrawl.Enabled = true;
+                                });
+                            }
+                            else
+                            {
+                                this.Invoke((Action)delegate
+                                {
+                                    this.toolShowExplorer.Enabled = false;
+                                    this.toolRemoveBlog.Enabled = false;
+                                    this.toolCrawl.Enabled = false;
+                                });
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -269,66 +326,6 @@
             }
         }
 
-        private void ClipboardMonitor_OnClipboardChange(ClipboardFormat format, object data)
-        {
-            // Do Something...
-            if (format.ToString() == "Text") 
-            {
-                string[] URLs = data.ToString().Split(new char[0]);
-                foreach (string _url in URLs)
-                {
-                    string str = this.ExtractBlogname_paste(_url);
-                    if (str != null)
-                    {
-                        if (blogs.Select(blog => blog.Name).ToList().Contains(str))
-                        {
-                            return;
-                        }
-                        {
-                            TumblrBlog newBlog = new TumblrBlog
-                            {
-                                Name = str,
-                                Url = this.ExtractUrl(_url),
-                                DateAdded = DateTime.Now,
-                                DownloadedImages = 0,
-                                TotalCount = 0,
-                                LastCrawled = System.DateTime.MinValue,
-                                FinishedCrawl = false
-                            };
-                            this.SaveBlog(newBlog);
-                            this.Invoke((Action)delegate
-                            {
-                                blogs.Add(newBlog);
-                                if (blogs.Count == 1)
-                                    FormatDataSource();
-                            });
-                            newBlog = null;
-
-
-                            if (blogs.Any())
-                            {
-                                this.Invoke((Action)delegate
-                                {
-                                    this.toolShowExplorer.Enabled = true;
-                                    this.toolRemoveBlog.Enabled = true;
-                                    this.toolCrawl.Enabled = true;
-                                });
-                            }
-                            else
-                            {
-                                this.Invoke((Action)delegate
-                                {
-                                    this.toolShowExplorer.Enabled = false;
-                                    this.toolRemoveBlog.Enabled = false;
-                                    this.toolCrawl.Enabled = false;
-                                });
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
         private TumblrBlog LoadBlog(string blogname)
         {
             TumblrBlog blog = new TumblrBlog();
@@ -370,6 +367,7 @@
         {
             return Task.Run(() =>
                 {
+                    // Clean UI
                     this.BeginInvoke((MethodInvoker)delegate
                         {
                             blogs.Clear();
@@ -379,6 +377,8 @@
                     if (Directory.Exists(Properties.Settings.Default.configDownloadLocation.ToString() + "Index/"))
                     {
                         string[] files = Directory.GetFiles(Properties.Settings.Default.configDownloadLocation.ToString() + "Index/", "*.tumblr");
+                        
+                        // Setup the UI
                         if (files.Count<string>() > 0)
                         {
                             this.BeginInvoke((MethodInvoker)delegate
@@ -400,6 +400,7 @@
 
                         this.BeginInvoke((MethodInvoker)delegate
                         {
+                            // load blogs
                             // format the Datagridview and bind the source (list of TumblrBlogs)
                             foreach (string str in files)
                             {
@@ -420,11 +421,13 @@
         {
             cts = new CancellationTokenSource();
 
+            // Setup the UI
             this.smallImage.ImageLocation = "";
             this.crawlingBlogs = "";
             this.lblUrl.Text = "";
             this.lblProcess.Text = "Crawling Blogs - " + this.crawlingBlogs;
 
+            // Start Crawl processes
             for (int i = 0; i < Properties.Settings.Default.configSimultaneousDownloads; i++ )
                 this.tasks[i] = Task.Run(() => runProducer(bin, cts.Token));
             this.wait_handle = new ManualResetEvent(true);
@@ -460,6 +463,7 @@
         {
             lvBlog.DataSource = null;
             lvBlog.Columns.Clear();
+
             // format the Datagridview and bind the source (list of TumblrBlogs)
             lvBlog.AutoGenerateColumns = false;
 
@@ -481,10 +485,10 @@
             urlField.HeaderText = "Url";
             urlField.DataPropertyName = "Url";
 
-            var progress = new DataGridViewTextBoxColumn();
+            var progress = new DataGridViewProgressColumn();
             progress.HeaderText = "Progress";
             progress.DataPropertyName = "Progress";
-            progress.DefaultCellStyle.Format = "0.##";
+            progress.DefaultCellStyle.Format = "##";
 
             var status = new DataGridViewTextBoxColumn();
             status.HeaderText = "Status";
@@ -501,6 +505,7 @@
 
             this.BeginInvoke((MethodInvoker)delegate
             {
+
                 lvBlog.Columns.Add(nameField);
                 lvBlog.Columns.Add(downloadedImages);
                 lvBlog.Columns.Add(numberOfPosts);
@@ -510,6 +515,7 @@
                 lvBlog.Columns.Add(dateAdded);
                 lvBlog.Columns.Add(lastCrawl);
                 lvBlog.DataSource = blogs;
+
 
                 lvBlog.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.False;
                 //lvBlog.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -535,6 +541,9 @@
                 lvBlog.AutoResizeColumns();
                 lvBlog.AllowUserToResizeColumns = true;
                 lvBlog.AllowUserToOrderColumns = true;
+
+                // reload saved column positions and sizes
+                lvBlog.SetOrder();
             });
 
             return true;
@@ -560,10 +569,6 @@
 
         private void RemoveBlog(object sender, EventArgs e)
         {
-            //if ((this.tasks[0] != null) && tasks[0].Status == TaskStatus.Running)
-            //{
-            //    MessageBox.Show("During an active crawl, it's not possible to remove a blog!", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            //}
             if (this.lvBlog.SelectedRows.Count != 0)
             {
                 if (Properties.Settings.Default.configDeleteIndexOnly)
@@ -625,7 +630,9 @@
             int numberOfPostsCrawled = 0;
             List<string> crawledImageURLs = new List<string>();
             //string blogname = ExtractBlogname(ApiUrl.ToString());
-            String ApiUrl = _blog.Url ;
+            String ApiUrl = _blog.Url;
+
+            // Set up and sanitize the url for blog status check
             if (ApiUrl.Last<char>() != '/')
             {
                 ApiUrl = ApiUrl + "/api/read?start=";
@@ -634,6 +641,8 @@
             {
                 ApiUrl = ApiUrl + "api/read?start=";
             }
+
+            // make sure we can save files
             this.CreateDataFolder(_blog.Name);
             while (true)
             {
@@ -645,15 +654,15 @@
                 }
                 catch (WebException)
                 {
-                    //this.toolStop_Click(this, null);
                     break;
                 }
 
                 if (numberOfPostsCrawled == 0)
                 {
                     // set title and name of the blog
-                    // check if blogaddress is alive of someone else is using it now
+                    // check if blogaddress is alive or someone else is using it now
 
+                    // first time check -- new blog
                     if (_blog.Description == null && checkedIfBlogIsAlive == false)
                     {
                         XmlDocument tumblelog = new XmlDocument();
@@ -664,22 +673,27 @@
                             XmlNode tumblblog = tumblelog.DocumentElement.SelectSingleNode("tumblelog");
                             try
                             {
+                                // blog is alive
                                 _blog.Description = tumblblog.Attributes["title"].InnerText;
                                 _blog.Text = tumblblog.InnerText;
                                 _blog.Online = true;
                             }
                             catch (NullReferenceException)
                             {
+                                // If there is no description, the blog can still be alive
                                 _blog.Online = true;
                             }
                         }
                         catch (WebException)
                         {
+                            // blog dead
                             _blog.Online = false;
                         }
                         checkedIfBlogIsAlive = true;
-                    }
-
+                    } 
+                    
+                        // we already have data to compare (description, text) since the blog was
+                        // already once crawled
                     else if (_blog.Description != null && checkedIfBlogIsAlive == false)
                     {
                         XmlDocument tumblelog = new XmlDocument();
@@ -715,42 +729,11 @@
                         checkedIfBlogIsAlive = true;
                     }
 
+                    // nothing to crawl, cleanup and leave
                     else
                     {
-                        this.SaveBlog(_blog);
-                        TumblrActiveList.Remove(_blog);
-                        // Update UI
-                        this.BeginInvoke((MethodInvoker)delegate
-                        {
 
-                            int indexBlogInProgress = crawlingBlogs.IndexOf(_blog.Name);
-                            int lengthBlogInProgress = _blog.Name.Length;
-                            this.crawlingBlogs = crawlingBlogs.Remove(indexBlogInProgress, (lengthBlogInProgress + 1));
-                            this.lblProcess.Text = "Crawling Blogs - " + this.crawlingBlogs;
-
-                        });
-
-                        if (TumblrActiveList.Count == 1)
-                        {
-                            this.BeginInvoke((MethodInvoker)delegate
-                            {
-                                this.pgBar.Style = ProgressBarStyle.Continuous;
-                            });
-                        }
-
-                        if (TumblrActiveList.Count == 0)
-                        {
-                            this.BeginInvoke((MethodInvoker)delegate
-                            {
-
-                                // Update current crawling progress label
-                                this.smallImage.ImageLocation = "";
-                                this.crawlingBlogs = "";
-                                this.lblUrl.Text = "";
-                                this.lblProcess.Text = "Queue finished";
-
-                            });
-                        }
+                        cleaupParser(_blog);
                         return;
                     }
 
@@ -872,33 +855,49 @@
                     //crawledImageURLs = _blog.Links.Select(Posts => Posts.url).ToList().Intersect(crawledImageURLs).ToList();
                     crawledImageURLs = crawledImageURLs.Except(_blog.Links.Select(Posts => Posts.Url).ToList()).ToList();
 
+
+                    // set databinings for the picturebox and the information label
+                    bsSmallImage.DataSource = _blog.Links;
+                    this.smallImage.DataBindings.Add("ImageLocation", bsSmallImage, "Filename", false, DataSourceUpdateMode.OnPropertyChanged);
+                    bsSmallImage.ListChanged += bsSmallImage_ListChanged;
+
+                    bslblUrl.DataSource = _blog.Links;
+                    this.lblUrl.DataBindings.Add("Text", bslblUrl, "Url", false, DataSourceUpdateMode.OnPropertyChanged);
+                    bslblUrl.ListChanged += bslblUrl_ListChanged;
+
                     try
                     {
+                        // start the crawl
                         Parallel.ForEach(crawledImageURLs, url =>
                         {
                             MethodInvoker invoker = null;
                             string FileLocation;
                             this.wait_handle.WaitOne();
+                            // create filename from url, just skip everything before the first slash (/)
                             string fileName = Path.GetFileName(new Uri(url).LocalPath);
+                            // check if we should crawl .gifs
                             if (!Properties.Settings.Default.configChkGIFState || (Path.GetExtension(fileName).ToLower() != ".gif"))
                             {
+                                // create path to save the file in the proper folder
                                 FileLocation = Properties.Settings.Default.configDownloadLocation.ToString() + _blog.Name + "/" + fileName;
                                 try
                                 {
+                                    // download file if the file is new
                                     if (this.Download(_blog, FileLocation, url, fileName))
                                     {
-                                        _blog.Links.Add(new Post(url, fileName));
-                                        _blog.DownloadedImages = _blog.Links.Count;
+
                                         if (invoker == null)
                                         {
                                             invoker = delegate
                                             {
+                                                // add file to collection to prevent re-downloads and for statistics
+                                                _blog.Links.Add(new Post(url, FileLocation));
+                                                _blog.DownloadedImages = _blog.Links.Count;
 
+                                                // update progress
                                                 double progress = (double)_blog.DownloadedImages / (double)_blog.TotalCount * 100;
-                                                _blog.Progress = progress;
+                                                _blog.Progress = (int) progress;
 
-                                                this.lblUrl.Text = url;
-                                                this.smallImage.ImageLocation = FileLocation;
                                                 if ((this.pgBar.Value + 1) < (this.pgBar.Maximum + 1))
                                                 {
                                                     this.pgBar.Value++;
@@ -933,27 +932,13 @@
                         continue;
                     }
 
-
-                    //this.toolStop_Click(this, null);
-                    // Finished Blog
+                    // Finished crawling the blog
                     _blog.LastCrawled = DateTime.Now;
                     _blog.FinishedCrawl = true;
-                    this.SaveBlog(_blog);
-                    TumblrActiveList.Remove(_blog);
-                    // Update UI
-                    this.BeginInvoke((MethodInvoker)delegate
-                    {
 
-                        //item.SubItems[8].Text = "True";
-                        // Update current crawling progress label
-                        int indexBlogInProgress = crawlingBlogs.IndexOf(_blog.Name);
-                        int lengthBlogInProgress = _blog.Name.Length;
-                        this.crawlingBlogs = crawlingBlogs.Remove(indexBlogInProgress, (lengthBlogInProgress + 1));
-                        this.lblProcess.Text = "Crawling Blogs - " + this.crawlingBlogs;
+                    cleaupParser(_blog);
 
-                    });
-
-                    // remove index from listview after completed crawl 
+                    // remove index from listview after completed crawl, if property set
                     if (Properties.Settings.Default.configRemoveFinishedBlogs)
                     {
                         string path = Properties.Settings.Default.configDownloadLocation.ToString() + "Index/" + _blog.Name + ".tumblr";
@@ -963,40 +948,19 @@
                         }
                         this.BeginInvoke((MethodInvoker)delegate
                         {
-
-                            //this.LoadLibrary();
-                            // Update UI
                             blogs.Remove(_blog);
-
                         });
                     }
 
-                    if (TumblrActiveList.Count == 1)
-                    {
-                        this.BeginInvoke((MethodInvoker)delegate
-                        {
-                            this.pgBar.Style = ProgressBarStyle.Continuous;
-                        });
-                    }
-
-                    if (TumblrActiveList.Count == 0)
-                    {
-                        this.BeginInvoke((MethodInvoker)delegate
-                        {
-                            foreach (DataGridViewRow item in this.lvBlog.Rows)
-                            {
-
-                                // Update current crawling progress label
-                                this.smallImage.ImageLocation = "";
-                                this.crawlingBlogs = "";
-                                this.lblUrl.Text = "";
-                                this.lblProcess.Text = "Queue finished";
-                            }
-                        });
-                    }
                     return;
                 }
             }
+            cleaupParser(_blog);
+            return;
+        }
+
+        void cleaupParser(TumblrBlog _blog)
+        {
             this.SaveBlog(_blog);
             TumblrActiveList.Remove(_blog);
             // Update UI
@@ -1011,6 +975,7 @@
 
             });
 
+            // update UI
             if (TumblrActiveList.Count == 1)
             {
                 this.BeginInvoke((MethodInvoker)delegate
@@ -1023,16 +988,27 @@
             {
                 this.BeginInvoke((MethodInvoker)delegate
                 {
+                    foreach (DataGridViewRow item in this.lvBlog.Rows)
+                    {
 
-                    // Update current crawling progress label
-                    this.smallImage.ImageLocation = "";
-                    this.crawlingBlogs = "";
-                    this.lblUrl.Text = "";
-                    this.lblProcess.Text = "Queue finished";
-
+                        // Update current crawling progress label
+                        this.smallImage.ImageLocation = "";
+                        this.crawlingBlogs = "";
+                        this.lblUrl.Text = "";
+                        this.lblProcess.Text = "Queue finished";
+                    }
                 });
             }
-            return;
+        }
+
+        void bsSmallImage_ListChanged(object sender, ListChangedEventArgs e)
+        {
+            bsSmallImage.MoveNext();
+        }
+
+        void bslblUrl_ListChanged(object sender, ListChangedEventArgs e)
+        {
+            bslblUrl.MoveNext();
         }
 
         private bool SaveBlog(TumblrBlog newBlog)

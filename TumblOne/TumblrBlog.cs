@@ -13,7 +13,7 @@
         private string url;
         private int downloadedImages;
         private int totalCount;
-        private double progress;
+        private int progress;
         private DateTime dateAdded;
         private DateTime lastCrawled;
         private bool finishedCrawl;
@@ -32,7 +32,7 @@
             this.url = null;
             this.downloadedImages = 0;
             this.totalCount = 0;
-            this.progress = 0.0;
+            this.progress = 0;
             this.dateAdded = System.DateTime.MinValue;
             this.lastCrawled = System.DateTime.MinValue;
             this.finishedCrawl = false;
@@ -128,7 +128,7 @@
             }
         }
 
-        public double Progress
+        public int Progress
         {
             get
             {

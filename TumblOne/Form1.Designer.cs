@@ -75,7 +75,7 @@
             this.lvQueue = new System.Windows.Forms.ListView();
             this.chQueueName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chQueueStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lvBlog = new System.Windows.Forms.DataGridView();
+            this.lvBlog = new TumblOne.DataGridViewExtended();
             this.contextBlog.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -523,7 +523,8 @@
             this.lvBlog.AllowUserToAddRows = false;
             this.lvBlog.AllowUserToDeleteRows = false;
             this.lvBlog.AllowUserToOrderColumns = true;
-            this.lvBlog.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.lvBlog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lvBlog.BackgroundColor = System.Drawing.SystemColors.Menu;
             this.lvBlog.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -627,6 +628,6 @@
         private ColumnHeader chQueueName;
         private ColumnHeader chQueueStatus;
         private ToolStripButton toolCheckClipboard;
-        private DataGridView lvBlog;
+        private DataGridViewExtended lvBlog;
     }
 }
