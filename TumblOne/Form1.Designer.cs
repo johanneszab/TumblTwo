@@ -32,6 +32,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.label21 = new System.Windows.Forms.Label();
             this.tBlogUrl = new System.Windows.Forms.TextBox();
@@ -73,20 +75,13 @@
             this.lvQueue = new System.Windows.Forms.ListView();
             this.chQueueName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chQueueStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lvBlog = new TumblOne.ListViewEx();
-            this.chName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.chDownloadedImages = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.chPostCount = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.chURL = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.chProgress = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.chStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.chDateAdded = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.chLastCrawled = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lvBlog = new System.Windows.Forms.DataGridView();
             this.contextBlog.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.panelInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.smallImage)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lvBlog)).BeginInit();
             this.SuspendLayout();
             // 
             // label21
@@ -525,83 +520,49 @@
             // 
             // lvBlog
             // 
-            this.lvBlog.AllowColumnReorder = true;
-            this.lvBlog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.lvBlog.AllowUserToAddRows = false;
+            this.lvBlog.AllowUserToDeleteRows = false;
+            this.lvBlog.AllowUserToOrderColumns = true;
+            this.lvBlog.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lvBlog.BackColor = System.Drawing.SystemColors.Menu;
-            this.lvBlog.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lvBlog.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.chName,
-            this.chDownloadedImages,
-            this.chPostCount,
-            this.chURL,
-            this.chProgress,
-            this.chStatus,
-            this.chDateAdded,
-            this.chLastCrawled});
+            this.lvBlog.BackgroundColor = System.Drawing.SystemColors.Menu;
+            this.lvBlog.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.lvBlog.ContextMenuStrip = this.contextBlog;
-            this.lvBlog.ForeColor = System.Drawing.Color.Black;
-            this.lvBlog.FullRowSelect = true;
-            this.lvBlog.HideSelection = false;
-            this.lvBlog.Location = new System.Drawing.Point(12, 42);
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Menu;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.lvBlog.DefaultCellStyle = dataGridViewCellStyle1;
+            this.lvBlog.Location = new System.Drawing.Point(12, 43);
             this.lvBlog.Name = "lvBlog";
-            this.lvBlog.Size = new System.Drawing.Size(1026, 274);
-            this.lvBlog.TabIndex = 0;
-            this.lvBlog.UseCompatibleStateImageBehavior = false;
-            this.lvBlog.View = System.Windows.Forms.View.Details;
-            this.lvBlog.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lvBlog_ColumnClick);
-            // 
-            // chName
-            // 
-            this.chName.Text = "Name";
-            this.chName.Width = 160;
-            // 
-            // chDownloadedImages
-            // 
-            this.chDownloadedImages.Text = "Downloaded Images";
-            this.chDownloadedImages.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.chDownloadedImages.Width = 119;
-            // 
-            // chPostCount
-            // 
-            this.chPostCount.Text = "Number of Posts";
-            this.chPostCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.chPostCount.Width = 100;
-            // 
-            // chURL
-            // 
-            this.chURL.Text = "Url";
-            this.chURL.Width = 240;
-            // 
-            // chProgress
-            // 
-            this.chProgress.Text = "Progress";
-            // 
-            // chStatus
-            // 
-            this.chStatus.Text = "Status";
-            // 
-            // chDateAdded
-            // 
-            this.chDateAdded.Text = "Date Added";
-            this.chDateAdded.Width = 130;
-            // 
-            // chLastCrawled
-            // 
-            this.chLastCrawled.Text = "Last Complete Crawl";
-            this.chLastCrawled.Width = 150;
+            this.lvBlog.ReadOnly = true;
+            this.lvBlog.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.lvBlog.RowHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            this.lvBlog.RowHeadersWidth = 4;
+            this.lvBlog.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.lvBlog.Size = new System.Drawing.Size(1025, 273);
+            this.lvBlog.TabIndex = 13;
             // 
             // Form1
             // 
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1144, 671);
+            this.Controls.Add(this.lvBlog);
             this.Controls.Add(this.lvQueue);
             this.Controls.Add(this.panelInfo);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.smallImage);
             this.Controls.Add(this.toolStrip1);
-            this.Controls.Add(this.lvBlog);
             this.Controls.Add(this.tBlogUrl);
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -616,6 +577,7 @@
             this.groupBox1.PerformLayout();
             this.panelInfo.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.smallImage)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lvBlog)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -624,9 +586,6 @@
         #endregion
 
         private CheckBox chkGIF;
-        private ColumnHeader chName;
-        private ColumnHeader chDownloadedImages;
-        private ColumnHeader chURL;
         private ColumnHeader columnHeader5;
         private ColumnHeader columnHeader6;
         private ColumnHeader columnHeader8;
@@ -639,7 +598,6 @@
         public Label lbl23;
         public Label lblProcess;
         public Label lblUrl;
-        public ListViewEx lvBlog;
         private ToolStripMenuItem mnuCrawl;
         private ToolStripMenuItem mnuRemoveBlog2;
         private ToolStripMenuItem mnuShowFilesInExplorer;
@@ -665,14 +623,10 @@
         public PictureBox smallImage;
         private ToolStripButton toolAddQueue;
         private ToolStripButton toolRemoveQueue;
-        private ColumnHeader chDateAdded;
-        private ColumnHeader chLastCrawled;
         private ListView lvQueue;
         private ColumnHeader chQueueName;
         private ColumnHeader chQueueStatus;
-        private ColumnHeader chPostCount;
         private ToolStripButton toolCheckClipboard;
-        private ColumnHeader chProgress;
-        private ColumnHeader chStatus;
+        private DataGridView lvBlog;
     }
 }

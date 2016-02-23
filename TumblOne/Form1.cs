@@ -4,6 +4,7 @@
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.ComponentModel;
     //using System.ComponentModel;
     using System.Diagnostics;
     //using System.Drawing;
@@ -31,9 +32,7 @@
         //private QueuedTaskScheduler qts = new QueuedTaskScheduler(TaskScheduler.Default, 2); 
         private CancellationTokenSource cts = new CancellationTokenSource();
         private List<TumblrBlog> bin = new List<TumblrBlog>();
-
-        // The column we are currently using for sorting.
-        private ColumnHeader SortingColumn = null;
+        private TumblOne.SortableBindingList<TumblrBlog> blogs = new TumblOne.SortableBindingList<TumblrBlog>();
 
         public Form1()
         {
@@ -48,59 +47,43 @@
 
         private void AddBlog(object sender, EventArgs e)
         {
-            ListViewItem lvItem;
             string str = this.ExtractBlogname(this.tBlogUrl.Text);
             if (str != null)
             {
-                foreach (ListViewItem item in this.lvBlog.Items)
+                if (blogs.Select(blog => blog.Name).ToList().Contains(str))
                 {
-                    if (item.Text.Equals(str))
-                    {
-                        MessageBox.Show("The entered URL is already in the library!", Application.ProductName);
-                        this.tBlogUrl.Text = string.Empty;
-                        return;
-                    }
+                    MessageBox.Show("The entered URL is already in the library!", Application.ProductName);
+                    this.tBlogUrl.Text = string.Empty;
+                    return;
                 }
-                lvItem = new ListViewItem();
+
+                TumblrBlog newBlog = new TumblrBlog
                 {
-                    TumblrBlog newBlog = new TumblrBlog
-                    {
-                        _Name = str,
-                        _URL = this.ExtractUrl(this.tBlogUrl.Text),
-                        _DateAdded = DateTime.Now,
-                        _DownloadedImages = 0,
-                        _TotalCount = 0,
-                        _LastCrawled = System.DateTime.MinValue,
-                        _finishedCrawl = false
-                    };
-                    lvItem.Text = newBlog._Name;
-                    lvItem.SubItems.Add("");
-                    lvItem.SubItems.Add("");
-                    lvItem.SubItems.Add(newBlog._URL);
-                    lvItem.SubItems.Add("0.00");
-                    lvItem.SubItems.Add("");
-                    lvItem.SubItems.Add(newBlog._DateAdded.ToString());
-                    lvItem.SubItems.Add("Not yet completely crawled!");
-                    //lvItem.SubItems.Add(newBlog._finishedCrawl.ToString());
-                    this.lvBlog.Items.Add(lvItem);
-                    this.SaveBlog(newBlog);
-                    newBlog = null;
-                }
+                    Name = str,
+                    Url = this.ExtractUrl(str),
+                    DateAdded = DateTime.Now,
+                    DownloadedImages = 0,
+                    TotalCount = 0,
+                    LastCrawled = System.DateTime.MinValue,
+                    FinishedCrawl = false
+                };
+                this.SaveBlog(newBlog);
+                blogs.Add(newBlog);
+                if (blogs.Count == 1)
+                    lvBlog.DataSource = blogs;
+                newBlog = null;
                 this.tBlogUrl.Text = "http://";
-                if (Directory.Exists(Properties.Settings.Default.configDownloadLocation.ToString() + "Index/"))
+                if (blogs.Any())
                 {
-                    if (Directory.GetFiles(Properties.Settings.Default.configDownloadLocation.ToString() + "Index/", "*.tumblr").Count<string>() > 0)
-                    {
-                        this.toolShowExplorer.Enabled = true;
-                        this.toolRemoveBlog.Enabled = true;
-                        this.toolCrawl.Enabled = true;
-                    }
-                    else
-                    {
-                        this.toolShowExplorer.Enabled = false;
-                        this.toolRemoveBlog.Enabled = false;
-                        this.toolCrawl.Enabled = false;
-                    }
+                    this.toolShowExplorer.Enabled = true;
+                    this.toolRemoveBlog.Enabled = true;
+                    this.toolCrawl.Enabled = true;
+                }
+                else
+                {
+                    this.toolShowExplorer.Enabled = false;
+                    this.toolRemoveBlog.Enabled = false;
+                    this.toolCrawl.Enabled = false;
                 }
             }
         }
@@ -284,18 +267,6 @@
                 Location = Properties.Settings.Default.Location;
                 Size = Properties.Settings.Default.Size;
             }
-
-            // Setup Clipboard Monitor Listener
-            if (Properties.Settings.Default.CheckClipboard)
-            {
-                this.toolCheckClipboard.Checked = true;
-                ClipboardMonitor.Start();
-                ClipboardMonitor.OnClipboardChange += ClipboardMonitor_OnClipboardChange;
-            }
-            else
-            {
-                this.toolCheckClipboard.Checked = false;
-            }
         }
 
         private void ClipboardMonitor_OnClipboardChange(ClipboardFormat format, object data)
@@ -306,76 +277,51 @@
                 string[] URLs = data.ToString().Split(new char[0]);
                 foreach (string _url in URLs)
                 {
-                    ListViewItem lvItem;
-                    bool blogExists = false;
                     string str = this.ExtractBlogname_paste(_url);
                     if (str != null)
                     {
-                        this.Invoke((Action)delegate
+                        if (blogs.Select(blog => blog.Name).ToList().Contains(str))
                         {
-                            foreach (ListViewItem item in this.lvBlog.Items)
-                            {
-                                if (item.Text.Equals(str))
-                                {
-                                    blogExists = true;
-                                    return;
-                                }
-                            }
-                        });
-                        if (blogExists)
-                        {
-
+                            return;
                         }
-                        else
                         {
-                            lvItem = new ListViewItem();
+                            TumblrBlog newBlog = new TumblrBlog
                             {
-                                TumblrBlog newBlog = new TumblrBlog
-                                {
-                                    _Name = str,
-                                    _URL = this.ExtractUrl(_url),
-                                    _DateAdded = DateTime.Now,
-                                    _DownloadedImages = 0,
-                                    _TotalCount = 0,
-                                    _LastCrawled = System.DateTime.MinValue,
-                                    _finishedCrawl = false
-                                };
-                                lvItem.Text = newBlog._Name;
-                                lvItem.SubItems.Add("");
-                                lvItem.SubItems.Add("");
-                                lvItem.SubItems.Add(newBlog._URL);
-                                lvItem.SubItems.Add("0.00");
-                                lvItem.SubItems.Add("");
-                                lvItem.SubItems.Add(newBlog._DateAdded.ToString());
-                                lvItem.SubItems.Add("Not yet completely crawled!");
-                                //lvItem.SubItems.Add(newBlog._finishedCrawl.ToString());
-                                this.SaveBlog(newBlog);
-                                newBlog = null;
+                                Name = str,
+                                Url = this.ExtractUrl(_url),
+                                DateAdded = DateTime.Now,
+                                DownloadedImages = 0,
+                                TotalCount = 0,
+                                LastCrawled = System.DateTime.MinValue,
+                                FinishedCrawl = false
+                            };
+                            this.SaveBlog(newBlog);
+                            this.Invoke((Action)delegate
+                            {
+                                blogs.Add(newBlog);
+                                if (blogs.Count == 1)
+                                    FormatDataSource();
+                            });
+                            newBlog = null;
+
+
+                            if (blogs.Any())
+                            {
                                 this.Invoke((Action)delegate
                                 {
-                                    this.lvBlog.Items.Add(lvItem);
+                                    this.toolShowExplorer.Enabled = true;
+                                    this.toolRemoveBlog.Enabled = true;
+                                    this.toolCrawl.Enabled = true;
                                 });
                             }
-                            if (Directory.Exists(Properties.Settings.Default.configDownloadLocation.ToString() + "Index/"))
+                            else
                             {
-                                if (Directory.GetFiles(Properties.Settings.Default.configDownloadLocation.ToString() + "Index/", "*.tumblr").Count<string>() > 0)
+                                this.Invoke((Action)delegate
                                 {
-                                    this.Invoke((Action)delegate
-                                    {
-                                        this.toolShowExplorer.Enabled = true;
-                                        this.toolRemoveBlog.Enabled = true;
-                                        this.toolCrawl.Enabled = true;
-                                    });
-                                }
-                                else
-                                {
-                                    this.Invoke((Action)delegate
-                                    {
-                                        this.toolShowExplorer.Enabled = false;
-                                        this.toolRemoveBlog.Enabled = false;
-                                        this.toolCrawl.Enabled = false;
-                                    });
-                                }
+                                    this.toolShowExplorer.Enabled = false;
+                                    this.toolRemoveBlog.Enabled = false;
+                                    this.toolCrawl.Enabled = false;
+                                });
                             }
                         }
                     }
@@ -415,6 +361,9 @@
         public async void LoadGUI()
         {
             await LoadLibrary();
+
+            // Delay load of preferences which interfere with library loading
+            loadPreferences();
         }
 
         public Task LoadLibrary()
@@ -423,100 +372,43 @@
                 {
                     this.BeginInvoke((MethodInvoker)delegate
                         {
-                            this.lvBlog.Items.Clear();
+                            blogs.Clear();
                             this.lblProcess.Text = "";
                             this.lblUrl.Text = "";
                         });
-                        if (Directory.Exists(Properties.Settings.Default.configDownloadLocation.ToString() + "Index/"))
+                    if (Directory.Exists(Properties.Settings.Default.configDownloadLocation.ToString() + "Index/"))
+                    {
+                        string[] files = Directory.GetFiles(Properties.Settings.Default.configDownloadLocation.ToString() + "Index/", "*.tumblr");
+                        if (files.Count<string>() > 0)
                         {
-                            string[] files = Directory.GetFiles(Properties.Settings.Default.configDownloadLocation.ToString() + "Index/", "*.tumblr");
-                            if (files.Count<string>() > 0)
+                            this.BeginInvoke((MethodInvoker)delegate
                             {
-                                this.BeginInvoke((MethodInvoker)delegate
-                                {
-                                    this.toolShowExplorer.Enabled = true;
-                                    this.toolRemoveBlog.Enabled = true;
-                                    this.toolCrawl.Enabled = true;
-                                });
-                            }
-                            else
+                                this.toolShowExplorer.Enabled = true;
+                                this.toolRemoveBlog.Enabled = true;
+                                this.toolCrawl.Enabled = true;
+                            });
+                        }
+                        else
+                        {
+                            this.BeginInvoke((MethodInvoker)delegate
                             {
-                                this.BeginInvoke((MethodInvoker)delegate
-                                {
-                                this.toolShowExplorer.Enabled = false;
-                                this.toolRemoveBlog.Enabled = false;
-                                this.toolCrawl.Enabled = false;
-                                });
-                            }
+                            this.toolShowExplorer.Enabled = false;
+                            this.toolRemoveBlog.Enabled = false;
+                            this.toolCrawl.Enabled = false;
+                            });
+                        }
+
+                        this.BeginInvoke((MethodInvoker)delegate
+                        {
+                            // format the Datagridview and bind the source (list of TumblrBlogs)
                             foreach (string str in files)
                             {
-                                TumblrBlog blog = this.LoadBlog(Path.GetFileNameWithoutExtension(str));
-                                if ((blog != null) && (blog._URL != null))
-                                {
-                                    //blog.TOTAL_COUNT =  Directory.GetFiles(Properties.Settings.Default.configDownloadLocation.ToString() + blog._Name + "/").Length;
-                                    ListViewItem item = new ListViewItem
-                                    {
-                                        Text = blog._Name
-                                    };
-                                    if (blog._DownloadedImages > 0)
-                                    {
-                                        item.SubItems.Add(blog._DownloadedImages.ToString());
-                                    }
-                                    else
-                                    {
-                                        item.SubItems.Add("Not yet crawled!");
-                                    }
-                                    item.SubItems.Add(blog._TotalCount.ToString());
-                                    item.SubItems.Add(blog._URL);
-
-                                    // Set Progressbar
-                                    double progress = (double)blog._DownloadedImages / (double)blog._TotalCount * 100;
-                                    if (progress < 101)
-                                    {
-                                        progress = System.Math.Round(progress, 2);
-                                        item.SubItems.Add(progress.ToString());
-                                    }
-                                    else
-                                    {
-                                        item.SubItems.Add("Inf");
-                                    }
-                                    if (Properties.Settings.Default.configCheckStatusAtStartup) {
-                                        checkIfBlogIsOnline(blog);
-                                        if (blog._Online == true)
-                                        {
-                                            item.SubItems.Add("Online");
-
-                                        }
-                                        else
-                                        {
-                                            item.SubItems.Add("Offline");
-
-                                        }
-                                    } else {
-                                        item.SubItems.Add("");
-                                    }
-
-                                    item.SubItems.Add(blog._DateAdded.ToString());
-                                    if (blog._LastCrawled == System.DateTime.MinValue)
-                                    {
-                                        item.SubItems.Add("Not yet completely crawled!");
-                                    }
-                                    else
-                                    {
-                                        item.SubItems.Add(blog._LastCrawled.ToString());
-                                    }
-                                    //item.SubItems.Add(blog._finishedCrawl.ToString());
-                                    this.BeginInvoke((MethodInvoker)delegate
-                                    {
-                                        this.lvBlog.Items.Add(item);
-                                    });
-                                    blog = null;
-                                }
+                                blogs.Add(this.LoadBlog(Path.GetFileNameWithoutExtension(str)));
                             }
-                        }
-                
+                            FormatDataSource();
+                        });
+                    }
                 });
-
         }
 
         private void mnuExit_Click(object sender, EventArgs e)
@@ -526,7 +418,6 @@
 
         private void mnuRescanBlog_Click(object sender, EventArgs e)
         {
-            //this.worker = new Thread(new ParameterizedThreadStart(this.RunParser));
             cts = new CancellationTokenSource();
 
             this.smallImage.ImageLocation = "";
@@ -536,28 +427,26 @@
 
             for (int i = 0; i < Properties.Settings.Default.configSimultaneousDownloads; i++ )
                 this.tasks[i] = Task.Run(() => runProducer(bin, cts.Token));
-            //this.worker.Name = "TumblOne Thread";
-            //this.worker.IsBackground = true;
             this.wait_handle = new ManualResetEvent(true);
-            //this.worker.Start(text);
+
+            // Enable/Disable Controls
             this.panelInfo.Visible = false;
             this.toolPause.Enabled = true;
             this.toolResume.Enabled = false;
             this.toolStop.Enabled = true;
             this.toolCrawl.Enabled = false;
-            //this.toolRemoveBlog.Enabled = false;
             this.contextBlog.Items[3].Enabled = false;
         }
 
         private void mnuShowFilesInExplorer_Click(object sender, EventArgs e)
         {
-            if (this.lvBlog.SelectedItems.Count > 0)
+            if (this.lvBlog.SelectedRows.Count > 0)
             {
-                foreach (ListViewItem eachItem in this.lvBlog.SelectedItems)
+                foreach (DataGridViewRow eachItem in this.lvBlog.SelectedRows)
                 {
                     try
                     {
-                        Process.Start("explorer.exe", Application.StartupPath + @"\Blogs\" + eachItem.Text);
+                        Process.Start("explorer.exe", Properties.Settings.Default.configDownloadLocation + ((TumblrBlog)eachItem.DataBoundItem).Name);
                     }
                     catch (Exception exception)
                     {
@@ -567,15 +456,99 @@
             }
         }
 
+        private bool FormatDataSource()
+        {
+            lvBlog.DataSource = null;
+            lvBlog.Columns.Clear();
+            // format the Datagridview and bind the source (list of TumblrBlogs)
+            lvBlog.AutoGenerateColumns = false;
+
+            var nameField = new DataGridViewTextBoxColumn();
+            nameField.HeaderText = "Name";
+            nameField.DataPropertyName = "Name";
+
+            var downloadedImages = new DataGridViewTextBoxColumn();
+            downloadedImages.HeaderText = "Downloaded Images";
+            downloadedImages.DataPropertyName = "DownloadedImages";
+            downloadedImages.DefaultCellStyle.Format = "#";
+
+            var numberOfPosts = new DataGridViewTextBoxColumn();
+            numberOfPosts.HeaderText = "Number of Posts";
+            numberOfPosts.DataPropertyName = "TotalCount";
+            numberOfPosts.DefaultCellStyle.Format = "#";
+
+            var urlField = new DataGridViewTextBoxColumn();
+            urlField.HeaderText = "Url";
+            urlField.DataPropertyName = "Url";
+
+            var progress = new DataGridViewTextBoxColumn();
+            progress.HeaderText = "Progress";
+            progress.DataPropertyName = "Progress";
+            progress.DefaultCellStyle.Format = "0.##";
+
+            var status = new DataGridViewTextBoxColumn();
+            status.HeaderText = "Status";
+            status.DataPropertyName = "Online";
+
+            var dateAdded = new DataGridViewTextBoxColumn();
+            dateAdded.HeaderText = "Date Added";
+            dateAdded.DataPropertyName = "dateAdded";
+            dateAdded.DefaultCellStyle.Format = "dd/MM/yyyy hh:mm:ss";
+
+            var lastCrawl = new DataGridViewTextBoxColumn();
+            lastCrawl.HeaderText = "Last Complete Crawl";
+            lastCrawl.DataPropertyName = "lastCrawled";
+
+            this.BeginInvoke((MethodInvoker)delegate
+            {
+                lvBlog.Columns.Add(nameField);
+                lvBlog.Columns.Add(downloadedImages);
+                lvBlog.Columns.Add(numberOfPosts);
+                lvBlog.Columns.Add(urlField);
+                lvBlog.Columns.Add(progress);
+                lvBlog.Columns.Add(status);
+                lvBlog.Columns.Add(dateAdded);
+                lvBlog.Columns.Add(lastCrawl);
+                lvBlog.DataSource = blogs;
+
+                lvBlog.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.False;
+                //lvBlog.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                //lvBlog.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                //lvBlog.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                //lvBlog.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                //lvBlog.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                //lvBlog.Columns[5].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                //lvBlog.Columns[6].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                //lvBlog.Columns[7].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+
+                lvBlog.Columns[0].SortMode = DataGridViewColumnSortMode.Automatic;
+                lvBlog.Columns[1].SortMode = DataGridViewColumnSortMode.Automatic;
+                lvBlog.Columns[2].SortMode = DataGridViewColumnSortMode.Automatic;
+                lvBlog.Columns[3].SortMode = DataGridViewColumnSortMode.Automatic;
+                lvBlog.Columns[4].SortMode = DataGridViewColumnSortMode.Automatic;
+                lvBlog.Columns[5].SortMode = DataGridViewColumnSortMode.Automatic;
+                lvBlog.Columns[6].SortMode = DataGridViewColumnSortMode.Automatic;
+                lvBlog.Columns[7].SortMode = DataGridViewColumnSortMode.Automatic;
+
+                lvBlog.CellBorderStyle = DataGridViewCellBorderStyle.None;
+                lvBlog.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+                lvBlog.AutoResizeColumns();
+                lvBlog.AllowUserToResizeColumns = true;
+                lvBlog.AllowUserToOrderColumns = true;
+            });
+
+            return true;
+        }
+
         private void mnuVisit_Click(object sender, EventArgs e)
         {
-            if (this.lvBlog.SelectedItems.Count >= 0)
+            if (this.lvBlog.SelectedRows.Count > 0)
             {
-                foreach (ListViewItem eachItem in this.lvBlog.SelectedItems)
+                foreach (DataGridViewRow eachItem in this.lvBlog.SelectedRows)
                 {
                     try
                     {
-                        Process.Start(eachItem.SubItems[3].Text);
+                        Process.Start(((TumblrBlog)eachItem.DataBoundItem).Url);
                     }
                     catch (Exception exception)
                     {
@@ -591,25 +564,23 @@
             //{
             //    MessageBox.Show("During an active crawl, it's not possible to remove a blog!", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             //}
-            if ((this.lvBlog.SelectedItems != null) && (this.lvBlog.SelectedItems.Count != 0))
+            if (this.lvBlog.SelectedRows.Count != 0)
             {
                 if (Properties.Settings.Default.configDeleteIndexOnly)
                 {
                     if (MessageBox.Show("Should the selected Blog really be deleted from Library (only removes Index Files, no downloaded images)?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
-                        foreach (ListViewItem eachItem in this.lvBlog.SelectedItems)
+                        foreach (DataGridViewRow eachItem in this.lvBlog.SelectedRows)
                         {
-                            string path = Properties.Settings.Default.configDownloadLocation.ToString() + "Index/" + eachItem.Text + ".tumblr";
-                            string str2 = Properties.Settings.Default.configDownloadLocation.ToString() + eachItem.Text;
+                            string indexPath = Properties.Settings.Default.configDownloadLocation.ToString() + "Index/" + ((TumblrBlog)eachItem.DataBoundItem).Name + ".tumblr";
                             try
                             {
-                                if (System.IO.File.Exists(path))
+                                if (System.IO.File.Exists(indexPath))
                                 {
-                                    System.IO.File.Delete(path);
+                                    System.IO.File.Delete(indexPath);
                                 }
-                                //this.LoadLibrary();
                                 // Update UI
-                                eachItem.Remove();
+                                blogs.RemoveAt(eachItem.Index);
                             }
                             catch (Exception exception)
                             {
@@ -622,20 +593,19 @@
                 {
                     if (MessageBox.Show("Should the selected Blog and all images really be deleted from Library?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
-                        foreach (ListViewItem eachItem in this.lvBlog.SelectedItems)
+                        foreach (DataGridViewRow eachItem in this.lvBlog.SelectedRows)
                         {
-                            string path = Properties.Settings.Default.configDownloadLocation.ToString() + "Index/" + eachItem.Text + ".tumblr";
-                            string str2 = Properties.Settings.Default.configDownloadLocation.ToString() + eachItem.Text;
+                            string indexPath = Properties.Settings.Default.configDownloadLocation.ToString() + "Index/" + ((TumblrBlog)eachItem.DataBoundItem).Name + ".tumblr";
+                            string filePath = Properties.Settings.Default.configDownloadLocation.ToString() + ((TumblrBlog)eachItem.DataBoundItem).Name;
                             try
                             {
-                                if (System.IO.File.Exists(path))
+                                if (System.IO.File.Exists(indexPath))
                                 {
-                                    System.IO.File.Delete(path);
+                                    System.IO.File.Delete(indexPath);
                                 }
-                                Directory.Delete(str2, true);
-                                //this.LoadLibrary();
+                                Directory.Delete(filePath, true);
                                 // Update UI
-                                eachItem.Remove();
+                                blogs.RemoveAt(eachItem.Index);
                             }
                             catch (Exception exception)
                             {
@@ -655,7 +625,7 @@
             int numberOfPostsCrawled = 0;
             List<string> crawledImageURLs = new List<string>();
             //string blogname = ExtractBlogname(ApiUrl.ToString());
-            String ApiUrl = _blog._URL ;
+            String ApiUrl = _blog.Url ;
             if (ApiUrl.Last<char>() != '/')
             {
                 ApiUrl = ApiUrl + "/api/read?start=";
@@ -664,7 +634,7 @@
             {
                 ApiUrl = ApiUrl + "api/read?start=";
             }
-            this.CreateDataFolder(_blog._Name);
+            this.CreateDataFolder(_blog.Name);
             while (true)
             {
                 this.wait_handle.WaitOne();
@@ -684,8 +654,7 @@
                     // set title and name of the blog
                     // check if blogaddress is alive of someone else is using it now
 
-                    bool newBlogDetected = false;
-                    if (_blog._Description == null && checkedIfBlogIsAlive == false)
+                    if (_blog.Description == null && checkedIfBlogIsAlive == false)
                     {
                         XmlDocument tumblelog = new XmlDocument();
 
@@ -695,24 +664,23 @@
                             XmlNode tumblblog = tumblelog.DocumentElement.SelectSingleNode("tumblelog");
                             try
                             {
-                                _blog._Description = tumblblog.Attributes["title"].InnerText;
-                                _blog._Text = tumblblog.InnerText;
-                                _blog._Online = true;
+                                _blog.Description = tumblblog.Attributes["title"].InnerText;
+                                _blog.Text = tumblblog.InnerText;
+                                _blog.Online = true;
                             }
                             catch (NullReferenceException)
                             {
-                                _blog._Online = true;
+                                _blog.Online = true;
                             }
                         }
                         catch (WebException)
                         {
-                            _blog._Online = false;
-                            newBlogDetected = true;
+                            _blog.Online = false;
                         }
                         checkedIfBlogIsAlive = true;
                     }
 
-                    else if (_blog._Description != null && checkedIfBlogIsAlive == false)
+                    else if (_blog.Description != null && checkedIfBlogIsAlive == false)
                     {
                         XmlDocument tumblelog = new XmlDocument();
 
@@ -722,47 +690,31 @@
                             XmlNode tumblblog = tumblelog.DocumentElement.SelectSingleNode("tumblelog");
                             try
                             {
-                                if (!_blog._Description.Equals(tumblblog.Attributes["title"].InnerText))
+                                if (!_blog.Description.Equals(tumblblog.Attributes["title"].InnerText))
                                 {
-                                    newBlogDetected = true;
-                                    _blog._Online = false;
+                                    _blog.Online = false;
                                 }
-                                if (!_blog._Text.Equals(tumblblog.InnerText))
+                                if (!_blog.Text.Equals(tumblblog.InnerText))
                                 {
-                                    newBlogDetected = true;
-                                    _blog._Online = false;
+                                    _blog.Online = false;
                                 }
 
-                                _blog._Description = tumblblog.Attributes["title"].InnerText;
-                                _blog._Text = tumblblog.InnerText;
-                                _blog._Online = true;
+                                _blog.Description = tumblblog.Attributes["title"].InnerText;
+                                _blog.Text = tumblblog.InnerText;
+                                _blog.Online = true;
                             }
                             catch (NullReferenceException)
                             {
-                                _blog._Online = true;
+                                _blog.Online = true;
                             }
                         }
                         catch (WebException)
                         {
-                            _blog._Online = false;
-                            newBlogDetected = true;
+                            _blog.Online = false;
                         }
                         checkedIfBlogIsAlive = true;
                     }
 
-                    if (!newBlogDetected)
-                    {
-                        this.BeginInvoke((MethodInvoker)delegate
-                        {
-                            foreach (ListViewItem item in this.lvBlog.Items)
-                            {
-                                if (item.Text == _blog._Name)
-                                {
-                                    item.SubItems[5].Text = "Online";
-                                }
-                            }
-                        });
-                    }
                     else
                     {
                         this.SaveBlog(_blog);
@@ -770,19 +722,12 @@
                         // Update UI
                         this.BeginInvoke((MethodInvoker)delegate
                         {
-                            foreach (ListViewItem item in this.lvBlog.Items)
-                            {
-                                if (item.Text == _blog._Name)
-                                {
-                                    // Update current crawling progress label
-                                    item.SubItems[5].Text = "Offline";
 
-                                    int indexBlogInProgress = crawlingBlogs.IndexOf(_blog._Name);
-                                    int lengthBlogInProgress = _blog._Name.Length;
-                                    this.crawlingBlogs = crawlingBlogs.Remove(indexBlogInProgress, (lengthBlogInProgress + 1));
-                                    this.lblProcess.Text = "Crawling Blogs - " + this.crawlingBlogs;
-                                }
-                            }
+                            int indexBlogInProgress = crawlingBlogs.IndexOf(_blog.Name);
+                            int lengthBlogInProgress = _blog.Name.Length;
+                            this.crawlingBlogs = crawlingBlogs.Remove(indexBlogInProgress, (lengthBlogInProgress + 1));
+                            this.lblProcess.Text = "Crawling Blogs - " + this.crawlingBlogs;
+
                         });
 
                         if (TumblrActiveList.Count == 1)
@@ -797,17 +742,13 @@
                         {
                             this.BeginInvoke((MethodInvoker)delegate
                             {
-                                foreach (ListViewItem item in this.lvBlog.Items)
-                                {
-                                    if (item.Text == _blog._Name)
-                                    {
-                                        // Update current crawling progress label
-                                        this.smallImage.ImageLocation = "";
-                                        this.crawlingBlogs = "";
-                                        this.lblUrl.Text = "";
-                                        this.lblProcess.Text = "Queue finished";
-                                    }
-                                }
+
+                                // Update current crawling progress label
+                                this.smallImage.ImageLocation = "";
+                                this.crawlingBlogs = "";
+                                this.lblUrl.Text = "";
+                                this.lblProcess.Text = "Queue finished";
+
                             });
                         }
                         return;
@@ -819,7 +760,7 @@
                     {
                         foreach (var type in from data in document.Descendants("posts") select new { Total = data.Attribute("total").Value })
                         {
-                            _blog._TotalCount = Convert.ToInt32(type.Total.ToString());
+                            _blog.TotalCount = Convert.ToInt32(type.Total.ToString());
                         }
                         if (method == null)
                         {
@@ -829,18 +770,10 @@
                                 {
                                     try
                                     {
-                                        foreach (ListViewItem item in this.lvBlog.Items)
-                                        {
-                                            if (item.Text == _blog._Name)
-                                            {
-                                                item.SubItems[2].Text = _blog._TotalCount.ToString();
-                                                break;
-                                            }
-                                        }
                                         this.pgBar.Style = ProgressBarStyle.Marquee;
                                         this.pgBar.Minimum = 0;
-                                        this.pgBar.Maximum = _blog._TotalCount;
-                                        this.pgBar.Value = _blog._DownloadedImages;
+                                        this.pgBar.Maximum = _blog.TotalCount;
+                                        this.pgBar.Value = _blog.DownloadedImages;
                                     }
                                     catch (ArgumentOutOfRangeException)
                                     {
@@ -855,18 +788,10 @@
                                 {
                                     try
                                     {
-                                        foreach (ListViewItem item in this.lvBlog.Items)
-                                        {
-                                            if (item.Text == _blog._Name)
-                                            {
-                                                item.SubItems[2].Text = _blog._TotalCount.ToString();
-                                                break;
-                                            }
-                                        }
                                         this.pgBar.Style = ProgressBarStyle.Continuous;
                                         this.pgBar.Minimum = 0;
-                                        this.pgBar.Maximum = _blog._TotalCount;
-                                        this.pgBar.Value = _blog._DownloadedImages;
+                                        this.pgBar.Maximum = _blog.TotalCount;
+                                        this.pgBar.Value = _blog.DownloadedImages;
                                     }
                                     catch (ArgumentOutOfRangeException)
                                     {
@@ -880,7 +805,7 @@
                     }
                     catch
                     {
-                        _blog._TotalCount = 0;
+                        _blog.TotalCount = 0;
                         //this.toolStop_Click(this, null);
                         break;
                     }
@@ -888,7 +813,7 @@
 
                 // Generate URL list of Images
                 // the api shows 50 posts at max, determine the number of pages to crawl
-                int numberOfPagesToCrawl = ((_blog._TotalCount / 50) + 1);
+                int numberOfPagesToCrawl = ((_blog.TotalCount / 50) + 1);
                 Parallel.For(0, numberOfPagesToCrawl, i =>
                     {
 
@@ -934,13 +859,15 @@
                             numberOfPostsCrawled += 50;
                             this.BeginInvoke((MethodInvoker)delegate
                             {
-                                this.lblUrl.Text = "Evaluated " + numberOfPostsCrawled + " Image URLs out of " + _blog._TotalCount + " Posts.";
+                                this.lblUrl.Text = "Evaluated " + numberOfPostsCrawled + " Image URLs out of " + _blog.TotalCount + " Posts.";
                             });
                         }
                     });
 
-                //if (numberOfPostsCrawled >= _blog._TotalCount)
+                // Start the crawl process
+                //if (numberOfPostsCrawled >= _blog.TotalCount)
                 {
+                    // Generate unique and new list of urls, subtract already crawled ones
                     crawledImageURLs = crawledImageURLs.Distinct().ToList();
                     //crawledImageURLs = _blog.Links.Select(Posts => Posts.url).ToList().Intersect(crawledImageURLs).ToList();
                     crawledImageURLs = crawledImageURLs.Except(_blog.Links.Select(Posts => Posts.Url).ToList()).ToList();
@@ -955,35 +882,21 @@
                             string fileName = Path.GetFileName(new Uri(url).LocalPath);
                             if (!Properties.Settings.Default.configChkGIFState || (Path.GetExtension(fileName).ToLower() != ".gif"))
                             {
-                                FileLocation = Properties.Settings.Default.configDownloadLocation.ToString() + _blog._Name + "/" + fileName;
+                                FileLocation = Properties.Settings.Default.configDownloadLocation.ToString() + _blog.Name + "/" + fileName;
                                 try
                                 {
                                     if (this.Download(_blog, FileLocation, url, fileName))
                                     {
                                         _blog.Links.Add(new Post(url, fileName));
-                                        _blog._DownloadedImages = _blog.Links.Count;
+                                        _blog.DownloadedImages = _blog.Links.Count;
                                         if (invoker == null)
                                         {
                                             invoker = delegate
                                             {
-                                                foreach (ListViewItem item in this.lvBlog.Items)
-                                                {
-                                                    if (item.Text == _blog._Name)
-                                                    {
-                                                        item.SubItems[1].Text = _blog.Links.Count.ToString();
-                                                        double progress = (double)_blog._DownloadedImages / (double)_blog._TotalCount * 100;
-                                                        if (progress < 101)
-                                                        {
-                                                            progress = System.Math.Round(progress, 2);
-                                                            item.SubItems[4].Text = progress.ToString();
-                                                        }
-                                                        else
-                                                        {
-                                                            item.SubItems[4].Text = "Inf";
-                                                        }
-                                                        break;
-                                                    }
-                                                }
+
+                                                double progress = (double)_blog.DownloadedImages / (double)_blog.TotalCount * 100;
+                                                _blog.Progress = progress;
+
                                                 this.lblUrl.Text = url;
                                                 this.smallImage.ImageLocation = FileLocation;
                                                 if ((this.pgBar.Value + 1) < (this.pgBar.Maximum + 1))
@@ -1002,7 +915,7 @@
                                             readingDataBase = true;
                                             this.BeginInvoke((MethodInvoker)delegate
                                             {
-                                                this.lblUrl.Text = "Skipping previously downloaded images - " + _blog._Name;
+                                                this.lblUrl.Text = "Skipping previously downloaded images - " + _blog.Name;
                                             });
                                         }
 
@@ -1023,48 +936,38 @@
 
                     //this.toolStop_Click(this, null);
                     // Finished Blog
-                    _blog._LastCrawled = DateTime.Now;
-                    _blog._finishedCrawl = true;
+                    _blog.LastCrawled = DateTime.Now;
+                    _blog.FinishedCrawl = true;
                     this.SaveBlog(_blog);
                     TumblrActiveList.Remove(_blog);
                     // Update UI
                     this.BeginInvoke((MethodInvoker)delegate
                     {
-                        foreach (ListViewItem item in this.lvBlog.Items)
-                        {
-                            if (item.Text == _blog._Name)
-                            {
-                                // Update Listview about completed blog
-                                item.SubItems[7].Text = DateTime.Now.ToString();
-                                //item.SubItems[8].Text = "True";
-                                // Update current crawling progress label
-                                int indexBlogInProgress = crawlingBlogs.IndexOf(_blog._Name);
-                                int lengthBlogInProgress = _blog._Name.Length;
-                                this.crawlingBlogs = crawlingBlogs.Remove(indexBlogInProgress, (lengthBlogInProgress + 1));
-                                this.lblProcess.Text = "Crawling Blogs - " + this.crawlingBlogs;
-                            }
-                        }
+
+                        //item.SubItems[8].Text = "True";
+                        // Update current crawling progress label
+                        int indexBlogInProgress = crawlingBlogs.IndexOf(_blog.Name);
+                        int lengthBlogInProgress = _blog.Name.Length;
+                        this.crawlingBlogs = crawlingBlogs.Remove(indexBlogInProgress, (lengthBlogInProgress + 1));
+                        this.lblProcess.Text = "Crawling Blogs - " + this.crawlingBlogs;
+
                     });
 
                     // remove index from listview after completed crawl 
                     if (Properties.Settings.Default.configRemoveFinishedBlogs)
                     {
+                        string path = Properties.Settings.Default.configDownloadLocation.ToString() + "Index/" + _blog.Name + ".tumblr";
+                        if (System.IO.File.Exists(path))
+                        {
+                            System.IO.File.Delete(path);
+                        }
                         this.BeginInvoke((MethodInvoker)delegate
                         {
-                            foreach (ListViewItem item in this.lvBlog.Items)
-                            {
-                                if (item.Text == _blog._Name)
-                                {
-                                    string path = Properties.Settings.Default.configDownloadLocation.ToString() + "Index/" + item.Text + ".tumblr";
-                                    if (System.IO.File.Exists(path))
-                                    {
-                                        System.IO.File.Delete(path);
-                                    }
-                                    //this.LoadLibrary();
-                                    // Update UI
-                                    item.Remove();
-                                }
-                            }
+
+                            //this.LoadLibrary();
+                            // Update UI
+                            blogs.Remove(_blog);
+
                         });
                     }
 
@@ -1080,16 +983,14 @@
                     {
                         this.BeginInvoke((MethodInvoker)delegate
                         {
-                            foreach (ListViewItem item in this.lvBlog.Items)
+                            foreach (DataGridViewRow item in this.lvBlog.Rows)
                             {
-                                if (item.Text == _blog._Name)
-                                {
-                                    // Update current crawling progress label
-                                    this.smallImage.ImageLocation = "";
-                                    this.crawlingBlogs = "";
-                                    this.lblUrl.Text = "";
-                                    this.lblProcess.Text = "Queue finished";
-                                }
+
+                                // Update current crawling progress label
+                                this.smallImage.ImageLocation = "";
+                                this.crawlingBlogs = "";
+                                this.lblUrl.Text = "";
+                                this.lblProcess.Text = "Queue finished";
                             }
                         });
                     }
@@ -1101,19 +1002,13 @@
             // Update UI
             this.BeginInvoke((MethodInvoker)delegate
             {
-                foreach (ListViewItem item in this.lvBlog.Items)
-                {
-                    if (item.Text == _blog._Name)
-                    {
-                        // Update current crawling progress label
-                        item.SubItems[5].Text = "Offline";
 
-                        int indexBlogInProgress = crawlingBlogs.IndexOf(_blog._Name);
-                        int lengthBlogInProgress = _blog._Name.Length;
-                        this.crawlingBlogs = crawlingBlogs.Remove(indexBlogInProgress, (lengthBlogInProgress + 1));
-                        this.lblProcess.Text = "Crawling Blogs - " + this.crawlingBlogs;
-                    }
-                }
+                // Update current crawling progress label
+                int indexBlogInProgress = crawlingBlogs.IndexOf(_blog.Name);
+                int lengthBlogInProgress = _blog.Name.Length;
+                this.crawlingBlogs = crawlingBlogs.Remove(indexBlogInProgress, (lengthBlogInProgress + 1));
+                this.lblProcess.Text = "Crawling Blogs - " + this.crawlingBlogs;
+
             });
 
             if (TumblrActiveList.Count == 1)
@@ -1128,17 +1023,13 @@
             {
                 this.BeginInvoke((MethodInvoker)delegate
                 {
-                    foreach (ListViewItem item in this.lvBlog.Items)
-                    {
-                        if (item.Text == _blog._Name)
-                        {
-                            // Update current crawling progress label
-                            this.smallImage.ImageLocation = "";
-                            this.crawlingBlogs = "";
-                            this.lblUrl.Text = "";
-                            this.lblProcess.Text = "Queue finished";
-                        }
-                    }
+
+                    // Update current crawling progress label
+                    this.smallImage.ImageLocation = "";
+                    this.crawlingBlogs = "";
+                    this.lblUrl.Text = "";
+                    this.lblProcess.Text = "Queue finished";
+
                 });
             }
             return;
@@ -1150,10 +1041,10 @@
             {
                 return false;
             }
-            this.CreateDataFolder(newBlog._Name);
+            this.CreateDataFolder(newBlog.Name);
             try
             {
-                using (Stream stream = new FileStream(Properties.Settings.Default.configDownloadLocation.ToString() + "Index/" + newBlog._Name + ".tumblr", FileMode.Create, FileAccess.Write, FileShare.None))
+                using (Stream stream = new FileStream(Properties.Settings.Default.configDownloadLocation.ToString() + "Index/" + newBlog.Name + ".tumblr", FileMode.Create, FileAccess.Write, FileShare.None))
                 {
                     IFormatter formatter = new BinaryFormatter();
                     formatter.Serialize(stream, newBlog);
@@ -1180,6 +1071,8 @@
             this.wait_handle.Reset();
 
             this.lblProcess.Text = "PAUSE! Click on Resume Button to continue...";
+
+            // Enable/Disable Controls
             this.toolPause.Enabled = false;
             this.toolResume.Enabled = true;
             this.toolStop.Enabled = true;
@@ -1189,8 +1082,9 @@
         {
             this.wait_handle.Set();
 
-            //Fixme
             this.lblProcess.Text = "Crawling Blogs - " + this.crawlingBlogs;
+
+            // Enable/Disable Controls
             this.toolPause.Enabled = true;
             this.toolResume.Enabled = false;
             this.toolStop.Enabled = true;
@@ -1202,15 +1096,15 @@
             this.wait_handle.Reset();
             this.panelInfo.Visible = true;
             this.lblProcess.Text = "Crawling of " + this.crawlingBlogs + "has stopped!";
-            //FIXME
             this.lblUrl.Text = "";
             this.smallImage.ImageLocation = "";
             this.crawlingBlogs = "";
+
+            // Enable/Disable Controls
             this.toolPause.Enabled = false;
             this.toolResume.Enabled = false;
             this.toolStop.Enabled = false;
             this.toolCrawl.Enabled = true;
-            //this.toolRemoveBlog.Enabled = true;
             this.contextBlog.Items[3].Enabled = false;
 
             if (TumblrActiveList.Count != 0)
@@ -1238,14 +1132,24 @@
 
         private void optionsSaved()
         {
-            loadPreferences();
+
         }
 
         // Load program preferences
 
         private void loadPreferences()
         {
-
+            // Setup Clipboard Monitor Listener
+            if (Properties.Settings.Default.CheckClipboard)
+            {
+                this.toolCheckClipboard.Checked = true;
+                ClipboardMonitor.Start();
+                ClipboardMonitor.OnClipboardChange += ClipboardMonitor_OnClipboardChange;
+            }
+            else
+            {
+                this.toolCheckClipboard.Checked = false;
+            }
         }
 
         private void chkGIF_CheckedChanged(object sender, EventArgs e)
@@ -1274,7 +1178,9 @@
 
         private void checkIfBlogIsOnline(TumblrBlog _blog)
         {
-            String ApiUrl = _blog._URL;
+            String ApiUrl = _blog.Url;
+
+            // sanitize URL
             if (ApiUrl.Last<char>() != '/')
             {
                 ApiUrl = ApiUrl + "/api/read?start=";
@@ -1284,7 +1190,8 @@
                 ApiUrl = ApiUrl + "api/read?start=";
             }
 
-            if (_blog._Description == null)
+            // First load of blog, hence there is no description
+            if (_blog.Description == null)
             {
                 XmlDocument tumblelog = new XmlDocument();
 
@@ -1294,25 +1201,25 @@
                 }
                 catch (WebException)
                 {
-                    _blog._Online = false;
+                    _blog.Online = false;
                     return;
                 }
 
                 XmlNode tumblblog = tumblelog.DocumentElement.SelectSingleNode("tumblelog");
-                //_blog._Name = tumblblog.Attributes["name"].InnerText;
+                //_blog.Name = tumblblog.Attributes["name"].InnerText;
                 try
                 {
-                    _blog._Description = tumblblog.Attributes["title"].InnerText;
-                    _blog._Text = tumblblog.InnerText;
-                    _blog._Online = true;
+                    _blog.Description = tumblblog.Attributes["title"].InnerText;
+                    _blog.Text = tumblblog.InnerText;
+                    _blog.Online = true;
                 }
                 catch (NullReferenceException)
                 {
-                    _blog._Online = true;
+                    _blog.Online = true;
                 }
             }
-
-            else if (_blog._Description != null)
+            // Previous loaded blog
+            else if (_blog.Description != null)
             {
                 XmlDocument tumblelog = new XmlDocument();
 
@@ -1322,7 +1229,7 @@
                 }
                 catch (WebException)
                 {
-                    _blog._Online = false;
+                    _blog.Online = false;
                     return;
                 }
 
@@ -1330,22 +1237,22 @@
 
                 try
                 {
-                    if (!_blog._Description.Equals(tumblblog.Attributes["title"].InnerText))
+                    if (!_blog.Description.Equals(tumblblog.Attributes["title"].InnerText))
                     {
-                        _blog._Online = false;
+                        _blog.Online = false;
                     }
-                    if (!_blog._Text.Equals(tumblblog.InnerText))
+                    if (!_blog.Text.Equals(tumblblog.InnerText))
                     {
-                        _blog._Online = false;
+                        _blog.Online = false;
                     }
                     else
                     {
-                        _blog._Online = true;
+                        _blog.Online = true;
                     }
                 }
                 catch (NullReferenceException)
                 {
-                    _blog._Online = true;
+                    _blog.Online = true;
                 }
             }
         }
@@ -1355,18 +1262,12 @@
             // Cancellation causes OCE. 
             try
             {
-                if (this.lvBlog.SelectedItems.Count > 0)
+                if (this.lvBlog.SelectedRows.Count > 0)
                 {
-                    foreach (ListViewItem eachItem in this.lvBlog.SelectedItems)
+                    foreach (DataGridViewRow eachItem in lvBlog.SelectedRows)
                     {
-                        TumblrBlog blog = this.LoadBlog(this.ExtractBlogname(eachItem.SubItems[3].Text));
-                        string text = eachItem.SubItems[3].Text;
-                        //blog.Links.Clear();
-
-                        //this.worker = new Thread(new ParameterizedThreadStart(this.RunParser));
-                        //success = bin.TryAdd(blog, 2, ct);
-                        bin.Add(blog);
-                        this.addToQueueUI(blog);
+                        bin.Add((TumblrBlog)eachItem.DataBoundItem);
+                        this.addToQueueUI((TumblrBlog)eachItem.DataBoundItem);
                     }
                 }
             }
@@ -1399,16 +1300,6 @@
                             bin.RemoveAt(0);
                             TumblrActiveList.Add(nextBlog);
 
-                            //                        if (TumblrActiveList.Count > Properties.Settings.Default.configSimultaneousDownloads)
-                            //                        {
-                            //                            TumblrBlog finishedBlog = (TumblrList.Find(x => x.Equals(TumblrActiveList.Take(1))));
-                            //                            finishedBlog._LastCrawled = DateTime.Now;
-                            //                            finishedBlog._finishedCrawl = true;
-                            //                        }
-                            //                        else
-                            //                        {
-                            //                        }
-
                             this.BeginInvoke((MethodInvoker)delegate
                             {
                                 // Update UI:
@@ -1420,16 +1311,11 @@
                             });
                             System.Threading.Monitor.Exit(bin);
                             this.RunParser(nextBlog);
-
-                            //IEnumerable<TumblrBlog> differenceQuery = this.TumblrList.Except(this.bin);
-                            //foreach (TumblrBlog active in differenceQuery)
-                            //    foreach (string active._Name  in lvQueue.Items. (active._Name.Equals())
                         }
                         else
                         {
                             System.Threading.Monitor.Exit(bin);
                             Thread.Sleep(4000);
-                            //Task.Delay(4000);   
                         }
 
                     }
@@ -1445,17 +1331,10 @@
             {
                 Console.WriteLine("Taking canceled.");
             }
-
-
-            // Slow down consumer just a little to cause 
-            // collection to fill up faster, and lead to "AddBlocked"
-            // Thread.SpinWait(500000);
         }
 
         private void RemoveBlogFromQueue(List<TumblrBlog> bin, CancellationToken ct)
         {
-
-
             // Cancellation causes OCE. 
             try
             {
@@ -1466,9 +1345,6 @@
                         bin.RemoveAt(eachItem.Index);
                         lvQueue.Items.Remove(eachItem);
                     }
-                    //TumblrBlog nextBlog = null;
-                    //this.TumblrList.RemoveAt(TumblrList.Count - 1);
-                    //this.lvQueue.Items.RemoveAt(lvQueue.Items.Count - 1);
                 }
             }
             catch (OperationCanceledException exception)
@@ -1486,8 +1362,7 @@
         {
             //Update UI
             ListViewItem lvQueueItem = new ListViewItem();
-            lvQueueItem.Text = _blog._Name;
-            //lvQueueItem.SubItems.Add("");
+            lvQueueItem.Text = _blog.Name;
             lvQueueItem.SubItems.Add("queued");
             this.lvQueue.Items.Add(lvQueueItem);
         }
@@ -1505,62 +1380,6 @@
                 Properties.Settings.Default.CheckClipboard = false;
                 ClipboardMonitor.Stop();
             }
-        }
-        private void lvBlog_ColumnClick(object sender, System.Windows.Forms.ColumnClickEventArgs e)
-        {
-
-            // Get the new sorting column.
-            ColumnHeader new_sorting_column = lvBlog.Columns[e.Column];
-
-            // Figure out the new sorting order.
-            System.Windows.Forms.SortOrder sort_order;
-            if (SortingColumn == null)
-            {
-                // New column. Sort ascending.
-                sort_order = SortOrder.Ascending;
-            }
-            else
-            {
-                // See if this is the same column.
-                if (new_sorting_column == SortingColumn)
-                {
-                    // Same column. Switch the sort order.
-                    if (SortingColumn.Text.StartsWith("> "))
-                    {
-                        sort_order = SortOrder.Descending;
-                    }
-                    else
-                    {
-                        sort_order = SortOrder.Ascending;
-                    }
-                }
-                else
-                {
-                    // New column. Sort ascending.
-                    sort_order = SortOrder.Ascending;
-                }
-
-                // Remove the old sort indicator.
-                SortingColumn.Text = SortingColumn.Text.Substring(2);
-            }
-
-            // Display the new sort order.
-            SortingColumn = new_sorting_column;
-            if (sort_order == SortOrder.Ascending)
-            {
-                SortingColumn.Text = "> " + SortingColumn.Text;
-            }
-            else
-            {
-                SortingColumn.Text = "< " + SortingColumn.Text;
-            }
-
-            // Create a comparer.
-            lvBlog.ListViewItemSorter =
-                new ListViewComparer(e.Column, sort_order);
-
-            // Sort.
-            lvBlog.Sort();
         }
     }
 }

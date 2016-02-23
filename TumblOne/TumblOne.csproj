@@ -125,6 +125,7 @@
   <ItemGroup>
     <Compile Include="ParallelUtils.cs" />
     <Compile Include="ListViewComparer.cs" />
+    <Compile Include="SortableBindingList.cs" />
     <Compile Include="Typeconvertor.cs" />
     <Compile Include="ClipboardMonitor.cs" />
     <Compile Include="Form1.cs">
