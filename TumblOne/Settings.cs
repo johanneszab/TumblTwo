@@ -76,6 +76,7 @@ namespace TumblOne
             this.cbRemoveFinished.Checked = Properties.Settings.Default.configRemoveFinishedBlogs;
             this.cbDeleteIndexOnly.Checked = Properties.Settings.Default.configDeleteIndexOnly;
             this.chkGif.Checked = Properties.Settings.Default.configChkGIFState;
+            this.cbCheckStatus.Checked = Properties.Settings.Default.configCheckStatusAtStartup;
         }
 
         static void Loaded_PropertyChanged(

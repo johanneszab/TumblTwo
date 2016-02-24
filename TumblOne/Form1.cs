@@ -35,6 +35,9 @@
         public Form1()
         {
             this.InitializeComponent();
+
+            // Increase connection limit for faster url list generation
+            System.Net.ServicePointManager.DefaultConnectionLimit = 100;
             this.Shown += new System.EventHandler(this.Form1_Shown);
         }
 
@@ -176,7 +179,7 @@
 
         private bool Download(TumblrBlog blog, string fileLocation, string url, string filename)
         {
-            if (!blog.Links.Contains(new Post(url, filename)))
+            if (!blog.Links.Any(Post => Post.Url.Contains(url)))
             {
                 try
                 {
@@ -361,6 +364,15 @@
 
             // Delay load of preferences which interfere with library loading
             loadPreferences();
+
+            // delay online check to reduce startup time
+            if (Properties.Settings.Default.configCheckStatusAtStartup)
+            {
+                foreach (TumblrBlog blog in blogs)
+                {
+                    Task.Run(() => { checkIfBlogIsOnline(blog); });
+                }
+            }
         }
 
         public Task LoadLibrary()
@@ -406,6 +418,8 @@
                             {
                                 blogs.Add(this.LoadBlog(Path.GetFileNameWithoutExtension(str)));
                             }
+
+                            // show UI
                             FormatDataSource();
                         });
                     }
@@ -429,7 +443,7 @@
 
             // Start Crawl processes
             for (int i = 0; i < Properties.Settings.Default.configSimultaneousDownloads; i++ )
-                this.tasks[i] = Task.Run(() => runProducer(bin, cts.Token));
+                this.tasks[i] = Task.Run(() => runProducer(bin, cts.Token), cts.Token);
             this.wait_handle = new ManualResetEvent(true);
 
             // Enable/Disable Controls
@@ -622,7 +636,7 @@
             }
         }
 
-        private void RunParser(TumblrBlog _blog)
+        private void RunParser(TumblrBlog _blog, CancellationToken ct)
         {
             MethodInvoker method = null;
             bool readingDataBase = false;
@@ -647,14 +661,10 @@
             while (true)
             {
                 this.wait_handle.WaitOne();
-                XDocument document = null;
-                try
+                if (ct.IsCancellationRequested)
                 {
-                    document = XDocument.Load(ApiUrl.ToString() + numberOfPostsCrawled.ToString() + "&num=50");
-                }
-                catch (WebException)
-                {
-                    break;
+                    // Clean up here
+                    ct.ThrowIfCancellationRequested();
                 }
 
                 if (numberOfPostsCrawled == 0)
@@ -662,85 +672,25 @@
                     // set title and name of the blog
                     // check if blogaddress is alive or someone else is using it now
 
-                    // first time check -- new blog
-                    if (_blog.Description == null && checkedIfBlogIsAlive == false)
+                    if (!checkIfBlogIsOnline(_blog))
                     {
-                        XmlDocument tumblelog = new XmlDocument();
-
-                        try
-                        {
-                            tumblelog.Load(ApiUrl.ToString() + numberOfPostsCrawled.ToString() + "&num=50");
-                            XmlNode tumblblog = tumblelog.DocumentElement.SelectSingleNode("tumblelog");
-                            try
-                            {
-                                // blog is alive
-                                _blog.Description = tumblblog.Attributes["title"].InnerText;
-                                _blog.Text = tumblblog.InnerText;
-                                _blog.Online = true;
-                            }
-                            catch (NullReferenceException)
-                            {
-                                // If there is no description, the blog can still be alive
-                                _blog.Online = true;
-                            }
-                        }
-                        catch (WebException)
-                        {
-                            // blog dead
-                            _blog.Online = false;
-                        }
-                        checkedIfBlogIsAlive = true;
-                    } 
-                    
-                        // we already have data to compare (description, text) since the blog was
-                        // already once crawled
-                    else if (_blog.Description != null && checkedIfBlogIsAlive == false)
-                    {
-                        XmlDocument tumblelog = new XmlDocument();
-
-                        try
-                        {
-                            tumblelog.Load(ApiUrl.ToString() + numberOfPostsCrawled.ToString() + "&num=50");
-                            XmlNode tumblblog = tumblelog.DocumentElement.SelectSingleNode("tumblelog");
-                            try
-                            {
-                                if (!_blog.Description.Equals(tumblblog.Attributes["title"].InnerText))
-                                {
-                                    _blog.Online = false;
-                                }
-                                if (!_blog.Text.Equals(tumblblog.InnerText))
-                                {
-                                    _blog.Online = false;
-                                }
-
-                                _blog.Description = tumblblog.Attributes["title"].InnerText;
-                                _blog.Text = tumblblog.InnerText;
-                                _blog.Online = true;
-                            }
-                            catch (NullReferenceException)
-                            {
-                                _blog.Online = true;
-                            }
-                        }
-                        catch (WebException)
-                        {
-                            _blog.Online = false;
-                        }
-                        checkedIfBlogIsAlive = true;
-                    }
-
-                    // nothing to crawl, cleanup and leave
-                    else
-                    {
-
+                        // nothing to crawl, cleanup and leave
                         cleaupParser(_blog);
                         return;
                     }
-
                     // Update image (blog post) count
                     // Set progressbar
                     try
                     {
+                        XDocument document = null;
+                        try
+                        {
+                            document = XDocument.Load(ApiUrl.ToString() + "0&num=50");
+                        }
+                        catch (Exception e)
+                        {
+                            //Console.WriteLine(e.Data);
+                        }
                         foreach (var type in from data in document.Descendants("posts") select new { Total = data.Attribute("total").Value })
                         {
                             _blog.TotalCount = Convert.ToInt32(type.Total.ToString());
@@ -799,7 +749,12 @@
                 int numberOfPagesToCrawl = ((_blog.TotalCount / 50) + 1);
                 Parallel.For(0, numberOfPagesToCrawl, i =>
                     {
-
+                        this.wait_handle.WaitOne();
+                        if (ct.IsCancellationRequested)
+                        {
+                            // Clean up here
+                            ct.ThrowIfCancellationRequested();
+                        }
                         XDocument document2 = null;
                         try
                         {
@@ -855,15 +810,26 @@
                     //crawledImageURLs = _blog.Links.Select(Posts => Posts.url).ToList().Intersect(crawledImageURLs).ToList();
                     crawledImageURLs = crawledImageURLs.Except(_blog.Links.Select(Posts => Posts.Url).ToList()).ToList();
 
+                    this.BeginInvoke((MethodInvoker)delegate
+                    {
+                        try
+                        {
+                            // set databinings for the picturebox and the information label
+                            bsSmallImage.DataSource = _blog.Links;
+                            this.smallImage.DataBindings.Add("ImageLocation", bsSmallImage, "Filename", false, DataSourceUpdateMode.OnPropertyChanged);
+                            bsSmallImage.ListChanged += bsSmallImage_ListChanged;
 
-                    // set databinings for the picturebox and the information label
-                    bsSmallImage.DataSource = _blog.Links;
-                    this.smallImage.DataBindings.Add("ImageLocation", bsSmallImage, "Filename", false, DataSourceUpdateMode.OnPropertyChanged);
-                    bsSmallImage.ListChanged += bsSmallImage_ListChanged;
+                            bslblUrl.DataSource = _blog.Links;
+                            this.lblUrl.DataBindings.Add("Text", bslblUrl, "Url", false, DataSourceUpdateMode.OnPropertyChanged);
+                            bslblUrl.ListChanged += bslblUrl_ListChanged;
+                        }
+                        catch (Exception)
+                            // two bindings to one source
+                        {
+                            //continue;
+                        }
 
-                    bslblUrl.DataSource = _blog.Links;
-                    this.lblUrl.DataBindings.Add("Text", bslblUrl, "Url", false, DataSourceUpdateMode.OnPropertyChanged);
-                    bslblUrl.ListChanged += bslblUrl_ListChanged;
+                    });
 
                     try
                     {
@@ -873,6 +839,11 @@
                             MethodInvoker invoker = null;
                             string FileLocation;
                             this.wait_handle.WaitOne();
+                            if (ct.IsCancellationRequested)
+                            {
+                                // Clean up here
+                                ct.ThrowIfCancellationRequested();
+                            }
                             // create filename from url, just skip everything before the first slash (/)
                             string fileName = Path.GetFileName(new Uri(url).LocalPath);
                             // check if we should crawl .gifs
@@ -1152,7 +1123,7 @@
             AddBlogtoQueue(bin, cts.Token);
         }
 
-        private void checkIfBlogIsOnline(TumblrBlog _blog)
+        private bool checkIfBlogIsOnline(TumblrBlog _blog)
         {
             String ApiUrl = _blog.Url;
 
@@ -1166,71 +1137,76 @@
                 ApiUrl = ApiUrl + "api/read?start=";
             }
 
-            // First load of blog, hence there is no description
-            if (_blog.Description == null)
+			// set title and name of the blog
+			// check if blogaddress is alive or someone else is using it now
+
+			// first time check -- new blog
+			if (_blog.Description == null)
             {
                 XmlDocument tumblelog = new XmlDocument();
 
                 try
                 {
                     tumblelog.Load(ApiUrl.ToString() + "0" + "&num=50");
+					XmlNode tumblblog = tumblelog.DocumentElement.SelectSingleNode("tumblelog");
+					try
+					{
+						_blog.Description = tumblblog.Attributes["title"].InnerText;
+						_blog.Text = tumblblog.InnerText;
+						_blog.Online = true;
+					}
+					catch (NullReferenceException)
+					{
+						// If there is no description, the blog can still be alive
+						_blog.Online = true;
+					}
                 }
                 catch (WebException)
                 {
+					// blog dead
                     _blog.Online = false;
-                    return;
-                }
-
-                XmlNode tumblblog = tumblelog.DocumentElement.SelectSingleNode("tumblelog");
-                //_blog.Name = tumblblog.Attributes["name"].InnerText;
-                try
-                {
-                    _blog.Description = tumblblog.Attributes["title"].InnerText;
-                    _blog.Text = tumblblog.InnerText;
-                    _blog.Online = true;
-                }
-                catch (NullReferenceException)
-                {
-                    _blog.Online = true;
+                    return false;
                 }
             }
-            // Previous loaded blog
-            else if (_blog.Description != null)
+			// we already have data to compare (description, text) since the blog was
+			// already once crawled
+			else if (_blog.Description != null)
             {
                 XmlDocument tumblelog = new XmlDocument();
 
                 try
                 {
                     tumblelog.Load(ApiUrl.ToString() + "0" + "&num=50");
+					XmlNode tumblblog = tumblelog.DocumentElement.SelectSingleNode("tumblelog");
+					try
+					{
+						if (!_blog.Description.Equals(tumblblog.Attributes["title"].InnerText))
+						{
+							_blog.Online = false;
+                            return false;
+						}
+						if (!_blog.Text.Equals(tumblblog.InnerText))
+						{
+							_blog.Online = false;
+                            return false;
+						}
+						else
+						{
+							_blog.Online = true;
+						}
+					}
+					catch (NullReferenceException)
+					{
+						_blog.Online = true;
+					}
                 }
                 catch (WebException)
                 {
                     _blog.Online = false;
-                    return;
-                }
-
-                XmlNode tumblblog = tumblelog.DocumentElement.SelectSingleNode("tumblelog");
-
-                try
-                {
-                    if (!_blog.Description.Equals(tumblblog.Attributes["title"].InnerText))
-                    {
-                        _blog.Online = false;
-                    }
-                    if (!_blog.Text.Equals(tumblblog.InnerText))
-                    {
-                        _blog.Online = false;
-                    }
-                    else
-                    {
-                        _blog.Online = true;
-                    }
-                }
-                catch (NullReferenceException)
-                {
-                    _blog.Online = true;
+                    return false;
                 }
             }
+            return true;
         }
 
         private void AddBlogtoQueue(List<TumblrBlog> bin, CancellationToken ct) 
@@ -1286,7 +1262,7 @@
                                 lvQueue.Items.RemoveAt(0);
                             });
                             System.Threading.Monitor.Exit(bin);
-                            this.RunParser(nextBlog);
+                            this.RunParser(nextBlog, ct);
                         }
                         else
                         {
