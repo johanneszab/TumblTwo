@@ -34,6 +34,7 @@
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.label21 = new System.Windows.Forms.Label();
             this.tBlogUrl = new System.Windows.Forms.TextBox();
@@ -488,6 +489,7 @@
             this.smallImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.smallImage.TabIndex = 7;
             this.smallImage.TabStop = false;
+            this.smallImage.Click += new System.EventHandler(this.smallImage_Click);
             // 
             // lvQueue
             // 
@@ -550,9 +552,13 @@
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.lvBlog.RowHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.lvBlog.RowHeadersWidth = 4;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lvBlog.RowsDefaultCellStyle = dataGridViewCellStyle3;
             this.lvBlog.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.lvBlog.Size = new System.Drawing.Size(1025, 273);
             this.lvBlog.TabIndex = 13;
+            this.lvBlog.CellFormatting += lvBlog_CellFormatting;
             // 
             // Form1
             // 
@@ -566,6 +572,7 @@
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.tBlogUrl);
             this.Controls.Add(this.label1);
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Text = "TumblTwo - A Tumblr Image Crawler - Version 1.0.6";

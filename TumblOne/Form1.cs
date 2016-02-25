@@ -26,8 +26,8 @@
         public List<TumblrBlog> TumblrActiveList = new List<TumblrBlog>();
         public Task[] tasks = new Task[Properties.Settings.Default.configSimultaneousDownloads];
         string crawlingBlogs = "";
-        BindingSource bsSmallImage = new BindingSource();
-        BindingSource bslblUrl = new BindingSource();
+        public BindingSource bsSmallImage = new BindingSource();
+        public BindingSource bslblUrl = new BindingSource();
         private CancellationTokenSource cts = new CancellationTokenSource();
         private List<TumblrBlog> bin = new List<TumblrBlog>();
         private TumblOne.SortableBindingList<TumblrBlog> blogs = new TumblOne.SortableBindingList<TumblrBlog>();
@@ -508,6 +508,10 @@
             status.HeaderText = "Status";
             status.DataPropertyName = "Online";
 
+            var tags = new DataGridViewTextBoxColumn();
+            tags.HeaderText = "Tags";
+            tags.DataPropertyName = "Tags";
+
             var dateAdded = new DataGridViewTextBoxColumn();
             dateAdded.HeaderText = "Date Added";
             dateAdded.DataPropertyName = "dateAdded";
@@ -526,10 +530,26 @@
                 lvBlog.Columns.Add(urlField);
                 lvBlog.Columns.Add(progress);
                 lvBlog.Columns.Add(status);
+                lvBlog.Columns.Add(tags);
                 lvBlog.Columns.Add(dateAdded);
                 lvBlog.Columns.Add(lastCrawl);
                 lvBlog.DataSource = blogs;
 
+                lvBlog.ReadOnly = false;
+                lvBlog.Columns[0].ReadOnly = true;
+                lvBlog.Columns[1].ReadOnly = true;
+                lvBlog.Columns[2].ReadOnly = true;
+                lvBlog.Columns[3].ReadOnly = false;
+                lvBlog.Columns[4].ReadOnly = true;
+                lvBlog.Columns[5].ReadOnly = true;
+                lvBlog.Columns[6].ReadOnly = true;
+                lvBlog.Columns[7].ReadOnly = true;
+                lvBlog.Columns[8].ReadOnly = true;
+
+                tags.ToolTipText = "Enter comma separated strings, e.g.: great big car, mouse";
+
+                lvBlog.Columns[5].DefaultCellStyle.FormatProvider = new BoolFormatter();
+                lvBlog.Columns[5].DefaultCellStyle.Format = "OnlineOffline";
 
                 lvBlog.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.False;
                 //lvBlog.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -549,6 +569,7 @@
                 lvBlog.Columns[5].SortMode = DataGridViewColumnSortMode.Automatic;
                 lvBlog.Columns[6].SortMode = DataGridViewColumnSortMode.Automatic;
                 lvBlog.Columns[7].SortMode = DataGridViewColumnSortMode.Automatic;
+                lvBlog.Columns[8].SortMode = DataGridViewColumnSortMode.Automatic;
 
                 lvBlog.CellBorderStyle = DataGridViewCellBorderStyle.None;
                 lvBlog.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
@@ -561,6 +582,16 @@
             });
 
             return true;
+        }
+
+
+        void lvBlog_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.CellStyle.FormatProvider is ICustomFormatter)
+            {
+                e.Value = (e.CellStyle.FormatProvider.GetFormat(typeof(ICustomFormatter)) as ICustomFormatter).Format(e.CellStyle.Format, e.Value, e.CellStyle.FormatProvider);
+                e.FormattingApplied = true;
+            }
         }
 
         private void mnuVisit_Click(object sender, EventArgs e)
@@ -746,6 +777,8 @@
 
                 // Generate URL list of Images
                 // the api shows 50 posts at max, determine the number of pages to crawl
+                List<string> Urllist = new List<string>();
+
                 int numberOfPagesToCrawl = ((_blog.TotalCount / 50) + 1);
                 Parallel.For(0, numberOfPagesToCrawl, i =>
                     {
@@ -755,45 +788,102 @@
                             // Clean up here
                             ct.ThrowIfCancellationRequested();
                         }
-                        XDocument document2 = null;
                         try
                         {
-                            document2 = XDocument.Load(ApiUrl.ToString() + (i * 50).ToString() + "&num=50");
-                        }
-                        catch (Exception e)
-                        {
-                            //Console.WriteLine(e.Data);
-                        }
+                            if (string.IsNullOrEmpty(_blog.Tags))
+                            {
+                                XDocument document2 = null;
+                                try
+                                {
+                                    document2 = XDocument.Load(ApiUrl.ToString() + (i * 50).ToString() + "&num=50");
+                                    Urllist = (from n in document2.Descendants("post")
+                                               where
 
-                        try
-                        {
-                            List<string> Urllist = (from n in document2.Descendants("post")
-                                                    where
+                                               // Identify Posts
+                                               n.Elements("photo-url").Where(x => x.Attribute("max-width").Value == Properties.Settings.Default.configImageSize.ToString()).Any() &&
+                                               !n.Elements("photo-url").Where(x => x.Value == "www.tumblr.com").Any() ||
 
-                                                    // Identify Posts
-                                                    n.Elements("photo-url").Where(x => x.Attribute("max-width").Value == Properties.Settings.Default.configImageSize.ToString()).Any() &&
-                                                    !n.Elements("photo-url").Where(x => x.Value == "www.tumblr.com").Any() ||
+                                               // Identify Photosets
+                                               n.Elements("photoset").Where(photoset => photoset.Descendants("photo-url")
+                                                   .Any(photourl => (string)photourl.Attribute("max-width").Value
+                                                       == Properties.Settings.Default.configImageSize.ToString() &&
+                                                       photourl.Value != "www.tumblr.com")).Any()
+                                               from m in n.Descendants("photo-url")
+                                               where m.Attribute("max-width").Value == Properties.Settings.Default.configImageSize.ToString()
+                                               select (string)m).ToList();
+                                }
+                                catch (Exception e)
+                                {
+                                    //Console.WriteLine(e.Data);
+                                }
 
-                                                    // Identify Photosets
-                                                    n.Elements("photoset").Where(photoset => photoset.Descendants("photo-url")
-                                                        .Any(photourl => (string)photourl.Attribute("max-width").Value
-                                                            == Properties.Settings.Default.configImageSize.ToString() &&
-                                                            photourl.Value != "www.tumblr.com")).Any()
-                                                    from m in n.Descendants("photo-url")
-                                                    where m.Attribute("max-width").Value == Properties.Settings.Default.configImageSize.ToString()
-                                                    select (string)m).ToList();
-                            System.Threading.Monitor.Enter(crawledImageURLs);
-                            crawledImageURLs.AddRange(Urllist);
-                            System.Threading.Monitor.Exit(crawledImageURLs);
-                            Urllist.Clear();
+                            }
+                            else
+                            {
+                                List<string> tagsToCheckFor = _blog.Tags.Split(',').ToList();
+                                XDocument document2 = null;
+                                try
+                                {
+                                    document2 = XDocument.Load(ApiUrl.ToString() + (i * 50).ToString() + "&num=50");
+                                    Urllist = (from n in document2.Descendants("post")
+
+                                                   // Identify Posts
+                                               where n.Elements("photo-url").Where(x => x.Attribute("max-width").Value == Properties.Settings.Default.configImageSize.ToString()).Any() &&
+                                               !n.Elements("photo-url").Where(x => x.Value == "www.tumblr.com").Any() &&
+                                               n.Elements("tag").Where(x => tagsToCheckFor.Contains(x.Value)).Any() ||
+
+                                               // Identify Photosets
+                                               n.Elements("photoset").Where(photoset => photoset.Descendants("photo-url")
+                                               .Any(photourl => (string)photourl.Attribute("max-width").Value
+                                               == Properties.Settings.Default.configImageSize.ToString() &&
+                                               photourl.Value != "www.tumblr.com")).Any() &&
+                                               n.Elements("tag").Where(x => tagsToCheckFor.Contains(x.Value)).Any()
+
+                                               from m in n.Descendants("photo-url")
+                                               where m.Attribute("max-width").Value == Properties.Settings.Default.configImageSize.ToString()
+                                               select (string)m).ToList();
+                                }
+                                catch (Exception e)
+                                {
+                                    //Console.WriteLine(e.Data);
+                                }
+
+                            }
                         }
-                        catch (Exception e)
+                        catch (Exception)
                         {
-                            //Console.WriteLine(e.Data);
-                        }
+                            XDocument document2 = null;
+                            try
+                            {
+                                document2 = XDocument.Load(ApiUrl.ToString() + (i * 50).ToString() + "&num=50");
 
+                                Urllist = (from n in document2.Descendants("post")
+                                           where
+
+                                           // Identify Posts
+                                           n.Elements("photo-url").Where(x => x.Attribute("max-width").Value == Properties.Settings.Default.configImageSize.ToString()).Any() &&
+                                           !n.Elements("photo-url").Where(x => x.Value == "www.tumblr.com").Any() ||
+
+                                           // Identify Photosets
+                                           n.Elements("photoset").Where(photoset => photoset.Descendants("photo-url")
+                                               .Any(photourl => (string)photourl.Attribute("max-width").Value
+                                                   == Properties.Settings.Default.configImageSize.ToString() &&
+                                                   photourl.Value != "www.tumblr.com")).Any()
+                                           from m in n.Descendants("photo-url")
+                                           where m.Attribute("max-width").Value == Properties.Settings.Default.configImageSize.ToString()
+                                           select (string)m).ToList();
+                            }
+                            catch (Exception e)
+                            {
+                                //Console.WriteLine(e.Data);
+                            }
+
+                        }
+                        System.Threading.Monitor.Enter(crawledImageURLs);
+                        crawledImageURLs.AddRange(Urllist);
+                        System.Threading.Monitor.Exit(crawledImageURLs);
+                        Urllist.Clear();
                         {
-                            //numberOfPagesCrawled = i;
                             numberOfPostsCrawled += 50;
                             this.BeginInvoke((MethodInvoker)delegate
                             {
@@ -801,7 +891,6 @@
                             });
                         }
                     });
-
                 // Start the crawl process
                 //if (numberOfPostsCrawled >= _blog.TotalCount)
                 {
@@ -1332,6 +1421,13 @@
                 Properties.Settings.Default.CheckClipboard = false;
                 ClipboardMonitor.Stop();
             }
+        }
+
+        private void smallImage_Click(object sender, EventArgs e)
+        {
+            PicturePreviewFullscreen pictureFullScreen = new PicturePreviewFullscreen(this);
+            pictureFullScreen.ShowPreviewImage = smallImage.Image;
+            pictureFullScreen.Show();
         }
     }
 }

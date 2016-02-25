@@ -18,6 +18,7 @@
         private DateTime lastCrawled;
         private bool finishedCrawl;
         private bool online;
+        private string tags;
         private BindingList<string> urls;
         private BindingList<Post> links;
 
@@ -37,6 +38,7 @@
             this.lastCrawled = System.DateTime.MinValue;
             this.finishedCrawl = false;
             this.online = false;
+            this.tags = null;
             this.urls = new BindingList<string>();
             this.links = new BindingList<Post>();
         }
@@ -220,6 +222,19 @@
                 {
                     this.online = value;
                     OnPropertyChanged("Online");
+                }
+            }
+        }
+
+        public string Tags
+        {
+            get { return tags; }
+            set
+            {
+                if (tags != value)
+                {
+                    tags = value;
+                    OnPropertyChanged("Tags");
                 }
             }
         }
