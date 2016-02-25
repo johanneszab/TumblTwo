@@ -539,10 +539,10 @@
                 lvBlog.Columns[0].ReadOnly = true;
                 lvBlog.Columns[1].ReadOnly = true;
                 lvBlog.Columns[2].ReadOnly = true;
-                lvBlog.Columns[3].ReadOnly = false;
+                lvBlog.Columns[3].ReadOnly = true;
                 lvBlog.Columns[4].ReadOnly = true;
                 lvBlog.Columns[5].ReadOnly = true;
-                lvBlog.Columns[6].ReadOnly = true;
+                lvBlog.Columns[6].ReadOnly = false;
                 lvBlog.Columns[7].ReadOnly = true;
                 lvBlog.Columns[8].ReadOnly = true;
 
