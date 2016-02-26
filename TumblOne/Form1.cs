@@ -53,11 +53,10 @@
                     this.tBlogUrl.Text = string.Empty;
                     return;
                 }
-
                 TumblrBlog newBlog = new TumblrBlog
                 {
                     Name = str,
-                    Url = this.ExtractUrl(str),
+                    Url = this.ExtractUrl(this.tBlogUrl.Text),
                     DateAdded = DateTime.Now,
                     DownloadedImages = 0,
                     TotalCount = 0,
@@ -67,7 +66,7 @@
                 this.SaveBlog(newBlog);
                 blogs.Add(newBlog);
                 if (blogs.Count == 1)
-                    lvBlog.DataSource = blogs;
+                    FormatDataSource();
                 newBlog = null;
                 this.tBlogUrl.Text = "http://";
                 if (blogs.Any())
