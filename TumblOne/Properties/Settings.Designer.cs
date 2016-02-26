@@ -169,13 +169,25 @@ namespace TumblOne.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool configCheckStatusAtStartup {
             get {
                 return ((bool)(this["configCheckStatusAtStartup"]));
             }
             set {
                 this["configCheckStatusAtStartup"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool configParallelCrawl {
+            get {
+                return ((bool)(this["configParallelCrawl"]));
+            }
+            set {
+                this["configParallelCrawl"] = value;
             }
         }
     }

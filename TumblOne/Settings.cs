@@ -77,6 +77,7 @@ namespace TumblOne
             this.cbDeleteIndexOnly.Checked = Properties.Settings.Default.configDeleteIndexOnly;
             this.chkGif.Checked = Properties.Settings.Default.configChkGIFState;
             this.cbCheckStatus.Checked = Properties.Settings.Default.configCheckStatusAtStartup;
+            this.cbParallelCrawl.Checked = Properties.Settings.Default.configParallelCrawl;
         }
 
         static void Loaded_PropertyChanged(
@@ -172,6 +173,18 @@ namespace TumblOne
             else
             {
                 Properties.Settings.Default.configCheckStatusAtStartup = false;
+            }
+        }
+
+        private void cbParallelCrawl_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.cbParallelCrawl.Checked)
+            {
+                Properties.Settings.Default.configParallelCrawl = true;
+            }
+            else
+            {
+                Properties.Settings.Default.configParallelCrawl = false;
             }
         }
     }

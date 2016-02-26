@@ -47,6 +47,7 @@
             this.bChooseDownloadLocation = new System.Windows.Forms.Button();
             this.tbDownloadLocation = new System.Windows.Forms.TextBox();
             this.lbDownloadLocation = new System.Windows.Forms.Label();
+            this.cbParallelCrawl = new System.Windows.Forms.CheckBox();
             this.gbSettingsGeneral.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudSimultaneousDownloads)).BeginInit();
             this.panelSettingsGeneral.SuspendLayout();
@@ -73,6 +74,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gbSettingsGeneral.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gbSettingsGeneral.BackColor = System.Drawing.SystemColors.Window;
+            this.gbSettingsGeneral.Controls.Add(this.cbParallelCrawl);
             this.gbSettingsGeneral.Controls.Add(this.cbCheckStatus);
             this.gbSettingsGeneral.Controls.Add(this.cbDeleteIndexOnly);
             this.gbSettingsGeneral.Controls.Add(this.chkGif);
@@ -95,6 +97,8 @@
             // cbCheckStatus
             // 
             this.cbCheckStatus.AutoSize = true;
+            this.cbCheckStatus.Checked = true;
+            this.cbCheckStatus.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cbCheckStatus.Location = new System.Drawing.Point(12, 181);
             this.cbCheckStatus.Name = "cbCheckStatus";
             this.cbCheckStatus.Size = new System.Drawing.Size(189, 17);
@@ -162,7 +166,7 @@
             "250",
             "100",
             "75"});
-            this.cbImagesize.Location = new System.Drawing.Point(305, 249);
+            this.cbImagesize.Location = new System.Drawing.Point(305, 263);
             this.cbImagesize.Name = "cbImagesize";
             this.cbImagesize.Size = new System.Drawing.Size(111, 21);
             this.cbImagesize.TabIndex = 7;
@@ -172,7 +176,7 @@
             this.nudSimultaneousDownloads.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.nudSimultaneousDownloads.BackColor = System.Drawing.SystemColors.Menu;
-            this.nudSimultaneousDownloads.Location = new System.Drawing.Point(305, 222);
+            this.nudSimultaneousDownloads.Location = new System.Drawing.Point(305, 236);
             this.nudSimultaneousDownloads.Minimum = new decimal(new int[] {
             1,
             0,
@@ -190,7 +194,7 @@
             // lbImageSize
             // 
             this.lbImageSize.AutoSize = true;
-            this.lbImageSize.Location = new System.Drawing.Point(9, 252);
+            this.lbImageSize.Location = new System.Drawing.Point(9, 266);
             this.lbImageSize.Name = "lbImageSize";
             this.lbImageSize.Size = new System.Drawing.Size(117, 13);
             this.lbImageSize.TabIndex = 5;
@@ -199,7 +203,7 @@
             // lbSimultaneousDownloads
             // 
             this.lbSimultaneousDownloads.AutoSize = true;
-            this.lbSimultaneousDownloads.Location = new System.Drawing.Point(9, 224);
+            this.lbSimultaneousDownloads.Location = new System.Drawing.Point(9, 238);
             this.lbSimultaneousDownloads.Name = "lbSimultaneousDownloads";
             this.lbSimultaneousDownloads.Size = new System.Drawing.Size(129, 13);
             this.lbSimultaneousDownloads.TabIndex = 4;
@@ -273,6 +277,19 @@
             this.lbDownloadLocation.TabIndex = 0;
             this.lbDownloadLocation.Text = "Download Location:";
             // 
+            // cbParallelCrawl
+            // 
+            this.cbParallelCrawl.AutoSize = true;
+            this.cbParallelCrawl.Checked = true;
+            this.cbParallelCrawl.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbParallelCrawl.Location = new System.Drawing.Point(12, 205);
+            this.cbParallelCrawl.Name = "cbParallelCrawl";
+            this.cbParallelCrawl.Size = new System.Drawing.Size(127, 17);
+            this.cbParallelCrawl.TabIndex = 13;
+            this.cbParallelCrawl.Text = "Crawl blogs in parallel";
+            this.cbParallelCrawl.UseVisualStyleBackColor = true;
+            this.cbParallelCrawl.CheckedChanged += new System.EventHandler(this.cbParallelCrawl_CheckedChanged);
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -315,5 +332,6 @@
         private System.Windows.Forms.CheckBox cbDeleteIndexOnly;
         private System.Windows.Forms.CheckBox chkGif;
         private System.Windows.Forms.CheckBox cbCheckStatus;
+        private System.Windows.Forms.CheckBox cbParallelCrawl;
     }
 }
