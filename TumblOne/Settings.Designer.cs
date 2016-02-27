@@ -233,7 +233,7 @@
             this.nudSimultaneousDownloads.Size = new System.Drawing.Size(110, 20);
             this.nudSimultaneousDownloads.TabIndex = 6;
             this.nudSimultaneousDownloads.Value = new decimal(new int[] {
-            3,
+            1,
             0,
             0,
             0});
