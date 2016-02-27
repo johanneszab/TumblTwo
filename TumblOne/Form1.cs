@@ -803,7 +803,7 @@
                     Parallel.For(
                         0,
                         numberOfPagesToCrawl,
-                        new ParallelOptions { MaxDegreeOfParallelism = Properties.Settings.Default.configParallelImageDownloads },
+                        new ParallelOptions { MaxDegreeOfParallelism = (Properties.Settings.Default.configParallelImageDownloads / Properties.Settings.Default.configSimultaneousDownloads) },
                         i =>
                     {
                         this.wait_handle.WaitOne();
@@ -928,7 +928,7 @@
                             // start the crawl
                             Parallel.ForEach(
                                 crawledImageURLs,
-                                new ParallelOptions { MaxDegreeOfParallelism = Properties.Settings.Default.configParallelImageDownloads },
+                                new ParallelOptions { MaxDegreeOfParallelism = (Properties.Settings.Default.configParallelImageDownloads / Properties.Settings.Default.configSimultaneousDownloads) },
                                 url =>
                             {
                                 MethodInvoker invoker = null;

@@ -114,7 +114,7 @@
             this.nudParallelImageDownloads.Size = new System.Drawing.Size(110, 20);
             this.nudParallelImageDownloads.TabIndex = 15;
             this.nudParallelImageDownloads.Value = new decimal(new int[] {
-            50,
+            40,
             0,
             0,
             0});
@@ -124,9 +124,9 @@
             this.lbParallelImageDownloads.AutoSize = true;
             this.lbParallelImageDownloads.Location = new System.Drawing.Point(9, 271);
             this.lbParallelImageDownloads.Name = "lbParallelImageDownloads";
-            this.lbParallelImageDownloads.Size = new System.Drawing.Size(263, 13);
+            this.lbParallelImageDownloads.Size = new System.Drawing.Size(278, 13);
             this.lbParallelImageDownloads.TabIndex = 14;
-            this.lbParallelImageDownloads.Text = "Maximum number of parallel image downloads per blog";
+            this.lbParallelImageDownloads.Text = "Maximum number of parallel image downloads for all blogs";
             // 
             // cbParallelCrawl
             // 
@@ -233,7 +233,7 @@
             this.nudSimultaneousDownloads.Size = new System.Drawing.Size(110, 20);
             this.nudSimultaneousDownloads.TabIndex = 6;
             this.nudSimultaneousDownloads.Value = new decimal(new int[] {
-            1,
+            2,
             0,
             0,
             0});
