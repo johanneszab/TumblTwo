@@ -190,5 +190,17 @@ namespace TumblOne.Properties {
                 this["configParallelCrawl"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
+        public int configParallelImageDownloads {
+            get {
+                return ((int)(this["configParallelImageDownloads"]));
+            }
+            set {
+                this["configParallelImageDownloads"] = value;
+            }
+        }
     }
 }

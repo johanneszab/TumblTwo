@@ -800,7 +800,11 @@
                     List<string> Urllist = new List<string>();
 
                     int numberOfPagesToCrawl = ((_blog.TotalCount / 50) + 1);
-                    Parallel.For(0, numberOfPagesToCrawl, i =>
+                    Parallel.For(
+                        0,
+                        numberOfPagesToCrawl,
+                        new ParallelOptions { MaxDegreeOfParallelism = Properties.Settings.Default.configParallelImageDownloads },
+                        i =>
                     {
                         this.wait_handle.WaitOne();
                         if (ct.IsCancellationRequested)
@@ -922,7 +926,10 @@
                         try
                         {
                             // start the crawl
-                            Parallel.ForEach(crawledImageURLs, url =>
+                            Parallel.ForEach(
+                                crawledImageURLs,
+                                new ParallelOptions { MaxDegreeOfParallelism = Properties.Settings.Default.configParallelImageDownloads },
+                                url =>
                             {
                                 MethodInvoker invoker = null;
                                 string FileLocation;
@@ -950,12 +957,14 @@
                                                 invoker = delegate
                                                 {
                                                     // add file to collection to prevent re-downloads and for statistics
+                                                    System.Threading.Monitor.Enter(_blog);
                                                     _blog.Links.Add(new Post(url, FileLocation));
                                                     _blog.DownloadedImages = _blog.Links.Count;
 
                                                     // update progress
                                                     double progress = (double)_blog.DownloadedImages / (double)_blog.TotalCount * 100;
                                                     _blog.Progress = (int)progress;
+                                                    System.Threading.Monitor.Exit(_blog);
 
                                                     if ((this.pgBar.Value + 1) < (this.pgBar.Maximum + 1))
                                                     {
@@ -1016,7 +1025,7 @@
                 }
 
                 // Use the serial crawl path as defined in the settings
-                else
+                else if (!Properties.Settings.Default.configParallelCrawl)
                 {
                     IEnumerable<XElement> query;
                     XDocument document3 = null;
@@ -1125,12 +1134,14 @@
                                                 invoker = delegate
                                                 {
                                                     // add file to collection to prevent re-downloads and for statistics
+                                                    System.Threading.Monitor.Enter(_blog);
                                                     _blog.Links.Add(new Post(p.Value, FileLocation));
                                                     _blog.DownloadedImages = _blog.Links.Count;
 
                                                     // update progress
                                                     double progress = (double)_blog.DownloadedImages / (double)_blog.TotalCount * 100;
                                                     _blog.Progress = (int)progress;
+                                                    System.Threading.Monitor.Exit(_blog);
 
                                                     if ((this.pgBar.Value + 1) < (this.pgBar.Maximum + 1))
                                                     {

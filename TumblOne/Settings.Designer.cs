@@ -32,6 +32,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Settings));
             this.tvSettings = new System.Windows.Forms.TreeView();
             this.gbSettingsGeneral = new System.Windows.Forms.GroupBox();
+            this.nudParallelImageDownloads = new System.Windows.Forms.NumericUpDown();
+            this.lbParallelImageDownloads = new System.Windows.Forms.Label();
+            this.cbParallelCrawl = new System.Windows.Forms.CheckBox();
             this.cbCheckStatus = new System.Windows.Forms.CheckBox();
             this.cbDeleteIndexOnly = new System.Windows.Forms.CheckBox();
             this.chkGif = new System.Windows.Forms.CheckBox();
@@ -47,8 +50,8 @@
             this.bChooseDownloadLocation = new System.Windows.Forms.Button();
             this.tbDownloadLocation = new System.Windows.Forms.TextBox();
             this.lbDownloadLocation = new System.Windows.Forms.Label();
-            this.cbParallelCrawl = new System.Windows.Forms.CheckBox();
             this.gbSettingsGeneral.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudParallelImageDownloads)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudSimultaneousDownloads)).BeginInit();
             this.panelSettingsGeneral.SuspendLayout();
             this.SuspendLayout();
@@ -74,6 +77,8 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gbSettingsGeneral.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gbSettingsGeneral.BackColor = System.Drawing.SystemColors.Window;
+            this.gbSettingsGeneral.Controls.Add(this.nudParallelImageDownloads);
+            this.gbSettingsGeneral.Controls.Add(this.lbParallelImageDownloads);
             this.gbSettingsGeneral.Controls.Add(this.cbParallelCrawl);
             this.gbSettingsGeneral.Controls.Add(this.cbCheckStatus);
             this.gbSettingsGeneral.Controls.Add(this.cbDeleteIndexOnly);
@@ -93,6 +98,48 @@
             this.gbSettingsGeneral.TabIndex = 1;
             this.gbSettingsGeneral.TabStop = false;
             this.gbSettingsGeneral.Text = "General";
+            // 
+            // nudParallelImageDownloads
+            // 
+            this.nudParallelImageDownloads.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.nudParallelImageDownloads.BackColor = System.Drawing.SystemColors.Menu;
+            this.nudParallelImageDownloads.Location = new System.Drawing.Point(305, 269);
+            this.nudParallelImageDownloads.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nudParallelImageDownloads.Name = "nudParallelImageDownloads";
+            this.nudParallelImageDownloads.Size = new System.Drawing.Size(110, 20);
+            this.nudParallelImageDownloads.TabIndex = 15;
+            this.nudParallelImageDownloads.Value = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            // 
+            // lbParallelImageDownloads
+            // 
+            this.lbParallelImageDownloads.AutoSize = true;
+            this.lbParallelImageDownloads.Location = new System.Drawing.Point(9, 271);
+            this.lbParallelImageDownloads.Name = "lbParallelImageDownloads";
+            this.lbParallelImageDownloads.Size = new System.Drawing.Size(263, 13);
+            this.lbParallelImageDownloads.TabIndex = 14;
+            this.lbParallelImageDownloads.Text = "Maximum number of parallel image downloads per blog";
+            // 
+            // cbParallelCrawl
+            // 
+            this.cbParallelCrawl.AutoSize = true;
+            this.cbParallelCrawl.Checked = true;
+            this.cbParallelCrawl.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbParallelCrawl.Location = new System.Drawing.Point(12, 205);
+            this.cbParallelCrawl.Name = "cbParallelCrawl";
+            this.cbParallelCrawl.Size = new System.Drawing.Size(127, 17);
+            this.cbParallelCrawl.TabIndex = 13;
+            this.cbParallelCrawl.Text = "Crawl blogs in parallel";
+            this.cbParallelCrawl.UseVisualStyleBackColor = true;
+            this.cbParallelCrawl.CheckedChanged += new System.EventHandler(this.cbParallelCrawl_CheckedChanged);
             // 
             // cbCheckStatus
             // 
@@ -114,9 +161,9 @@
             this.cbDeleteIndexOnly.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cbDeleteIndexOnly.Location = new System.Drawing.Point(12, 158);
             this.cbDeleteIndexOnly.Name = "cbDeleteIndexOnly";
-            this.cbDeleteIndexOnly.Size = new System.Drawing.Size(194, 17);
+            this.cbDeleteIndexOnly.Size = new System.Drawing.Size(264, 17);
             this.cbDeleteIndexOnly.TabIndex = 11;
-            this.cbDeleteIndexOnly.Text = "Delete Only Index Files (No Images)";
+            this.cbDeleteIndexOnly.Text = "Delete only the index files (no downloaded images)";
             this.cbDeleteIndexOnly.UseVisualStyleBackColor = true;
             this.cbDeleteIndexOnly.CheckedChanged += new System.EventHandler(this.cbDeleteIndexOnly_CheckedChanged);
             // 
@@ -125,9 +172,9 @@
             this.chkGif.AutoSize = true;
             this.chkGif.Location = new System.Drawing.Point(12, 134);
             this.chkGif.Name = "chkGif";
-            this.chkGif.Size = new System.Drawing.Size(88, 17);
+            this.chkGif.Size = new System.Drawing.Size(85, 17);
             this.chkGif.TabIndex = 10;
-            this.chkGif.Text = "Skip .gif-Files";
+            this.chkGif.Text = "Skip .gif files";
             this.chkGif.UseVisualStyleBackColor = true;
             this.chkGif.CheckedChanged += new System.EventHandler(this.chkGif_CheckedChanged);
             // 
@@ -166,7 +213,7 @@
             "250",
             "100",
             "75"});
-            this.cbImagesize.Location = new System.Drawing.Point(305, 263);
+            this.cbImagesize.Location = new System.Drawing.Point(305, 299);
             this.cbImagesize.Name = "cbImagesize";
             this.cbImagesize.Size = new System.Drawing.Size(111, 21);
             this.cbImagesize.TabIndex = 7;
@@ -176,7 +223,7 @@
             this.nudSimultaneousDownloads.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.nudSimultaneousDownloads.BackColor = System.Drawing.SystemColors.Menu;
-            this.nudSimultaneousDownloads.Location = new System.Drawing.Point(305, 236);
+            this.nudSimultaneousDownloads.Location = new System.Drawing.Point(305, 238);
             this.nudSimultaneousDownloads.Minimum = new decimal(new int[] {
             1,
             0,
@@ -186,7 +233,7 @@
             this.nudSimultaneousDownloads.Size = new System.Drawing.Size(110, 20);
             this.nudSimultaneousDownloads.TabIndex = 6;
             this.nudSimultaneousDownloads.Value = new decimal(new int[] {
-            1,
+            3,
             0,
             0,
             0});
@@ -194,29 +241,29 @@
             // lbImageSize
             // 
             this.lbImageSize.AutoSize = true;
-            this.lbImageSize.Location = new System.Drawing.Point(9, 266);
+            this.lbImageSize.Location = new System.Drawing.Point(9, 302);
             this.lbImageSize.Name = "lbImageSize";
-            this.lbImageSize.Size = new System.Drawing.Size(117, 13);
+            this.lbImageSize.Size = new System.Drawing.Size(113, 13);
             this.lbImageSize.TabIndex = 5;
-            this.lbImageSize.Text = "Imagesize (Max. Width)";
+            this.lbImageSize.Text = "Imagesize (max. width)";
             // 
             // lbSimultaneousDownloads
             // 
             this.lbSimultaneousDownloads.AutoSize = true;
-            this.lbSimultaneousDownloads.Location = new System.Drawing.Point(9, 238);
+            this.lbSimultaneousDownloads.Location = new System.Drawing.Point(9, 240);
             this.lbSimultaneousDownloads.Name = "lbSimultaneousDownloads";
-            this.lbSimultaneousDownloads.Size = new System.Drawing.Size(129, 13);
+            this.lbSimultaneousDownloads.Size = new System.Drawing.Size(193, 13);
             this.lbSimultaneousDownloads.TabIndex = 4;
-            this.lbSimultaneousDownloads.Text = "Simultaneous Downloads:";
+            this.lbSimultaneousDownloads.Text = "Maximum number of parallel blog crawls";
             // 
             // cbRemoveFinished
             // 
             this.cbRemoveFinished.AutoSize = true;
             this.cbRemoveFinished.Location = new System.Drawing.Point(12, 110);
             this.cbRemoveFinished.Name = "cbRemoveFinished";
-            this.cbRemoveFinished.Size = new System.Drawing.Size(188, 17);
+            this.cbRemoveFinished.Size = new System.Drawing.Size(169, 17);
             this.cbRemoveFinished.TabIndex = 3;
-            this.cbRemoveFinished.Text = "Remove completely crawled Blogs";
+            this.cbRemoveFinished.Text = "Remove blog index after crawl";
             this.cbRemoveFinished.UseVisualStyleBackColor = true;
             this.cbRemoveFinished.CheckedChanged += new System.EventHandler(this.cbRemoveFinished_CheckedChanged);
             // 
@@ -227,9 +274,9 @@
             this.cbPicturePreview.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cbPicturePreview.Location = new System.Drawing.Point(12, 86);
             this.cbPicturePreview.Name = "cbPicturePreview";
-            this.cbPicturePreview.Size = new System.Drawing.Size(130, 17);
+            this.cbPicturePreview.Size = new System.Drawing.Size(146, 17);
             this.cbPicturePreview.TabIndex = 2;
-            this.cbPicturePreview.Text = "Show Picture Preview";
+            this.cbPicturePreview.Text = "Show the picture preview";
             this.cbPicturePreview.UseVisualStyleBackColor = true;
             this.cbPicturePreview.CheckedChanged += new System.EventHandler(this.cbPicturePreview_CheckedChanged);
             // 
@@ -277,19 +324,6 @@
             this.lbDownloadLocation.TabIndex = 0;
             this.lbDownloadLocation.Text = "Download Location:";
             // 
-            // cbParallelCrawl
-            // 
-            this.cbParallelCrawl.AutoSize = true;
-            this.cbParallelCrawl.Checked = true;
-            this.cbParallelCrawl.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbParallelCrawl.Location = new System.Drawing.Point(12, 205);
-            this.cbParallelCrawl.Name = "cbParallelCrawl";
-            this.cbParallelCrawl.Size = new System.Drawing.Size(127, 17);
-            this.cbParallelCrawl.TabIndex = 13;
-            this.cbParallelCrawl.Text = "Crawl blogs in parallel";
-            this.cbParallelCrawl.UseVisualStyleBackColor = true;
-            this.cbParallelCrawl.CheckedChanged += new System.EventHandler(this.cbParallelCrawl_CheckedChanged);
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -306,6 +340,7 @@
             this.Load += new System.EventHandler(this.Settings_Load);
             this.gbSettingsGeneral.ResumeLayout(false);
             this.gbSettingsGeneral.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudParallelImageDownloads)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudSimultaneousDownloads)).EndInit();
             this.panelSettingsGeneral.ResumeLayout(false);
             this.panelSettingsGeneral.PerformLayout();
@@ -333,5 +368,7 @@
         private System.Windows.Forms.CheckBox chkGif;
         private System.Windows.Forms.CheckBox cbCheckStatus;
         private System.Windows.Forms.CheckBox cbParallelCrawl;
+        private System.Windows.Forms.NumericUpDown nudParallelImageDownloads;
+        private System.Windows.Forms.Label lbParallelImageDownloads;
     }
 }

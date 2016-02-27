@@ -70,6 +70,7 @@ namespace TumblOne
         private void Settings_Load(object sender, EventArgs e)
         {
             this.nudSimultaneousDownloads.Value = Convert.ToDecimal(Properties.Settings.Default.configSimultaneousDownloads);
+            this.nudParallelImageDownloads.Value = Convert.ToDecimal(Properties.Settings.Default.configParallelImageDownloads);
             this.cbImagesize.SelectedItem = Convert.ToString(Properties.Settings.Default.configImageSize);
             this.tbDownloadLocation.Text = Properties.Settings.Default.configDownloadLocation;
             this.cbPicturePreview.Checked = Properties.Settings.Default.configPreviewVisible;
@@ -106,6 +107,7 @@ namespace TumblOne
             }
             // Save Settings
             Properties.Settings.Default.configSimultaneousDownloads = Convert.ToInt32(this.nudSimultaneousDownloads.Value);
+            Properties.Settings.Default.configParallelImageDownloads = Convert.ToInt32(this.nudParallelImageDownloads.Value);
             Properties.Settings.Default.configImageSize = Convert.ToInt32(this.cbImagesize.SelectedItem);
             Properties.Settings.Default.Save();
         }
