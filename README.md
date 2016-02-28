@@ -1,8 +1,8 @@
 # TumblTwo
-TumblTwo, an Improved Fork of TumblOne, a Tumblr Image Crawler.
+TumblTwo, an Improved Fork of TumblOne, a Tumblr Image Downloader.
 ___
 TumblTwo, a TumblOne Fork:
-TumblTwo is an image crawler for the Bloghoster Tumblr.com largely
+TumblTwo is an image downloader for the Bloghoster Tumblr.com largely
 based on TumblOne by Helena Craven. After supplying a url, the tool 
 will search and download all types of images in a given resolution.
 You can simultaneously download from multiple blogs and enqueue others. 
