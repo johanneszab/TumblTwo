@@ -510,6 +510,7 @@
             this.lvBlog.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.lvBlog.Size = new System.Drawing.Size(1175, 273);
             this.lvBlog.TabIndex = 13;
+            lvBlog.CellFormatting += lvBlog_CellFormatting;
             // 
             // Form1
             // 

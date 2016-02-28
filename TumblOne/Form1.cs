@@ -599,7 +599,15 @@
                 lvBlog.AllowUserToOrderColumns = true;
 
                 // reload saved column positions and sizes
-                lvBlog.SetOrder();
+                try
+                {
+                    lvBlog.SetOrder();
+                }
+                catch (Exception e)
+                {
+                    DataGridViewExtendedSetting.Default.Reset();
+                    lvBlog.SetOrder();
+                }
             });
 
             return true;
