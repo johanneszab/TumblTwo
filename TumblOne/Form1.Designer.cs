@@ -35,12 +35,10 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.label21 = new System.Windows.Forms.Label();
             this.tBlogUrl = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.chkGIF = new System.Windows.Forms.CheckBox();
-            this.lblUrl = new System.Windows.Forms.Label();
             this.lblProcess = new System.Windows.Forms.Label();
             this.lbl23 = new System.Windows.Forms.Label();
             this.contextBlog = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -68,7 +66,6 @@
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.pgBar = new System.Windows.Forms.ProgressBar();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.panelInfo = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
@@ -85,17 +82,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.lvBlog)).BeginInit();
             this.SuspendLayout();
             // 
-            // label21
-            // 
-            this.label21.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label21.AutoSize = true;
-            this.label21.ForeColor = System.Drawing.SystemColors.InfoText;
-            this.label21.Location = new System.Drawing.Point(6, 73);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(63, 13);
-            this.label21.TabIndex = 2;
-            this.label21.Text = "Current Url: ";
-            // 
             // tBlogUrl
             // 
             this.tBlogUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -106,7 +92,7 @@
             this.tBlogUrl.ForeColor = System.Drawing.Color.Black;
             this.tBlogUrl.Location = new System.Drawing.Point(135, 16);
             this.tBlogUrl.Name = "tBlogUrl";
-            this.tBlogUrl.Size = new System.Drawing.Size(902, 21);
+            this.tBlogUrl.Size = new System.Drawing.Size(1052, 21);
             this.tBlogUrl.TabIndex = 1;
             this.tBlogUrl.Text = "http://";
             // 
@@ -119,33 +105,6 @@
             this.label1.Size = new System.Drawing.Size(120, 13);
             this.label1.TabIndex = 2;
             this.label1.Text = "Enter a valid Tumblr Url:";
-            // 
-            // chkGIF
-            // 
-            this.chkGIF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.chkGIF.AutoSize = true;
-            this.chkGIF.BackColor = System.Drawing.SystemColors.Window;
-            this.chkGIF.Location = new System.Drawing.Point(765, 19);
-            this.chkGIF.Name = "chkGIF";
-            this.chkGIF.Size = new System.Drawing.Size(91, 17);
-            this.chkGIF.TabIndex = 8;
-            this.chkGIF.Text = "Skip GIF-Files";
-            this.chkGIF.UseVisualStyleBackColor = false;
-            this.chkGIF.Visible = false;
-            this.chkGIF.CheckedChanged += new System.EventHandler(this.chkGIF_CheckedChanged);
-            // 
-            // lblUrl
-            // 
-            this.lblUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblUrl.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblUrl.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.lblUrl.Location = new System.Drawing.Point(6, 93);
-            this.lblUrl.Name = "lblUrl";
-            this.lblUrl.Size = new System.Drawing.Size(850, 49);
-            this.lblUrl.TabIndex = 7;
-            this.lblUrl.Text = "       ";
-            this.lblUrl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblProcess
             // 
@@ -243,7 +202,7 @@
             this.toolSettings,
             this.toolStripSeparator3,
             this.toolAbout});
-            this.toolStrip1.Location = new System.Drawing.Point(1044, 0);
+            this.toolStrip1.Location = new System.Drawing.Point(1194, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
             this.toolStrip1.Size = new System.Drawing.Size(100, 671);
@@ -423,31 +382,16 @@
             this.columnHeader6.Text = "Url";
             this.columnHeader6.Width = 382;
             // 
-            // pgBar
-            // 
-            this.pgBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pgBar.BackColor = System.Drawing.SystemColors.Menu;
-            this.pgBar.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.pgBar.Location = new System.Drawing.Point(6, 155);
-            this.pgBar.Name = "pgBar";
-            this.pgBar.Size = new System.Drawing.Size(850, 23);
-            this.pgBar.TabIndex = 9;
-            // 
             // groupBox1
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.lblUrl);
-            this.groupBox1.Controls.Add(this.label21);
-            this.groupBox1.Controls.Add(this.chkGIF);
-            this.groupBox1.Controls.Add(this.pgBar);
             this.groupBox1.Controls.Add(this.lbl23);
             this.groupBox1.Controls.Add(this.lblProcess);
             this.groupBox1.ForeColor = System.Drawing.SystemColors.InfoText;
             this.groupBox1.Location = new System.Drawing.Point(12, 475);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(862, 184);
+            this.groupBox1.Size = new System.Drawing.Size(1012, 184);
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Download";
@@ -460,7 +404,7 @@
             this.panelInfo.ForeColor = System.Drawing.SystemColors.InfoText;
             this.panelInfo.Location = new System.Drawing.Point(12, 475);
             this.panelInfo.Name = "panelInfo";
-            this.panelInfo.Size = new System.Drawing.Size(1025, 184);
+            this.panelInfo.Size = new System.Drawing.Size(1175, 184);
             this.panelInfo.TabIndex = 11;
             // 
             // label2
@@ -472,7 +416,7 @@
             this.label2.ForeColor = System.Drawing.SystemColors.InfoText;
             this.label2.Location = new System.Drawing.Point(0, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(1025, 184);
+            this.label2.Size = new System.Drawing.Size(1175, 184);
             this.label2.TabIndex = 0;
             this.label2.Text = "To start, click on a blog, add it to the queue and hit the \'Crawl\' button to star" +
     "t the crawl process. ";
@@ -483,7 +427,7 @@
             this.smallImage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.smallImage.BackColor = System.Drawing.SystemColors.Menu;
             this.smallImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.smallImage.Location = new System.Drawing.Point(880, 475);
+            this.smallImage.Location = new System.Drawing.Point(1030, 475);
             this.smallImage.Name = "smallImage";
             this.smallImage.Size = new System.Drawing.Size(157, 184);
             this.smallImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -505,7 +449,7 @@
             this.lvQueue.HideSelection = false;
             this.lvQueue.Location = new System.Drawing.Point(12, 322);
             this.lvQueue.Name = "lvQueue";
-            this.lvQueue.Size = new System.Drawing.Size(1026, 147);
+            this.lvQueue.Size = new System.Drawing.Size(1176, 147);
             this.lvQueue.TabIndex = 12;
             this.lvQueue.UseCompatibleStateImageBehavior = false;
             this.lvQueue.View = System.Windows.Forms.View.Details;
@@ -513,12 +457,12 @@
             // chQueueName
             // 
             this.chQueueName.Text = "Name";
-            this.chQueueName.Width = 133;
+            this.chQueueName.Width = 200;
             // 
             // chQueueStatus
             // 
             this.chQueueStatus.Text = "Queue Status";
-            this.chQueueStatus.Width = 289;
+            this.chQueueStatus.Width = 900;
             // 
             // lvBlog
             // 
@@ -529,41 +473,48 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lvBlog.BackgroundColor = System.Drawing.SystemColors.Menu;
-            this.lvBlog.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.lvBlog.ContextMenuStrip = this.contextBlog;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Menu;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.lvBlog.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.lvBlog.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            this.lvBlog.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.lvBlog.ContextMenuStrip = this.contextBlog;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Menu;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.lvBlog.DefaultCellStyle = dataGridViewCellStyle2;
             this.lvBlog.Location = new System.Drawing.Point(12, 43);
             this.lvBlog.Name = "lvBlog";
             this.lvBlog.ReadOnly = true;
             this.lvBlog.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.lvBlog.RowHeadersDefaultCellStyle = dataGridViewCellStyle2;
-            this.lvBlog.RowHeadersWidth = 4;
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
             dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lvBlog.RowsDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.lvBlog.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            this.lvBlog.RowHeadersWidth = 4;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lvBlog.RowsDefaultCellStyle = dataGridViewCellStyle4;
             this.lvBlog.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.lvBlog.Size = new System.Drawing.Size(1025, 273);
+            this.lvBlog.Size = new System.Drawing.Size(1175, 273);
             this.lvBlog.TabIndex = 13;
-            this.lvBlog.CellFormatting += lvBlog_CellFormatting;
             // 
             // Form1
             // 
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1144, 671);
+            this.ClientSize = new System.Drawing.Size(1294, 671);
             this.Controls.Add(this.lvBlog);
             this.Controls.Add(this.lvQueue);
             this.Controls.Add(this.panelInfo);
@@ -575,7 +526,7 @@
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
-            this.Text = "TumblTwo - A Tumblr Image Crawler - Version 1.0.6";
+            this.Text = "TumblTwo - A Tumblr Image Crawler - Version 1.0.7";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.contextBlog.ResumeLayout(false);
@@ -592,8 +543,6 @@
         }
 
         #endregion
-
-        private CheckBox chkGIF;
         private ColumnHeader columnHeader5;
         private ColumnHeader columnHeader6;
         private ColumnHeader columnHeader8;
@@ -602,16 +551,13 @@
         private GroupBox groupBox1;
         private Label label1;
         private Label label2;
-        public Label label21;
         public Label lbl23;
         public Label lblProcess;
-        public Label lblUrl;
         private ToolStripMenuItem mnuCrawl;
         private ToolStripMenuItem mnuRemoveBlog2;
         private ToolStripMenuItem mnuShowFilesInExplorer;
         private ToolStripMenuItem mnuVisit;
         private Panel panelInfo;
-        private ProgressBar pgBar;
         private TextBox tBlogUrl;
         private ToolStripButton toolAbout;
         private ToolStripButton toolAddBlog;

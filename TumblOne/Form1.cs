@@ -23,10 +23,10 @@
         public Task[] tasks = new Task[Properties.Settings.Default.configSimultaneousDownloads];
         string crawlingBlogs = "";
         public BindingSource bsSmallImage = new BindingSource();
-        public BindingSource bslblUrl = new BindingSource();
         private CancellationTokenSource cts = new CancellationTokenSource();
         private List<TumblrBlog> bin = new List<TumblrBlog>();
         private TumblOne.SortableBindingList<TumblrBlog> blogs = new TumblOne.SortableBindingList<TumblrBlog>();
+        private BindingList<Post> pictureList = new BindingList<Post>();
 
         public Form1()
         {
@@ -40,6 +40,25 @@
         private void Form1_Shown(object sender, EventArgs e)
         {
             this.LoadGUI();
+
+            // FIXME
+            // bind the data
+            this.BeginInvoke((MethodInvoker)delegate
+            {
+                try
+                {
+                    // set databinings for the picturebox and the information label
+                    bsSmallImage.DataSource = pictureList;
+                    this.smallImage.DataBindings.Add("ImageLocation", bsSmallImage, "Filename", false, DataSourceUpdateMode.OnPropertyChanged);
+                    bsSmallImage.ListChanged += bsSmallImage_ListChanged;
+                }
+                catch (Exception)
+                // two bindings to one source
+                {
+                    //continue;
+                }
+
+            });
         }
 
         private void AddBlog(object sender, EventArgs e)
@@ -176,8 +195,8 @@
         {
 
             // This would work if the hostname would be the same, but when the file is hosted on a different mirror, we load the same file again
-            //if (!blog.Links.Any(Post => Post.Url.Contains(url)))
-            if (!blog.Links.Any(Post => Post.Filename.Contains(url.Substring(url.LastIndexOf("/") + 1))))
+            //if (!blog.Links.Any(Post => Post.Filename.Contains(url.Substring(url.LastIndexOf("/") + 1))))
+            if (!blog.Links.Any(Post => Post.Url.Contains(filename)))
             {
                 try
                 {
@@ -382,7 +401,6 @@
                         {
                             blogs.Clear();
                             this.lblProcess.Text = "";
-                            this.lblUrl.Text = "";
                         });
                     if (Directory.Exists(Properties.Settings.Default.configDownloadLocation.ToString() + "Index/"))
                     {
@@ -434,9 +452,7 @@
             cts = new CancellationTokenSource();
 
             // Setup the UI
-            this.smallImage.ImageLocation = "";
             this.crawlingBlogs = "";
-            this.lblUrl.Text = "";
             this.lblProcess.Text = "Crawling Blogs - " + this.crawlingBlogs;
 
             // Start Crawl processes
@@ -519,6 +535,10 @@
             lastCrawl.HeaderText = "Last Complete Crawl";
             lastCrawl.DataPropertyName = "lastCrawled";
 
+            var information = new DataGridViewTextBoxColumn();
+            information.HeaderText = "Current Process";
+            information.DataPropertyName = "Information";
+
             this.BeginInvoke((MethodInvoker)delegate
             {
 
@@ -531,6 +551,7 @@
                 lvBlog.Columns.Add(tags);
                 lvBlog.Columns.Add(dateAdded);
                 lvBlog.Columns.Add(lastCrawl);
+                lvBlog.Columns.Add(information);
                 lvBlog.DataSource = blogs;
 
                 lvBlog.ReadOnly = false;
@@ -543,6 +564,7 @@
                 lvBlog.Columns[6].ReadOnly = false;
                 lvBlog.Columns[7].ReadOnly = true;
                 lvBlog.Columns[8].ReadOnly = true;
+                lvBlog.Columns[9].ReadOnly = true;
 
                 tags.ToolTipText = "Enter comma separated strings, e.g.: great big car, mouse";
 
@@ -568,6 +590,7 @@
                 lvBlog.Columns[6].SortMode = DataGridViewColumnSortMode.Automatic;
                 lvBlog.Columns[7].SortMode = DataGridViewColumnSortMode.Automatic;
                 lvBlog.Columns[8].SortMode = DataGridViewColumnSortMode.Automatic;
+                lvBlog.Columns[9].SortMode = DataGridViewColumnSortMode.Automatic;
 
                 lvBlog.CellBorderStyle = DataGridViewCellBorderStyle.None;
                 lvBlog.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
@@ -698,6 +721,12 @@
 
                 if (numberOfPostsCrawled == 0)
                 {
+
+                    this.BeginInvoke((MethodInvoker)delegate
+                    {
+                        _blog.Information = "Checking blogs status and number of posts ...";
+                    });
+
                     // set title and name of the blog
                     // check if blogaddress is alive or someone else is using it now
 
@@ -709,67 +738,20 @@
                     }
                     // Update image (blog post) count
                     // Set progressbar
+
+                    XDocument document = null;
                     try
                     {
-                        XDocument document = null;
-                        try
-                        {
-                            document = XDocument.Load(ApiUrl.ToString() + "0&num=50");
-                        }
-                        catch (Exception e)
-                        {
-                            //Console.WriteLine(e.Data);
-                        }
-                        foreach (var type in from data in document.Descendants("posts") select new { Total = data.Attribute("total").Value })
-                        {
-                            _blog.TotalCount = Convert.ToInt32(type.Total.ToString());
-                        }
-                        if (method == null)
-                        {
-                            if (TumblrActiveList.Count > 1)
-                            {
-                                method = delegate
-                                {
-                                    try
-                                    {
-                                        this.pgBar.Style = ProgressBarStyle.Marquee;
-                                        this.pgBar.Minimum = 0;
-                                        this.pgBar.Maximum = _blog.TotalCount;
-                                        this.pgBar.Value = _blog.DownloadedImages;
-                                    }
-                                    catch (ArgumentOutOfRangeException)
-                                    {
-                                        this.pgBar.Style = ProgressBarStyle.Marquee;
-                                    }
-
-                                };
-                            }
-                            else
-                            {
-                                method = delegate
-                                {
-                                    try
-                                    {
-                                        this.pgBar.Style = ProgressBarStyle.Continuous;
-                                        this.pgBar.Minimum = 0;
-                                        this.pgBar.Maximum = _blog.TotalCount;
-                                        this.pgBar.Value = _blog.DownloadedImages;
-                                    }
-                                    catch (ArgumentOutOfRangeException)
-                                    {
-                                        this.pgBar.Style = ProgressBarStyle.Marquee;
-                                    }
-
-                                };
-                            }
-                        }
-                        this.BeginInvoke(method);
+                        document = XDocument.Load(ApiUrl.ToString() + "0&num=50");
                     }
-                    catch
+                    catch (Exception e)
                     {
                         _blog.TotalCount = 0;
-                        //this.toolStop_Click(this, null);
                         break;
+                    }
+                    foreach (var type in from data in document.Descendants("posts") select new { Total = data.Attribute("total").Value })
+                    {
+                        _blog.TotalCount = Convert.ToInt32(type.Total.ToString());
                     }
                 }
 
@@ -893,13 +875,17 @@
                             numberOfPostsCrawled += 50;
                             this.BeginInvoke((MethodInvoker)delegate
                             {
-                                this.lblUrl.Text = "Evaluated " + numberOfPostsCrawled + " tumblr post urls out of " + _blog.TotalCount + " total posts.";
+                                _blog.Information = "Evaluated " + numberOfPostsCrawled + " tumblr post urls out of " + _blog.TotalCount + " total posts.";
                             });
                         }
                     });
                     // Start the crawl process
                     //if (numberOfPostsCrawled >= _blog.TotalCount)
                     {
+                        this.BeginInvoke((MethodInvoker)delegate
+                        {
+                            _blog.Information = "Calculating new image urls ...";
+                        });
                         // Generate unique url list of urls as we might have fetched duplicates at the end
                         crawledImageURLs = crawledImageURLs.Distinct().ToList();
 
@@ -909,33 +895,10 @@
 
                         // 
                         //crawledImageURLs = crawledImageURLs.Where(url => _blog.Links.Any(Post => !url.Substring(url.LastIndexOf('/') + 1).Contains(Post.Url))).ToList();
-                        crawledImageURLs = crawledImageURLs.Where(url => !_blog.Links.Any(Post => Post.Filename.Contains(url.Substring(url.LastIndexOf("/") + 1)))).ToList();
+                        crawledImageURLs = crawledImageURLs.Where(url => !_blog.Links.Any(Post => url.Contains(Post.Filename))).ToList();
 
                         try
                         {
-                            // FIXME
-                            // bind the data
-                            this.BeginInvoke((MethodInvoker)delegate
-                            {
-                                try
-                                {
-                                    // set databinings for the picturebox and the information label
-                                    bsSmallImage.DataSource = _blog.Links;
-                                    this.smallImage.DataBindings.Add("ImageLocation", bsSmallImage, "Filename", false, DataSourceUpdateMode.OnPropertyChanged);
-                                    bsSmallImage.ListChanged += bsSmallImage_ListChanged;
-
-                                    bslblUrl.DataSource = _blog.Links;
-                                    this.lblUrl.DataBindings.Add("Text", bslblUrl, "Url", false, DataSourceUpdateMode.OnPropertyChanged);
-                                    bslblUrl.ListChanged += bslblUrl_ListChanged;
-                                }
-                                catch (Exception)
-                                // two bindings to one source
-                                {
-                                    //continue;
-                                }
-
-                            });
-
                             // start the crawl
                             Parallel.ForEach(
                                 crawledImageURLs,
@@ -969,18 +932,16 @@
                                                 {
                                                     // add file to collection to prevent re-downloads and for statistics
                                                     System.Threading.Monitor.Enter(_blog);
-                                                    _blog.Links.Add(new Post(url, FileLocation));
+                                                    _blog.Links.Add(new Post(url, fileName));
+                                                    _blog.Information = "Downloading " + url;
                                                     _blog.DownloadedImages = _blog.Links.Count;
+
+                                                    pictureList.Add(new Post(url, FileLocation));
 
                                                     // update progress
                                                     double progress = (double)_blog.DownloadedImages / (double)_blog.TotalCount * 100;
                                                     _blog.Progress = (int)progress;
                                                     System.Threading.Monitor.Exit(_blog);
-
-                                                    if ((this.pgBar.Value + 1) < (this.pgBar.Maximum + 1))
-                                                    {
-                                                        this.pgBar.Value++;
-                                                    }
                                                 };
                                             }
                                             this.BeginInvoke(invoker);
@@ -990,13 +951,13 @@
                                         {
                                             if (!readingDataBase)
                                             {
-                                                readingDataBase = true;
                                                 // FIXME
                                                 // need to be rewritten as we overwrite the Post.Url value of the last entry since we've bound the label.
-                                                //this.BeginInvoke((MethodInvoker)delegate
-                                                //{
-                                                //    this.lblUrl.Text = "Skipping previously downloaded images - " + _blog.Name;
-                                                //});
+                                                readingDataBase = true;
+                                                this.BeginInvoke((MethodInvoker)delegate
+                                                {
+                                                    _blog.Information = "Skipping previously downloaded images ...";
+                                                });
                                             }
 
                                         }
@@ -1013,25 +974,9 @@
                             continue;
                         }
 
-                        // FIXME
-                        // unbind the data
                         this.BeginInvoke((MethodInvoker)delegate
                         {
-                            try
-                            {
-                                // set databinings for the picturebox and the information label
-                                bsSmallImage.DataSource = null;
-                                bsSmallImage.Clear();
-                                this.smallImage.DataBindings.Clear();
-
-                                bslblUrl.DataSource = null;
-                                bslblUrl.Clear();
-                                this.lblUrl.DataBindings.Clear();
-                            }
-                            catch (Exception)
-                            {
-                            }
-
+                            _blog.Information = "Crawl finished - cleaning up";
                         });
 
                         // Finished crawling the blog
@@ -1053,6 +998,11 @@
                                 blogs.Remove(_blog);
                             });
                         }
+
+                        this.BeginInvoke((MethodInvoker)delegate
+                        {
+                            _blog.Information = "";
+                        });
 
                         return;
                     }
@@ -1136,127 +1086,80 @@
                         numberOfPagesCrawled++;
                         numberOfPostsCrawled = 50 * numberOfPagesCrawled;
 
-                        try
+                        // start the crawl
+                        while (enumerator.MoveNext())
                         {
-                            // FIXME
-                            // bind the data
-                            this.BeginInvoke((MethodInvoker)delegate
+                            MethodInvoker invoker = null;
+                            XElement p = enumerator.Current;
+                            string FileLocation;
+                            this.wait_handle.WaitOne();
+                            if (ct.IsCancellationRequested)
                             {
+                                // Clean up here
+                                ct.ThrowIfCancellationRequested();
+                            }
+                            // create filename from url, just skip everything before the first slash (/)
+                            string fileName = Path.GetFileName(new Uri(p.Value).LocalPath);
+                            // check if we should crawl .gifs
+                            if (!Properties.Settings.Default.configChkGIFState || (Path.GetExtension(fileName).ToLower() != ".gif"))
+                            {
+                                // create path to save the file in the proper folder
+                                FileLocation = Properties.Settings.Default.configDownloadLocation.ToString() + _blog.Name + "/" + fileName;
                                 try
                                 {
-                                    // set databinings for the picturebox and the information label
-                                    bsSmallImage.DataSource = _blog.Links;
-                                    this.smallImage.DataBindings.Add("ImageLocation", bsSmallImage, "Filename", false, DataSourceUpdateMode.OnPropertyChanged);
-                                    bsSmallImage.ListChanged += bsSmallImage_ListChanged;
+                                    // download file if the file is new
+                                    if (this.Download(_blog, FileLocation, p.Value, fileName))
+                                    {
 
-                                    bslblUrl.DataSource = _blog.Links;
-                                    this.lblUrl.DataBindings.Add("Text", bslblUrl, "Url", false, DataSourceUpdateMode.OnPropertyChanged);
-                                    bslblUrl.ListChanged += bslblUrl_ListChanged;
+                                        if (invoker == null)
+                                        {
+                                            invoker = delegate
+                                            {
+                                                // add file to collection to prevent re-downloads and for statistics
+                                                System.Threading.Monitor.Enter(_blog);
+                                                _blog.Links.Add(new Post(p.Value, fileName));
+                                                _blog.Information = "Downloading " + p.Value;
+                                                _blog.DownloadedImages = _blog.Links.Count;
+
+                                                pictureList.Add(new Post(p.Value, FileLocation));
+
+                                                // update progress
+                                                double progress = (double)_blog.DownloadedImages / (double)_blog.TotalCount * 100;
+                                                _blog.Progress = (int)progress;
+                                                System.Threading.Monitor.Exit(_blog);
+                                            };
+                                        }
+                                        this.BeginInvoke(invoker);
+                                        readingDataBase = false;
+                                    }
+                                    else
+                                    {
+                                        if (!readingDataBase)
+                                        {
+                                            // FIXME
+                                            // need to be rewritten as we overwrite the Post.Url value of the last entry since we've bound the label.
+                                            readingDataBase = true;
+                                            this.BeginInvoke((MethodInvoker)delegate
+                                            {
+                                                _blog.Information = "Skipping previously downloaded images ...";
+                                            });
+                                        }
+                                    }
                                 }
                                 catch (Exception)
-                                // two bindings to one source
                                 {
-                                    //continue;
-                                }
-
-                            });
-
-                            // start the crawl
-                            while (enumerator.MoveNext())
-                            {
-                                MethodInvoker invoker = null;
-                                XElement p = enumerator.Current;
-                                string FileLocation;
-                                this.wait_handle.WaitOne();
-                                if (ct.IsCancellationRequested)
-                                {
-                                    // Clean up here
-                                    ct.ThrowIfCancellationRequested();
-                                }
-                                // create filename from url, just skip everything before the first slash (/)
-                                string fileName = Path.GetFileName(new Uri(p.Value).LocalPath);
-                                // check if we should crawl .gifs
-                                if (!Properties.Settings.Default.configChkGIFState || (Path.GetExtension(fileName).ToLower() != ".gif"))
-                                {
-                                    // create path to save the file in the proper folder
-                                    FileLocation = Properties.Settings.Default.configDownloadLocation.ToString() + _blog.Name + "/" + fileName;
-                                    try
-                                    {
-                                        // download file if the file is new
-                                        if (this.Download(_blog, FileLocation, p.Value, fileName))
-                                        {
-
-                                            if (invoker == null)
-                                            {
-                                                invoker = delegate
-                                                {
-                                                    // add file to collection to prevent re-downloads and for statistics
-                                                    System.Threading.Monitor.Enter(_blog);
-                                                    _blog.Links.Add(new Post(p.Value, FileLocation));
-                                                    _blog.DownloadedImages = _blog.Links.Count;
-
-                                                    // update progress
-                                                    double progress = (double)_blog.DownloadedImages / (double)_blog.TotalCount * 100;
-                                                    _blog.Progress = (int)progress;
-                                                    System.Threading.Monitor.Exit(_blog);
-
-                                                    if ((this.pgBar.Value + 1) < (this.pgBar.Maximum + 1))
-                                                    {
-                                                        this.pgBar.Value++;
-                                                    }
-                                                };
-                                            }
-                                            this.BeginInvoke(invoker);
-                                            readingDataBase = false;
-                                        }
-                                        else
-                                        {
-                                            if (!readingDataBase)
-                                            {
-                                                readingDataBase = true;
-                                                // need to be rewritten as we overwrite the Post.Url value of the last entry since we've bound the label.
-                                                // this.BeginInvoke((MethodInvoker)delegate
-                                                //{
-                                                //    this.lblUrl.Text = "Skipping previously downloaded images - " + _blog.Name;
-                                                //});
-                                            }
-
-                                        }
-                                    }
-                                    catch (Exception)
-                                    {
-                                        continue;
-                                    }
+                                    continue;
                                 }
                             }
-                        }
-                        catch (Exception)
-                        {
-                            continue;
                         }
                     }
 
                     if (numberOfPostsCrawled >= _blog.TotalCount)
                     {
-                        // FIXME
-                        // unbind the data
+
                         this.BeginInvoke((MethodInvoker)delegate
                         {
-                            try
-                            {
-                                // set databinings for the picturebox and the information label
-                                bsSmallImage.DataSource = null;
-                                bsSmallImage.Clear();
-                                this.smallImage.DataBindings.Clear();
-
-                                bslblUrl.DataSource = null;
-                                bslblUrl.Clear();
-                                this.lblUrl.DataBindings.Clear();
-                            }
-                            catch (Exception)
-                            {
-                            }
-
+                            _blog.Information = "Crawl finished - cleaning up";
                         });
 
                         // Finished crawling the blog
@@ -1278,6 +1181,11 @@
                                 blogs.Remove(_blog);
                             });
                         }
+
+                        this.BeginInvoke((MethodInvoker)delegate
+                        {
+                            _blog.Information = "";
+                        });
 
                         return;
                     }
@@ -1304,15 +1212,6 @@
 
             });
 
-            // update UI
-            if (TumblrActiveList.Count == 1)
-            {
-                this.BeginInvoke((MethodInvoker)delegate
-                {
-                    this.pgBar.Style = ProgressBarStyle.Continuous;
-                });
-            }
-
             if (TumblrActiveList.Count == 0)
             {
                 this.BeginInvoke((MethodInvoker)delegate
@@ -1321,9 +1220,7 @@
                     {
 
                         // Update current crawling progress label
-                        this.smallImage.ImageLocation = "";
                         this.crawlingBlogs = "";
-                        this.lblUrl.Text = "";
                         this.lblProcess.Text = "Queue finished";
                     }
                 });
@@ -1333,11 +1230,6 @@
         void bsSmallImage_ListChanged(object sender, ListChangedEventArgs e)
         {
             bsSmallImage.MoveNext();
-        }
-
-        void bslblUrl_ListChanged(object sender, ListChangedEventArgs e)
-        {
-            bslblUrl.MoveNext();
         }
 
         private bool SaveBlog(TumblrBlog newBlog)
@@ -1401,8 +1293,6 @@
             this.wait_handle.Reset();
             this.panelInfo.Visible = true;
             this.lblProcess.Text = "Crawling of " + this.crawlingBlogs + "has stopped!";
-            this.lblUrl.Text = "";
-            this.smallImage.ImageLocation = "";
             this.crawlingBlogs = "";
 
             // Enable/Disable Controls
@@ -1411,6 +1301,11 @@
             this.toolStop.Enabled = false;
             this.toolCrawl.Enabled = true;
             this.contextBlog.Items[3].Enabled = false;
+
+            foreach (TumblrBlog blog in blogs)
+            {
+                blog.Information = "";
+            }
 
             if (TumblrActiveList.Count != 0)
             {
@@ -1454,18 +1349,6 @@
             else
             {
                 this.toolCheckClipboard.Checked = false;
-            }
-        }
-
-        private void chkGIF_CheckedChanged(object sender, EventArgs e)
-        {
-            if (this.chkGIF.Checked)
-            {
-                Properties.Settings.Default.configChkGIFState = true;
-            }
-            else
-            {
-                Properties.Settings.Default.configChkGIFState = false;
             }
         }
 
