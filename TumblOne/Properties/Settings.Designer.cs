@@ -193,7 +193,7 @@ namespace TumblOne.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("40")]
+        [global::System.Configuration.DefaultSettingValueAttribute("20")]
         public int configParallelImageDownloads {
             get {
                 return ((int)(this["configParallelImageDownloads"]));

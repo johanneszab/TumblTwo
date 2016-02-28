@@ -174,7 +174,10 @@
 
         private bool Download(TumblrBlog blog, string fileLocation, string url, string filename)
         {
-            if (!blog.Links.Any(Post => Post.Url.Contains(url)))
+
+            // This would work if the hostname would be the same, but when the file is hosted on a different mirror, we load the same file again
+            //if (!blog.Links.Any(Post => Post.Url.Contains(url)))
+            if (!blog.Links.Any(Post => Post.Filename.Contains(url.Substring(url.LastIndexOf("/") + 1))))
             {
                 try
                 {
@@ -182,12 +185,12 @@
                     {
                         client.DownloadFile(url, fileLocation);
                     }
+                    return true;
                 }
                 catch (Exception)
                 {
-                    return true;
                 }
-                return true;
+                return false;
             }
             return false;
         }
@@ -682,27 +685,6 @@
                 ApiUrl = ApiUrl + "api/read?start=";
             }
 
-            this.BeginInvoke((MethodInvoker)delegate
-            {
-                try
-                {
-                    // set databinings for the picturebox and the information label
-                    bsSmallImage.DataSource = _blog.Links;
-                    this.smallImage.DataBindings.Add("ImageLocation", bsSmallImage, "Filename", false, DataSourceUpdateMode.OnPropertyChanged);
-                    bsSmallImage.ListChanged += bsSmallImage_ListChanged;
-
-                    bslblUrl.DataSource = _blog.Links;
-                    this.lblUrl.DataBindings.Add("Text", bslblUrl, "Url", false, DataSourceUpdateMode.OnPropertyChanged);
-                    bslblUrl.ListChanged += bslblUrl_ListChanged;
-                }
-                catch (Exception)
-                // two bindings to one source
-                {
-                    //continue;
-                }
-
-            });
-
             // make sure we can save files
             this.CreateDataFolder(_blog.Name);
             while (true)
@@ -911,20 +893,49 @@
                             numberOfPostsCrawled += 50;
                             this.BeginInvoke((MethodInvoker)delegate
                             {
-                                this.lblUrl.Text = "Evaluated " + numberOfPostsCrawled + " Image URLs out of " + _blog.TotalCount + " Posts.";
+                                this.lblUrl.Text = "Evaluated " + numberOfPostsCrawled + " tumblr post urls out of " + _blog.TotalCount + " total posts.";
                             });
                         }
                     });
                     // Start the crawl process
                     //if (numberOfPostsCrawled >= _blog.TotalCount)
                     {
-                        // Generate unique and new list of urls, subtract already crawled ones
+                        // Generate unique url list of urls as we might have fetched duplicates at the end
                         crawledImageURLs = crawledImageURLs.Distinct().ToList();
-                        //crawledImageURLs = _blog.Links.Select(Posts => Posts.url).ToList().Intersect(crawledImageURLs).ToList();
-                        crawledImageURLs = crawledImageURLs.Except(_blog.Links.Select(Posts => Posts.Url).ToList()).ToList();
+
+                        // substract already crawled urls
+                        // This would work if the hostname would be the same, but when the file is hosted on a different mirror, we load the same file again
+                        // crawledImageURLs = crawledImageURLs.Except(_blog.Links.Select(Posts => Posts.Url).ToList()).ToList();
+
+                        // 
+                        //crawledImageURLs = crawledImageURLs.Where(url => _blog.Links.Any(Post => !url.Substring(url.LastIndexOf('/') + 1).Contains(Post.Url))).ToList();
+                        crawledImageURLs = crawledImageURLs.Where(url => !_blog.Links.Any(Post => Post.Filename.Contains(url.Substring(url.LastIndexOf("/") + 1)))).ToList();
 
                         try
                         {
+                            // FIXME
+                            // bind the data
+                            this.BeginInvoke((MethodInvoker)delegate
+                            {
+                                try
+                                {
+                                    // set databinings for the picturebox and the information label
+                                    bsSmallImage.DataSource = _blog.Links;
+                                    this.smallImage.DataBindings.Add("ImageLocation", bsSmallImage, "Filename", false, DataSourceUpdateMode.OnPropertyChanged);
+                                    bsSmallImage.ListChanged += bsSmallImage_ListChanged;
+
+                                    bslblUrl.DataSource = _blog.Links;
+                                    this.lblUrl.DataBindings.Add("Text", bslblUrl, "Url", false, DataSourceUpdateMode.OnPropertyChanged);
+                                    bslblUrl.ListChanged += bslblUrl_ListChanged;
+                                }
+                                catch (Exception)
+                                // two bindings to one source
+                                {
+                                    //continue;
+                                }
+
+                            });
+
                             // start the crawl
                             Parallel.ForEach(
                                 crawledImageURLs,
@@ -980,10 +991,12 @@
                                             if (!readingDataBase)
                                             {
                                                 readingDataBase = true;
-                                                this.BeginInvoke((MethodInvoker)delegate
-                                                {
-                                                    this.lblUrl.Text = "Skipping previously downloaded images - " + _blog.Name;
-                                                });
+                                                // FIXME
+                                                // need to be rewritten as we overwrite the Post.Url value of the last entry since we've bound the label.
+                                                //this.BeginInvoke((MethodInvoker)delegate
+                                                //{
+                                                //    this.lblUrl.Text = "Skipping previously downloaded images - " + _blog.Name;
+                                                //});
                                             }
 
                                         }
@@ -999,6 +1012,27 @@
                         {
                             continue;
                         }
+
+                        // FIXME
+                        // unbind the data
+                        this.BeginInvoke((MethodInvoker)delegate
+                        {
+                            try
+                            {
+                                // set databinings for the picturebox and the information label
+                                bsSmallImage.DataSource = null;
+                                bsSmallImage.Clear();
+                                this.smallImage.DataBindings.Clear();
+
+                                bslblUrl.DataSource = null;
+                                bslblUrl.Clear();
+                                this.lblUrl.DataBindings.Clear();
+                            }
+                            catch (Exception)
+                            {
+                            }
+
+                        });
 
                         // Finished crawling the blog
                         _blog.LastCrawled = DateTime.Now;
@@ -1104,6 +1138,29 @@
 
                         try
                         {
+                            // FIXME
+                            // bind the data
+                            this.BeginInvoke((MethodInvoker)delegate
+                            {
+                                try
+                                {
+                                    // set databinings for the picturebox and the information label
+                                    bsSmallImage.DataSource = _blog.Links;
+                                    this.smallImage.DataBindings.Add("ImageLocation", bsSmallImage, "Filename", false, DataSourceUpdateMode.OnPropertyChanged);
+                                    bsSmallImage.ListChanged += bsSmallImage_ListChanged;
+
+                                    bslblUrl.DataSource = _blog.Links;
+                                    this.lblUrl.DataBindings.Add("Text", bslblUrl, "Url", false, DataSourceUpdateMode.OnPropertyChanged);
+                                    bslblUrl.ListChanged += bslblUrl_ListChanged;
+                                }
+                                catch (Exception)
+                                // two bindings to one source
+                                {
+                                    //continue;
+                                }
+
+                            });
+
                             // start the crawl
                             while (enumerator.MoveNext())
                             {
@@ -1157,10 +1214,11 @@
                                             if (!readingDataBase)
                                             {
                                                 readingDataBase = true;
-                                                this.BeginInvoke((MethodInvoker)delegate
-                                                {
-                                                    this.lblUrl.Text = "Skipping previously downloaded images - " + _blog.Name;
-                                                });
+                                                // need to be rewritten as we overwrite the Post.Url value of the last entry since we've bound the label.
+                                                // this.BeginInvoke((MethodInvoker)delegate
+                                                //{
+                                                //    this.lblUrl.Text = "Skipping previously downloaded images - " + _blog.Name;
+                                                //});
                                             }
 
                                         }
@@ -1180,6 +1238,26 @@
 
                     if (numberOfPostsCrawled >= _blog.TotalCount)
                     {
+                        // FIXME
+                        // unbind the data
+                        this.BeginInvoke((MethodInvoker)delegate
+                        {
+                            try
+                            {
+                                // set databinings for the picturebox and the information label
+                                bsSmallImage.DataSource = null;
+                                bsSmallImage.Clear();
+                                this.smallImage.DataBindings.Clear();
+
+                                bslblUrl.DataSource = null;
+                                bslblUrl.Clear();
+                                this.lblUrl.DataBindings.Clear();
+                            }
+                            catch (Exception)
+                            {
+                            }
+
+                        });
 
                         // Finished crawling the blog
                         _blog.LastCrawled = DateTime.Now;

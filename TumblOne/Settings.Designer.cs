@@ -114,7 +114,7 @@
             this.nudParallelImageDownloads.Size = new System.Drawing.Size(110, 20);
             this.nudParallelImageDownloads.TabIndex = 15;
             this.nudParallelImageDownloads.Value = new decimal(new int[] {
-            40,
+            20,
             0,
             0,
             0});
