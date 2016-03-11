@@ -1,9 +1,7 @@
 ﻿namespace TumblOne
 {
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Diagnostics;
     using System.IO;
@@ -26,7 +24,7 @@
         private CancellationTokenSource cts = new CancellationTokenSource();
         private List<TumblrBlog> bin = new List<TumblrBlog>();
         private TumblOne.SortableBindingList<TumblrBlog> blogs = new TumblOne.SortableBindingList<TumblrBlog>();
-        private BindingList<Post> pictureList = new BindingList<Post>();
+        private BindingList<String> pictureList = new BindingList<String>();
 
         public Form1()
         {
@@ -49,7 +47,7 @@
                 {
                     // set databinings for the picturebox and the information label
                     bsSmallImage.DataSource = pictureList;
-                    this.smallImage.DataBindings.Add("ImageLocation", bsSmallImage, "Filename", false, DataSourceUpdateMode.OnPropertyChanged);
+                    this.smallImage.DataBindings.Add("ImageLocation", bsSmallImage, "", false, DataSourceUpdateMode.OnPropertyChanged);
                     bsSmallImage.ListChanged += bsSmallImage_ListChanged;
                 }
                 catch (Exception)
@@ -196,8 +194,10 @@
 
             // This would work if the hostname would be the same, but when the file is hosted on a different mirror, we load the same file again
             //if (!blog.Links.Any(Post => Post.Filename.Contains(url.Substring(url.LastIndexOf("/") + 1))))
+            System.Threading.Monitor.Enter(blog);
             if (!blog.Links.Any(Post => Post.Url.Contains(filename)))
             {
+                System.Threading.Monitor.Exit(blog);
                 try
                 {
                     using (WebClient client = new WebClient())
@@ -211,6 +211,7 @@
                 }
                 return false;
             }
+            System.Threading.Monitor.Exit(blog);
             return false;
         }
 
@@ -268,6 +269,7 @@
                     {
                         foreach (TumblrBlog tumblr in TumblrActiveList)
                         {
+                            tumblr.Information = "";
                             this.SaveBlog(tumblr);
                         }
                     }
@@ -363,7 +365,7 @@
                 {
                     IFormatter formatter = new BinaryFormatter();
 
-                    //Set formatters binder property to TumblOne 1.0.4.0 Version
+                    //Set formatters binder property to TumblOne 1.0.4.0 / 0.0.0.0 Version
                     formatter.Binder = new TumblOne.Typeconvertor();
                     blog = (TumblrBlog)formatter.Deserialize(stream);
                 }
@@ -505,7 +507,7 @@
             downloadedImages.DefaultCellStyle.Format = "#";
 
             var numberOfPosts = new DataGridViewTextBoxColumn();
-            numberOfPosts.HeaderText = "Number of Posts";
+            numberOfPosts.HeaderText = "Number of Images";
             numberOfPosts.DataPropertyName = "TotalCount";
             numberOfPosts.DefaultCellStyle.Format = "#";
 
@@ -702,6 +704,7 @@
             bool readingDataBase = false;
             int numberOfPostsCrawled = 0;
             int numberOfPagesCrawled = 0;
+            int totalPostCount = 0;
             List<string> crawledImageURLs = new List<string>();
             //string blogname = ExtractBlogname(ApiUrl.ToString());
             String ApiUrl = _blog.Url;
@@ -732,7 +735,7 @@
 
                     this.BeginInvoke((MethodInvoker)delegate
                     {
-                        _blog.Information = "Checking blogs status and number of posts ...";
+                        _blog.Information = "Checking blogs status ...";
                     });
 
                     // set title and name of the blog
@@ -745,7 +748,6 @@
                         return;
                     }
                     // Update image (blog post) count
-                    // Set progressbar
 
                     XDocument document = null;
                     try
@@ -759,7 +761,7 @@
                     }
                     foreach (var type in from data in document.Descendants("posts") select new { Total = data.Attribute("total").Value })
                     {
-                        _blog.TotalCount = Convert.ToInt32(type.Total.ToString());
+                        totalPostCount = Convert.ToInt32(type.Total.ToString());
                     }
                 }
 
@@ -771,7 +773,7 @@
                     // the api shows 50 posts at max, determine the number of pages to crawl
                     List<string> Urllist = new List<string>();
 
-                    int numberOfPagesToCrawl = ((_blog.TotalCount / 50) + 1);
+                    int numberOfPagesToCrawl = ((totalPostCount / 50) + 1);
                     Parallel.For(
                         0,
                         numberOfPagesToCrawl,
@@ -883,19 +885,24 @@
                             numberOfPostsCrawled += 50;
                             this.BeginInvoke((MethodInvoker)delegate
                             {
-                                _blog.Information = "Evaluated " + numberOfPostsCrawled + " tumblr post urls out of " + _blog.TotalCount + " total posts.";
+                                _blog.Information = "Evaluated " + numberOfPostsCrawled + " tumblr post urls out of " + totalPostCount + " total posts.";
                             });
                         }
                     });
                     // Start the crawl process
                     //if (numberOfPostsCrawled >= _blog.TotalCount)
                     {
+                        // Generate unique url list of urls as we might have fetched duplicates at the end
+                        crawledImageURLs = crawledImageURLs.Distinct().ToList();
+
+                        // Save count of images for progress calculation
+                        int totalImages = crawledImageURLs.Count;
+
                         this.BeginInvoke((MethodInvoker)delegate
                         {
                             _blog.Information = "Calculating new image urls ...";
+                            _blog.TotalCount = totalImages;
                         });
-                        // Generate unique url list of urls as we might have fetched duplicates at the end
-                        crawledImageURLs = crawledImageURLs.Distinct().ToList();
 
                         // substract already crawled urls
                         // This would work if the hostname would be the same, but when the file is hosted on a different mirror, we load the same file again
@@ -941,15 +948,18 @@
                                                     // add file to collection to prevent re-downloads and for statistics
                                                     System.Threading.Monitor.Enter(_blog);
                                                     _blog.Links.Add(new Post(url, fileName));
+                                                    System.Threading.Monitor.Exit(_blog);
                                                     _blog.Information = "Downloading " + url;
                                                     _blog.DownloadedImages = _blog.Links.Count;
 
-                                                    pictureList.Add(new Post(url, FileLocation));
+                                                    pictureList.Add((Path.GetFullPath(FileLocation)));
 
                                                     // update progress
                                                     double progress = (double)_blog.DownloadedImages / (double)_blog.TotalCount * 100;
-                                                    _blog.Progress = (int)progress;
-                                                    System.Threading.Monitor.Exit(_blog);
+                                                    if ((int)_blog.Progress != progress)
+                                                    {
+                                                        _blog.Progress = (int)progress;
+                                                    }
                                                 };
                                             }
                                             this.BeginInvoke(invoker);
@@ -1007,11 +1017,6 @@
                             });
                         }
 
-                        this.BeginInvoke((MethodInvoker)delegate
-                        {
-                            _blog.Information = "";
-                        });
-
                         return;
                     }
                 }
@@ -1019,6 +1024,7 @@
                 // Use the serial crawl path as defined in the settings
                 else if (!Properties.Settings.Default.configParallelCrawl)
                 {
+                    _blog.TotalCount = totalPostCount;
                     IEnumerable<XElement> query;
                     XDocument document3 = null;
                     try
@@ -1124,17 +1130,18 @@
                                             invoker = delegate
                                             {
                                                 // add file to collection to prevent re-downloads and for statistics
-                                                System.Threading.Monitor.Enter(_blog);
                                                 _blog.Links.Add(new Post(p.Value, fileName));
                                                 _blog.Information = "Downloading " + p.Value;
                                                 _blog.DownloadedImages = _blog.Links.Count;
 
-                                                pictureList.Add(new Post(p.Value, FileLocation));
+                                                pictureList.Add((Path.GetFullPath(FileLocation)));
 
                                                 // update progress
                                                 double progress = (double)_blog.DownloadedImages / (double)_blog.TotalCount * 100;
-                                                _blog.Progress = (int)progress;
-                                                System.Threading.Monitor.Exit(_blog);
+                                                if ((int)_blog.Progress != progress)
+                                                {
+                                                    _blog.Progress = (int)progress;
+                                                }
                                             };
                                         }
                                         this.BeginInvoke(invoker);
@@ -1162,7 +1169,7 @@
                         }
                     }
 
-                    if (numberOfPostsCrawled >= _blog.TotalCount)
+                    if (numberOfPostsCrawled >= totalPostCount)
                     {
 
                         this.BeginInvoke((MethodInvoker)delegate
@@ -1189,12 +1196,6 @@
                                 blogs.Remove(_blog);
                             });
                         }
-
-                        this.BeginInvoke((MethodInvoker)delegate
-                        {
-                            _blog.Information = "";
-                        });
-
                         return;
                     }
                 }
@@ -1217,7 +1218,7 @@
                 int lengthBlogInProgress = _blog.Name.Length;
                 this.crawlingBlogs = crawlingBlogs.Remove(indexBlogInProgress, (lengthBlogInProgress + 1));
                 this.lblProcess.Text = "Crawling Blogs - " + this.crawlingBlogs;
-
+                _blog.Information = "";
             });
 
             if (TumblrActiveList.Count == 0)
@@ -1281,6 +1282,9 @@
             this.toolPause.Enabled = false;
             this.toolResume.Enabled = true;
             this.toolStop.Enabled = true;
+
+            if (pictureList.Count > 1)
+                pictureList.Clear();
         }
 
         private void toolResume_Click(object sender, EventArgs e)
@@ -1327,6 +1331,7 @@
                         bin.Clear();
                     }
                 this.lvQueue.Items.Clear();
+                pictureList.Clear();
             }
             try
             {

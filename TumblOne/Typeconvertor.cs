@@ -28,8 +28,29 @@ namespace TumblOne
                     Type.GetType(String.Format("{0}, {1}",
                     typeName, assemblyName));
                 return returntype;
-          }
-          return returntype;
+            }
+
+            if (assemblyName ==
+                "TumblOne, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null")
+            {
+                assemblyName = Assembly.GetExecutingAssembly().FullName;
+                returntype =
+                    Type.GetType(String.Format("{0}, {1}",
+                    typeName, assemblyName));
+                return returntype;
+            }
+
+            if (typeName ==
+                "System.Collections.Generic.List`1[[TumblOne.Post, TumblOne, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]")
+            {
+                typeName =
+                    typeName.Replace("TumblOne, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null", Assembly.GetExecutingAssembly().FullName);
+                returntype =
+                    Type.GetType(String.Format("{0}, {1}",
+                    typeName, assemblyName));
+                return returntype;
+            }
+            return returntype;
        }
     }
 }

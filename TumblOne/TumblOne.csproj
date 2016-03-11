@@ -137,6 +137,7 @@
       <DependentUpon>PicturePreviewFullscreen.cs</DependentUpon>
     </Compile>
     <Compile Include="SortableBindingList.cs" />
+    <Compile Include="TumblrOneBlog.cs" />
     <Compile Include="Typeconvertor.cs" />
     <Compile Include="ClipboardMonitor.cs" />
     <Compile Include="Form1.cs">

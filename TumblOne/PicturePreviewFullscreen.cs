@@ -17,7 +17,7 @@ namespace TumblOne
         public Image ShowPreviewImage
         {
             get { return this.pbFullScreen.Image; }
-            set { this.pbFullScreen.DataBindings.Add("ImageLocation", form1.bsSmallImage, "Filename", false, DataSourceUpdateMode.OnPropertyChanged); }
+            set { this.pbFullScreen.DataBindings.Add("ImageLocation", form1.bsSmallImage, "", false, DataSourceUpdateMode.OnPropertyChanged); }
         }
 
         private void pbFullScreen_Click(object sender, System.EventArgs e)

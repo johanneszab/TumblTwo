@@ -1,8 +1,9 @@
-﻿namespace TumblOne
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+
+namespace TumblOne
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
 
     [Serializable]
     public class TumblrBlog : INotifyPropertyChanged
