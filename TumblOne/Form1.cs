@@ -759,10 +759,24 @@
                         _blog.TotalCount = 0;
                         break;
                     }
-                    foreach (var type in from data in document.Descendants("posts") select new { Total = data.Attribute("total").Value })
+
+                    List<string> images = new List<string>();
+
+                    // Get number of photos on blog, excluding duplicate posts
+                    foreach (var post in from data in document.Descendants("post") where data.Attribute("type").Value == "photo" select data)
                     {
-                        totalPostCount = Convert.ToInt32(type.Total.ToString());
+                        // If it's a photoset, add all urls
+                        if (post.Descendants("photoset").Count() > 0)
+                            foreach (var photo in from photoData in post.Descendants("photoset").Descendants("photo") select photoData)
+                                images.Add(String.Concat(photo.Nodes()));
+                        // If it's a single photo, add it to the list
+                        else
+                            images.Add(String.Concat(post.Nodes()));
                     }
+
+                    // Remove duplicates
+                    images = images.Distinct().ToList();
+
                 }
 
                 // Use the parallel crawl path as defined in the settings
