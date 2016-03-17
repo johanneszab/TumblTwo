@@ -777,6 +777,8 @@
                     // Remove duplicates
                     images = images.Distinct().ToList();
 
+                    _blog.TotalCount = images.Count;
+
                 }
 
                 // Use the parallel crawl path as defined in the settings
