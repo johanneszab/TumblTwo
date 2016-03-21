@@ -905,12 +905,18 @@
                         });
 
                         // substract already crawled urls
-                        // This would work if the hostname would be the same, but when the file is hosted on a different mirror, we load the same file again
-                        // crawledImageURLs = crawledImageURLs.Except(_blog.Links.Select(Posts => Posts.Url).ToList()).ToList();
 
-                        // 
-                        //crawledImageURLs = crawledImageURLs.Where(url => _blog.Links.Any(Post => !url.Substring(url.LastIndexOf('/') + 1).Contains(Post.Url))).ToList();
-                        crawledImageURLs = crawledImageURLs.Where(url => !_blog.Links.Any(Post => url.Contains(Post.Filename))).ToList();
+                        if (Properties.Settings.Default.configCheckMirror)
+                        {
+                            // 
+                            //crawledImageURLs = crawledImageURLs.Where(url => _blog.Links.Any(Post => !url.Substring(url.LastIndexOf('/') + 1).Contains(Post.Url))).ToList();
+                            crawledImageURLs = crawledImageURLs.Where(url => !_blog.Links.Any(Post => url.Contains(Post.Filename))).ToList();
+                        }
+                        else
+                        {
+                            // This would work if the hostname would be the same, but when the file is hosted on a different mirror, we load the same file again
+                            crawledImageURLs = crawledImageURLs.Except(_blog.Links.Select(Posts => Posts.Url).ToList()).ToList();
+                        }
 
                         try
                         {

@@ -32,6 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Settings));
             this.tvSettings = new System.Windows.Forms.TreeView();
             this.gbSettingsGeneral = new System.Windows.Forms.GroupBox();
+            this.cbCheckMirror = new System.Windows.Forms.CheckBox();
             this.nudParallelImageDownloads = new System.Windows.Forms.NumericUpDown();
             this.lbParallelImageDownloads = new System.Windows.Forms.Label();
             this.cbParallelCrawl = new System.Windows.Forms.CheckBox();
@@ -67,7 +68,7 @@
             treeNode1.Text = "General";
             this.tvSettings.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             treeNode1});
-            this.tvSettings.Size = new System.Drawing.Size(205, 444);
+            this.tvSettings.Size = new System.Drawing.Size(205, 438);
             this.tvSettings.TabIndex = 0;
             // 
             // gbSettingsGeneral
@@ -77,6 +78,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gbSettingsGeneral.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gbSettingsGeneral.BackColor = System.Drawing.SystemColors.Window;
+            this.gbSettingsGeneral.Controls.Add(this.cbCheckMirror);
             this.gbSettingsGeneral.Controls.Add(this.nudParallelImageDownloads);
             this.gbSettingsGeneral.Controls.Add(this.lbParallelImageDownloads);
             this.gbSettingsGeneral.Controls.Add(this.cbParallelCrawl);
@@ -94,24 +96,36 @@
             this.gbSettingsGeneral.Controls.Add(this.panelSettingsGeneral);
             this.gbSettingsGeneral.Location = new System.Drawing.Point(223, 12);
             this.gbSettingsGeneral.Name = "gbSettingsGeneral";
-            this.gbSettingsGeneral.Size = new System.Drawing.Size(440, 444);
+            this.gbSettingsGeneral.Size = new System.Drawing.Size(499, 438);
             this.gbSettingsGeneral.TabIndex = 1;
             this.gbSettingsGeneral.TabStop = false;
             this.gbSettingsGeneral.Text = "General";
+            // 
+            // cbCheckMirror
+            // 
+            this.cbCheckMirror.AutoSize = true;
+            this.cbCheckMirror.Location = new System.Drawing.Point(12, 229);
+            this.cbCheckMirror.Name = "cbCheckMirror";
+            this.cbCheckMirror.Size = new System.Drawing.Size(450, 17);
+            this.cbCheckMirror.TabIndex = 16;
+            this.cbCheckMirror.Text = "Check if new images were previously downloaded from a different mirror (high CPU " +
+    "Usage)";
+            this.cbCheckMirror.UseVisualStyleBackColor = true;
+            this.cbCheckMirror.CheckedChanged += new System.EventHandler(this.cbCheckMirror_CheckedChanged);
             // 
             // nudParallelImageDownloads
             // 
             this.nudParallelImageDownloads.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.nudParallelImageDownloads.BackColor = System.Drawing.SystemColors.Menu;
-            this.nudParallelImageDownloads.Location = new System.Drawing.Point(305, 269);
+            this.nudParallelImageDownloads.Location = new System.Drawing.Point(305, 292);
             this.nudParallelImageDownloads.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
             this.nudParallelImageDownloads.Name = "nudParallelImageDownloads";
-            this.nudParallelImageDownloads.Size = new System.Drawing.Size(110, 20);
+            this.nudParallelImageDownloads.Size = new System.Drawing.Size(169, 20);
             this.nudParallelImageDownloads.TabIndex = 15;
             this.nudParallelImageDownloads.Value = new decimal(new int[] {
             20,
@@ -122,7 +136,7 @@
             // lbParallelImageDownloads
             // 
             this.lbParallelImageDownloads.AutoSize = true;
-            this.lbParallelImageDownloads.Location = new System.Drawing.Point(9, 271);
+            this.lbParallelImageDownloads.Location = new System.Drawing.Point(9, 294);
             this.lbParallelImageDownloads.Name = "lbParallelImageDownloads";
             this.lbParallelImageDownloads.Size = new System.Drawing.Size(278, 13);
             this.lbParallelImageDownloads.TabIndex = 14;
@@ -181,7 +195,7 @@
             // buttonCancel
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCancel.Location = new System.Drawing.Point(275, 415);
+            this.buttonCancel.Location = new System.Drawing.Point(334, 409);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 9;
@@ -192,7 +206,7 @@
             // buttonOk
             // 
             this.buttonOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOk.Location = new System.Drawing.Point(355, 415);
+            this.buttonOk.Location = new System.Drawing.Point(414, 409);
             this.buttonOk.Name = "buttonOk";
             this.buttonOk.Size = new System.Drawing.Size(75, 23);
             this.buttonOk.TabIndex = 8;
@@ -213,9 +227,9 @@
             "250",
             "100",
             "75"});
-            this.cbImagesize.Location = new System.Drawing.Point(305, 299);
+            this.cbImagesize.Location = new System.Drawing.Point(305, 322);
             this.cbImagesize.Name = "cbImagesize";
-            this.cbImagesize.Size = new System.Drawing.Size(111, 21);
+            this.cbImagesize.Size = new System.Drawing.Size(170, 21);
             this.cbImagesize.TabIndex = 7;
             // 
             // nudSimultaneousDownloads
@@ -223,14 +237,14 @@
             this.nudSimultaneousDownloads.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.nudSimultaneousDownloads.BackColor = System.Drawing.SystemColors.Menu;
-            this.nudSimultaneousDownloads.Location = new System.Drawing.Point(305, 238);
+            this.nudSimultaneousDownloads.Location = new System.Drawing.Point(305, 261);
             this.nudSimultaneousDownloads.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
             this.nudSimultaneousDownloads.Name = "nudSimultaneousDownloads";
-            this.nudSimultaneousDownloads.Size = new System.Drawing.Size(110, 20);
+            this.nudSimultaneousDownloads.Size = new System.Drawing.Size(169, 20);
             this.nudSimultaneousDownloads.TabIndex = 6;
             this.nudSimultaneousDownloads.Value = new decimal(new int[] {
             2,
@@ -241,7 +255,7 @@
             // lbImageSize
             // 
             this.lbImageSize.AutoSize = true;
-            this.lbImageSize.Location = new System.Drawing.Point(9, 302);
+            this.lbImageSize.Location = new System.Drawing.Point(9, 325);
             this.lbImageSize.Name = "lbImageSize";
             this.lbImageSize.Size = new System.Drawing.Size(113, 13);
             this.lbImageSize.TabIndex = 5;
@@ -250,7 +264,7 @@
             // lbSimultaneousDownloads
             // 
             this.lbSimultaneousDownloads.AutoSize = true;
-            this.lbSimultaneousDownloads.Location = new System.Drawing.Point(9, 240);
+            this.lbSimultaneousDownloads.Location = new System.Drawing.Point(9, 263);
             this.lbSimultaneousDownloads.Name = "lbSimultaneousDownloads";
             this.lbSimultaneousDownloads.Size = new System.Drawing.Size(193, 13);
             this.lbSimultaneousDownloads.TabIndex = 4;
@@ -289,13 +303,13 @@
             this.panelSettingsGeneral.Controls.Add(this.lbDownloadLocation);
             this.panelSettingsGeneral.Location = new System.Drawing.Point(6, 19);
             this.panelSettingsGeneral.Name = "panelSettingsGeneral";
-            this.panelSettingsGeneral.Size = new System.Drawing.Size(424, 60);
+            this.panelSettingsGeneral.Size = new System.Drawing.Size(483, 60);
             this.panelSettingsGeneral.TabIndex = 1;
             // 
             // bChooseDownloadLocation
             // 
             this.bChooseDownloadLocation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.bChooseDownloadLocation.Location = new System.Drawing.Point(334, 8);
+            this.bChooseDownloadLocation.Location = new System.Drawing.Point(393, 8);
             this.bChooseDownloadLocation.Name = "bChooseDownloadLocation";
             this.bChooseDownloadLocation.Size = new System.Drawing.Size(75, 23);
             this.bChooseDownloadLocation.TabIndex = 2;
@@ -310,7 +324,7 @@
             this.tbDownloadLocation.BackColor = System.Drawing.SystemColors.Menu;
             this.tbDownloadLocation.Location = new System.Drawing.Point(111, 9);
             this.tbDownloadLocation.Name = "tbDownloadLocation";
-            this.tbDownloadLocation.Size = new System.Drawing.Size(217, 20);
+            this.tbDownloadLocation.Size = new System.Drawing.Size(276, 20);
             this.tbDownloadLocation.TabIndex = 1;
             this.tbDownloadLocation.Text = global::TumblOne.Properties.Settings.Default.configDownloadLocation;
             this.tbDownloadLocation.TextChanged += new System.EventHandler(this.tbDownloadLocation_TextChanged);
@@ -329,7 +343,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.ClientSize = new System.Drawing.Size(675, 467);
+            this.ClientSize = new System.Drawing.Size(734, 461);
             this.Controls.Add(this.gbSettingsGeneral);
             this.Controls.Add(this.tvSettings);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -370,5 +384,6 @@
         private System.Windows.Forms.CheckBox cbParallelCrawl;
         private System.Windows.Forms.NumericUpDown nudParallelImageDownloads;
         private System.Windows.Forms.Label lbParallelImageDownloads;
+        private System.Windows.Forms.CheckBox cbCheckMirror;
     }
 }

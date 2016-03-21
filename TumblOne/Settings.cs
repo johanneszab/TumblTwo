@@ -79,6 +79,7 @@ namespace TumblOne
             this.chkGif.Checked = Properties.Settings.Default.configChkGIFState;
             this.cbCheckStatus.Checked = Properties.Settings.Default.configCheckStatusAtStartup;
             this.cbParallelCrawl.Checked = Properties.Settings.Default.configParallelCrawl;
+            this.cbCheckMirror.Checked = Properties.Settings.Default.configCheckMirror;
         }
 
         static void Loaded_PropertyChanged(
@@ -168,6 +169,18 @@ namespace TumblOne
             else
             {
                 Properties.Settings.Default.configParallelCrawl = false;
+            }
+        }
+
+        private void cbCheckMirror_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.cbParallelCrawl.Checked)
+            {
+                Properties.Settings.Default.configCheckMirror = true;
+            }
+            else
+            {
+                Properties.Settings.Default.configCheckMirror = false;
             }
         }
     }

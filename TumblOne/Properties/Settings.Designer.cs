@@ -202,5 +202,17 @@ namespace TumblOne.Properties {
                 this["configParallelImageDownloads"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool configCheckMirror {
+            get {
+                return ((bool)(this["configCheckMirror"]));
+            }
+            set {
+                this["configCheckMirror"] = value;
+            }
+        }
     }
 }
