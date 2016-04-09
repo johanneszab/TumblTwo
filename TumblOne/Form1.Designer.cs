@@ -573,7 +573,6 @@
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripSeparator toolStripSeparator2;
         private ToolStripSeparator toolStripSeparator3;
-        private ManualResetEvent wait_handle;
         private ToolStripButton toolSettings;
         public PictureBox smallImage;
         private ToolStripButton toolAddQueue;

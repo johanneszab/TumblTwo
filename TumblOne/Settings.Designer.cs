@@ -106,10 +106,10 @@
             this.cbCheckMirror.AutoSize = true;
             this.cbCheckMirror.Location = new System.Drawing.Point(12, 229);
             this.cbCheckMirror.Name = "cbCheckMirror";
-            this.cbCheckMirror.Size = new System.Drawing.Size(450, 17);
+            this.cbCheckMirror.Size = new System.Drawing.Size(448, 17);
             this.cbCheckMirror.TabIndex = 16;
             this.cbCheckMirror.Text = "Check if new images were previously downloaded from a different mirror (high CPU " +
-    "Usage)";
+    "usage)";
             this.cbCheckMirror.UseVisualStyleBackColor = true;
             this.cbCheckMirror.CheckedChanged += new System.EventHandler(this.cbCheckMirror_CheckedChanged);
             // 
