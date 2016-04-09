@@ -1,5 +1,6 @@
 # TumblTwo
 TumblTwo, an Improved Fork of TumblOne, a Tumblr Image Downloader.
+**New**: Check out [TumblThree](https://github.com/johanneszab/TumblThree) for my beginning code rewrite using C# with WPF and the MVVM pattern.
 ___
 TumblTwo, a TumblOne Fork:
 TumblTwo is an image downloader for the Bloghoster Tumblr.com largely
