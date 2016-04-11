@@ -1,7 +1,8 @@
-﻿namespace TumblOne
+﻿using System;
+using System.Windows.Forms;
+
+namespace TumblTwo
 {
-    using System;
-    using System.Windows.Forms;
 
     public partial class SplashScreen : Form
     {

@@ -67,17 +67,17 @@
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
-    <RootNamespace>TumblOne</RootNamespace>
+    <RootNamespace>TumblTwo</RootNamespace>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\TumblOne.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\TumblTwo.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>TumblOne.Program</StartupObject>
+    <StartupObject>TumblTwo.Program</StartupObject>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -142,11 +142,11 @@
     <Compile Include="TumblrOneBlog.cs" />
     <Compile Include="Typeconvertor.cs" />
     <Compile Include="ClipboardMonitor.cs" />
-    <Compile Include="Form1.cs">
+    <Compile Include="CrawlerForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="CrawlerForm.Designer.cs">
+      <DependentUpon>CrawlerForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs">
       <SubType>Form</SubType>
@@ -179,8 +179,8 @@
     <Compile Include="TumblrBlog.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="CrawlerForm.resx">
+      <DependentUpon>CrawlerForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PicturePreviewFullscreen.resx">
       <DependentUpon>PicturePreviewFullscreen.cs</DependentUpon>
@@ -188,6 +188,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Settings.resx">
       <DependentUpon>Settings.cs</DependentUpon>
@@ -224,7 +225,7 @@
     <None Include="Resources\Stop.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\TumblOne.ico" />
+    <None Include="Resources\TumblTwo.ico" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Settings.png" />

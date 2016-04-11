@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace TumblOne
+namespace TumblTwo
 {
     [Description("DataGridView that Saves Column Order, Width and Visibility to user.config")]
     [ToolboxBitmap(typeof(System.Windows.Forms.DataGridView))]

@@ -1,4 +1,4 @@
-﻿namespace TumblOne
+﻿namespace TumblTwo
 {
     partial class Settings
     {
@@ -326,7 +326,7 @@
             this.tbDownloadLocation.Name = "tbDownloadLocation";
             this.tbDownloadLocation.Size = new System.Drawing.Size(276, 20);
             this.tbDownloadLocation.TabIndex = 1;
-            this.tbDownloadLocation.Text = global::TumblOne.Properties.Settings.Default.configDownloadLocation;
+            this.tbDownloadLocation.Text = global::TumblTwo.Properties.Settings.Default.configDownloadLocation;
             this.tbDownloadLocation.TextChanged += new System.EventHandler(this.tbDownloadLocation_TextChanged);
             // 
             // lbDownloadLocation

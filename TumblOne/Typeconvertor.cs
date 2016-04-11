@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Runtime.Serialization;
 
-namespace TumblOne
+namespace TumblTwo
 {
     sealed class Typeconvertor : SerializationBinder
     {
@@ -10,7 +10,7 @@ namespace TumblOne
         {
             Type returntype = null;
             if (assemblyName ==
-                "TumblOne, Version=1.0.4.0, Culture=neutral, PublicKeyToken=null")
+                "TumblTwo, Version=1.0.4.0, Culture=neutral, PublicKeyToken=null")
             {
                 assemblyName = Assembly.GetExecutingAssembly().FullName;
                 returntype =
@@ -20,10 +20,10 @@ namespace TumblOne
             }
 
             if (typeName ==
-                "System.Collections.Generic.List`1[[TumblOne.Post, TumblOne, Version=1.0.4.0, Culture=neutral, PublicKeyToken=null]]")
+                "System.Collections.Generic.List`1[[TumblTwo.Post, TumblTwo, Version=1.0.4.0, Culture=neutral, PublicKeyToken=null]]")
             {
                 typeName =
-                    typeName.Replace("TumblOne, Version=1.0.4.0, Culture=neutral, PublicKeyToken=null", Assembly.GetExecutingAssembly().FullName);
+                    typeName.Replace("TumblTwo, Version=1.0.4.0, Culture=neutral, PublicKeyToken=null", Assembly.GetExecutingAssembly().FullName);
                 returntype =
                     Type.GetType(String.Format("{0}, {1}",
                     typeName, assemblyName));
@@ -31,7 +31,7 @@ namespace TumblOne
             }
 
             if (assemblyName ==
-                "TumblOne, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null")
+                "TumblTwo, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null")
             {
                 assemblyName = Assembly.GetExecutingAssembly().FullName;
                 returntype =
@@ -41,10 +41,10 @@ namespace TumblOne
             }
 
             if (typeName ==
-                "System.Collections.Generic.List`1[[TumblOne.Post, TumblOne, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]")
+                "System.Collections.Generic.List`1[[TumblTwo.Post, TumblTwo, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]")
             {
                 typeName =
-                    typeName.Replace("TumblOne, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null", Assembly.GetExecutingAssembly().FullName);
+                    typeName.Replace("TumblTwo, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null", Assembly.GetExecutingAssembly().FullName);
                 returntype =
                     Type.GetType(String.Format("{0}, {1}",
                     typeName, assemblyName));

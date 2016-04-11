@@ -1,14 +1,14 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 
-namespace TumblOne
+namespace TumblTwo
 {
 
     public partial class PicturePreviewFullscreen : Form
     {
-        Form1 form1;
+        CrawlerForm form1;
 
-        public PicturePreviewFullscreen(Form1 form1)
+        public PicturePreviewFullscreen(CrawlerForm form1)
         {
             InitializeComponent();
             this.form1 = form1;

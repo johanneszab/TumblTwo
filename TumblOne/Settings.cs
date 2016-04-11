@@ -2,16 +2,16 @@
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace TumblOne
+namespace TumblTwo
 {
     public partial class Settings : Form
     {
-        Form1 _Form1;
+        CrawlerForm crawlerForm;
         bool DownloadLocationChanged = false;
 
-        public Settings(Form1 _theForm1)
+        public Settings(CrawlerForm crawlerForm)
         {
-            _Form1 = _theForm1;
+            this.crawlerForm = crawlerForm;
             InitializeComponent();
         }
 
@@ -46,12 +46,12 @@ namespace TumblOne
             if (this.cbPicturePreview.Checked)
             {
                 Properties.Settings.Default.configPreviewVisible = true;
-                _Form1.smallImage.Visible = true;
+                crawlerForm.smallImage.Visible = true;
             }
             else
             {
                 Properties.Settings.Default.configPreviewVisible = false;
-                _Form1.smallImage.Visible = false;
+                crawlerForm.smallImage.Visible = false;
             }
         }
 
@@ -91,19 +91,19 @@ namespace TumblOne
         private void Settings_FormClosing(object sender, FormClosingEventArgs e)
         {
             // Reload Settings and Blogs
-            if (_Form1.tasks[0] == null && DownloadLocationChanged)
+            if (crawlerForm.taskList[0] == null && DownloadLocationChanged)
             {
-                _Form1.LoadGUI();
+                crawlerForm.LoadGUI();
             }
             if (Convert.ToInt32(this.nudSimultaneousDownloads.Value) > Properties.Settings.Default.configSimultaneousDownloads)
             {
-                Array.Resize(ref _Form1.tasks, _Form1.tasks.Length + (Convert.ToInt32(this.nudSimultaneousDownloads.Value) - Properties.Settings.Default.configSimultaneousDownloads));
+                Array.Resize(ref crawlerForm.taskList, crawlerForm.taskList.Length + (Convert.ToInt32(this.nudSimultaneousDownloads.Value) - Properties.Settings.Default.configSimultaneousDownloads));
             }
             else
             {
-                if (_Form1.tasks[0] == null)
+                if (crawlerForm.taskList[0] == null)
                 {
-                    Array.Resize(ref _Form1.tasks, Convert.ToInt32(this.nudSimultaneousDownloads.Value));
+                    Array.Resize(ref crawlerForm.taskList, Convert.ToInt32(this.nudSimultaneousDownloads.Value));
                 }
             }
             // Save Settings

@@ -4,7 +4,8 @@ using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
 using System.ComponentModel;
-namespace TumblOne
+
+namespace TumblTwo
 {
     public class DataGridViewProgressColumn : DataGridViewImageColumn
     {
@@ -14,7 +15,7 @@ namespace TumblOne
         }
     }
 }
-namespace TumblOne
+namespace TumblTwo
 {
     class DataGridViewProgressCell : DataGridViewImageCell
     {

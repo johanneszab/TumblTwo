@@ -1,4 +1,4 @@
-﻿// Assembly TumblOne, Version 1.0.4.0
+﻿// Assembly TumblTwo, Version 1.0.4.0
 
 [assembly: System.Runtime.CompilerServices.RuntimeCompatibility(WrapNonExceptionThrows=true)]
 [assembly: System.Reflection.AssemblyCopyright("Originally 2013 by Helena. 2015-2016 by johanneszab.")]

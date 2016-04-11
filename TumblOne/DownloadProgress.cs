@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TumblOne
+namespace TumblTwo
 {
     public class DownloadProgress
     {

@@ -1,10 +1,10 @@
-﻿namespace TumblOne
+﻿using System.Threading;
+using System.Windows.Forms;
+
+namespace TumblTwo
 {
 
-    using System.Threading;
-    using System.Windows.Forms;
-
-    public partial class Form1
+    public partial class CrawlerForm : Form
     {
         /// <summary>
         /// Required designer variable.
@@ -36,7 +36,7 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CrawlerForm));
             this.tBlogUrl = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.lblProcess = new System.Windows.Forms.Label();
@@ -73,7 +73,7 @@
             this.lvQueue = new System.Windows.Forms.ListView();
             this.chQueueName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chQueueStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lvBlog = new TumblOne.DataGridViewExtended();
+            this.lvBlog = new TumblTwo.DataGridViewExtended();
             this.contextBlog.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -143,7 +143,7 @@
             // 
             // mnuShowFilesInExplorer
             // 
-            this.mnuShowFilesInExplorer.Image = global::TumblOne.Properties.Resources.Explorer;
+            this.mnuShowFilesInExplorer.Image = global::TumblTwo.Properties.Resources.Explorer;
             this.mnuShowFilesInExplorer.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.mnuShowFilesInExplorer.Name = "mnuShowFilesInExplorer";
             this.mnuShowFilesInExplorer.Size = new System.Drawing.Size(253, 38);
@@ -152,7 +152,7 @@
             // 
             // mnuRemoveBlog2
             // 
-            this.mnuRemoveBlog2.Image = global::TumblOne.Properties.Resources.Remove;
+            this.mnuRemoveBlog2.Image = global::TumblTwo.Properties.Resources.Remove;
             this.mnuRemoveBlog2.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.mnuRemoveBlog2.Name = "mnuRemoveBlog2";
             this.mnuRemoveBlog2.Size = new System.Drawing.Size(253, 38);
@@ -166,7 +166,7 @@
             // 
             // mnuCrawl
             // 
-            this.mnuCrawl.Image = global::TumblOne.Properties.Resources.Scan;
+            this.mnuCrawl.Image = global::TumblTwo.Properties.Resources.Scan;
             this.mnuCrawl.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.mnuCrawl.Name = "mnuCrawl";
             this.mnuCrawl.Size = new System.Drawing.Size(253, 38);
@@ -212,7 +212,7 @@
             // toolAddBlog
             // 
             this.toolAddBlog.BackColor = System.Drawing.SystemColors.Menu;
-            this.toolAddBlog.Image = global::TumblOne.Properties.Resources.AddBlog;
+            this.toolAddBlog.Image = global::TumblTwo.Properties.Resources.AddBlog;
             this.toolAddBlog.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolAddBlog.Name = "toolAddBlog";
             this.toolAddBlog.Size = new System.Drawing.Size(97, 51);
@@ -224,7 +224,7 @@
             // toolRemoveBlog
             // 
             this.toolRemoveBlog.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.toolRemoveBlog.Image = global::TumblOne.Properties.Resources.Remove;
+            this.toolRemoveBlog.Image = global::TumblTwo.Properties.Resources.Remove;
             this.toolRemoveBlog.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolRemoveBlog.Name = "toolRemoveBlog";
             this.toolRemoveBlog.Size = new System.Drawing.Size(97, 51);
@@ -236,7 +236,7 @@
             // toolShowExplorer
             // 
             this.toolShowExplorer.Enabled = false;
-            this.toolShowExplorer.Image = global::TumblOne.Properties.Resources.Explorer;
+            this.toolShowExplorer.Image = global::TumblTwo.Properties.Resources.Explorer;
             this.toolShowExplorer.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolShowExplorer.Name = "toolShowExplorer";
             this.toolShowExplorer.Size = new System.Drawing.Size(97, 51);
@@ -254,7 +254,7 @@
             // 
             // toolAddQueue
             // 
-            this.toolAddQueue.Image = global::TumblOne.Properties.Resources.AddBlog;
+            this.toolAddQueue.Image = global::TumblTwo.Properties.Resources.AddBlog;
             this.toolAddQueue.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolAddQueue.Name = "toolAddQueue";
             this.toolAddQueue.Size = new System.Drawing.Size(97, 51);
@@ -265,7 +265,7 @@
             // 
             // toolRemoveQueue
             // 
-            this.toolRemoveQueue.Image = global::TumblOne.Properties.Resources.Remove;
+            this.toolRemoveQueue.Image = global::TumblTwo.Properties.Resources.Remove;
             this.toolRemoveQueue.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolRemoveQueue.Name = "toolRemoveQueue";
             this.toolRemoveQueue.Size = new System.Drawing.Size(97, 51);
@@ -276,7 +276,7 @@
             // 
             // toolCrawl
             // 
-            this.toolCrawl.Image = global::TumblOne.Properties.Resources.Scan;
+            this.toolCrawl.Image = global::TumblTwo.Properties.Resources.Scan;
             this.toolCrawl.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolCrawl.Name = "toolCrawl";
             this.toolCrawl.Size = new System.Drawing.Size(97, 51);
@@ -293,7 +293,7 @@
             // toolPause
             // 
             this.toolPause.Enabled = false;
-            this.toolPause.Image = global::TumblOne.Properties.Resources.Pause;
+            this.toolPause.Image = global::TumblTwo.Properties.Resources.Pause;
             this.toolPause.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolPause.Name = "toolPause";
             this.toolPause.Size = new System.Drawing.Size(97, 51);
@@ -305,7 +305,7 @@
             // toolResume
             // 
             this.toolResume.Enabled = false;
-            this.toolResume.Image = global::TumblOne.Properties.Resources.Resume;
+            this.toolResume.Image = global::TumblTwo.Properties.Resources.Resume;
             this.toolResume.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolResume.Name = "toolResume";
             this.toolResume.Size = new System.Drawing.Size(97, 51);
@@ -317,7 +317,7 @@
             // toolStop
             // 
             this.toolStop.Enabled = false;
-            this.toolStop.Image = global::TumblOne.Properties.Resources.Stop;
+            this.toolStop.Image = global::TumblTwo.Properties.Resources.Stop;
             this.toolStop.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStop.Name = "toolStop";
             this.toolStop.Size = new System.Drawing.Size(97, 51);
@@ -331,7 +331,7 @@
             this.toolCheckClipboard.Checked = true;
             this.toolCheckClipboard.CheckOnClick = true;
             this.toolCheckClipboard.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.toolCheckClipboard.Image = global::TumblOne.Properties.Resources.Clipboard;
+            this.toolCheckClipboard.Image = global::TumblTwo.Properties.Resources.Clipboard;
             this.toolCheckClipboard.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolCheckClipboard.Name = "toolCheckClipboard";
             this.toolCheckClipboard.Size = new System.Drawing.Size(97, 51);
@@ -342,7 +342,7 @@
             // 
             // toolSettings
             // 
-            this.toolSettings.Image = global::TumblOne.Properties.Resources.Settings;
+            this.toolSettings.Image = global::TumblTwo.Properties.Resources.Settings;
             this.toolSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolSettings.Name = "toolSettings";
             this.toolSettings.Size = new System.Drawing.Size(97, 51);
@@ -358,7 +358,7 @@
             // 
             // toolAbout
             // 
-            this.toolAbout.Image = global::TumblOne.Properties.Resources.About;
+            this.toolAbout.Image = global::TumblTwo.Properties.Resources.About;
             this.toolAbout.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolAbout.Name = "toolAbout";
             this.toolAbout.Size = new System.Drawing.Size(97, 51);
@@ -512,7 +512,7 @@
             this.lvBlog.TabIndex = 13;
             lvBlog.CellFormatting += lvBlog_CellFormatting;
             // 
-            // Form1
+            // CrawlerForm
             // 
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1294, 671);
@@ -526,10 +526,10 @@
             this.Controls.Add(this.label1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "Form1";
+            this.Name = "CrawlerForm";
             this.Text = "TumblTwo - A Tumblr Image Crawler - Version 1.0.7";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
-            this.Load += new System.EventHandler(this.Form1_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnFormClosing);
+            this.Load += new System.EventHandler(this.OnLoad);
             this.contextBlog.ResumeLayout(false);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();

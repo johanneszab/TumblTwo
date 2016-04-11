@@ -1,4 +1,5 @@
-﻿namespace TumblOne
+﻿namespace TumblTwo
+
 {
     partial class PicturePreviewFullscreen
     {

@@ -1,19 +1,20 @@
-﻿namespace TumblOne
+﻿using System;
+using System.Windows.Forms;
+
+namespace TumblTwo
 {
-    using System;
-    using System.Windows.Forms;
 
     internal static class Program
     {
         [STAThread]
         private static void Main()
         {
+            // Increase connection limit for faster url list generation
+            System.Net.ServicePointManager.DefaultConnectionLimit = 100;
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
-            //Form1 mainWindow = new Form1();
-            //Application.Run(mainWindow);
+            Application.Run(new CrawlerForm());
         }
     }
 }
-

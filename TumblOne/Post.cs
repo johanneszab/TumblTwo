@@ -1,7 +1,8 @@
-﻿namespace TumblOne
+﻿using System;
+using System.ComponentModel;
+
+namespace TumblTwo
 {
-    using System;
-    using System.ComponentModel;
 
     [Serializable]
     public class Post : Object, INotifyPropertyChanged
