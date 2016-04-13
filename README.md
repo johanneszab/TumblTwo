@@ -20,6 +20,10 @@ You can simultaneously download from multiple blogs and enqueue others.
 * a settings panel (change download location, turn picture preview off/on, define number of simultaneous downloads, set the imagesize of downloaded pictures).
 * Somewhat overhauled user interface which is resizable, faster and saves and restores its settings.
 * Source code at github (Written in C# and WinForms).
+* 
+
+## Screenshot:
+![TumblTwo Main UI](http://www.jzab.de/sites/default/files/images/TumblrTwoUi201603.png?raw=true "TumblTwo Main UI")
 
 ## Next Features (ToDo-List):
 
