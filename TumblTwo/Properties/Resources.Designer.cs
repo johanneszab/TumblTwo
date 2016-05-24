@@ -169,25 +169,5 @@ namespace TumblTwo.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap TumblrLogo {
-            get {
-                object obj = ResourceManager.GetObject("TumblrLogo", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon TumblTwo {
-            get {
-                object obj = ResourceManager.GetObject("TumblTwo", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
     }
 }

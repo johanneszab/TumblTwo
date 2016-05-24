@@ -70,7 +70,8 @@
     <RootNamespace>TumblTwo</RootNamespace>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\TumblTwo.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
@@ -138,6 +139,11 @@
     <Compile Include="PicturePreviewFullscreen.Designer.cs">
       <DependentUpon>PicturePreviewFullscreen.cs</DependentUpon>
     </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="SortableBindingList.cs" />
     <Compile Include="TumblrOneBlog.cs" />
     <Compile Include="Typeconvertor.cs" />
@@ -166,11 +172,6 @@
     </Compile>
     <Compile Include="Post.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -181,14 +182,15 @@
   <ItemGroup>
     <EmbeddedResource Include="CrawlerForm.resx">
       <DependentUpon>CrawlerForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="PicturePreviewFullscreen.resx">
       <DependentUpon>PicturePreviewFullscreen.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Settings.resx">
       <DependentUpon>Settings.cs</DependentUpon>

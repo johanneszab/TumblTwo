@@ -40,7 +40,7 @@ namespace TumblTwo
             this.timer1.Tick += new EventHandler(this.SplashScreen_Click);
             base.AutoScaleDimensions = new SizeF(6f, 13f);
 //            base.AutoScaleMode = AutoScaleMode.Font;
-            this.BackgroundImage = TumblTwo.Properties.Resources.TumblrLogo;
+            //this.BackgroundImage = TumblTwo.Properties.Resources.TumblrLogo;
             base.ClientSize = new Size(0x18f, 400);
 //            base.FormBorderStyle = FormBorderStyle.None;
             base.Name = "SplashScreen";
