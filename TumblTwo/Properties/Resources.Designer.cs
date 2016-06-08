@@ -83,6 +83,16 @@ namespace TumblTwo.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap AddQueue {
+            get {
+                object obj = ResourceManager.GetObject("AddQueue", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Clipboard {
             get {
                 object obj = ResourceManager.GetObject("Clipboard", resourceCulture);
@@ -123,9 +133,19 @@ namespace TumblTwo.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Remove {
+        internal static System.Drawing.Bitmap RemoveBlog {
             get {
-                object obj = ResourceManager.GetObject("Remove", resourceCulture);
+                object obj = ResourceManager.GetObject("RemoveBlog", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap RemoveQueue {
+            get {
+                object obj = ResourceManager.GetObject("RemoveQueue", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -167,6 +187,16 @@ namespace TumblTwo.Properties {
             get {
                 object obj = ResourceManager.GetObject("Stop", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon Tumblr {
+            get {
+                object obj = ResourceManager.GetObject("Tumblr", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
             }
         }
     }

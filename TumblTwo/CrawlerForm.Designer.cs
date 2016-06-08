@@ -32,10 +32,11 @@ namespace TumblTwo
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CrawlerForm));
             this.tBlogUrl = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.lblProcess = new System.Windows.Forms.Label();
@@ -151,7 +152,7 @@ namespace TumblTwo
             // 
             // mnuRemoveBlog2
             // 
-            this.mnuRemoveBlog2.Image = global::TumblTwo.Properties.Resources.Remove;
+            this.mnuRemoveBlog2.Image = global::TumblTwo.Properties.Resources.RemoveBlog;
             this.mnuRemoveBlog2.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.mnuRemoveBlog2.Name = "mnuRemoveBlog2";
             this.mnuRemoveBlog2.Size = new System.Drawing.Size(253, 38);
@@ -223,7 +224,7 @@ namespace TumblTwo
             // toolRemoveBlog
             // 
             this.toolRemoveBlog.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.toolRemoveBlog.Image = global::TumblTwo.Properties.Resources.Remove;
+            this.toolRemoveBlog.Image = global::TumblTwo.Properties.Resources.RemoveBlog;
             this.toolRemoveBlog.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolRemoveBlog.Name = "toolRemoveBlog";
             this.toolRemoveBlog.Size = new System.Drawing.Size(97, 51);
@@ -253,7 +254,7 @@ namespace TumblTwo
             // 
             // toolAddQueue
             // 
-            this.toolAddQueue.Image = global::TumblTwo.Properties.Resources.AddBlog;
+            this.toolAddQueue.Image = global::TumblTwo.Properties.Resources.AddQueue;
             this.toolAddQueue.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolAddQueue.Name = "toolAddQueue";
             this.toolAddQueue.Size = new System.Drawing.Size(97, 51);
@@ -264,7 +265,7 @@ namespace TumblTwo
             // 
             // toolRemoveQueue
             // 
-            this.toolRemoveQueue.Image = global::TumblTwo.Properties.Resources.Remove;
+            this.toolRemoveQueue.Image = global::TumblTwo.Properties.Resources.RemoveQueue;
             this.toolRemoveQueue.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolRemoveQueue.Name = "toolRemoveQueue";
             this.toolRemoveQueue.Size = new System.Drawing.Size(97, 51);
@@ -360,7 +361,7 @@ namespace TumblTwo
             this.toolAbout.Image = global::TumblTwo.Properties.Resources.About;
             this.toolAbout.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolAbout.Name = "toolAbout";
-            this.toolAbout.Size = new System.Drawing.Size(97, 51);
+            this.toolAbout.Size = new System.Drawing.Size(44, 51);
             this.toolAbout.Text = "About";
             this.toolAbout.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolAbout.ToolTipText = "Opens the about window";
@@ -472,44 +473,43 @@ namespace TumblTwo
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lvBlog.BackgroundColor = System.Drawing.SystemColors.Menu;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.lvBlog.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.lvBlog.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
             this.lvBlog.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.lvBlog.ContextMenuStrip = this.contextBlog;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Menu;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.lvBlog.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Menu;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.lvBlog.DefaultCellStyle = dataGridViewCellStyle6;
             this.lvBlog.Location = new System.Drawing.Point(12, 43);
             this.lvBlog.Name = "lvBlog";
             this.lvBlog.ReadOnly = true;
             this.lvBlog.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.lvBlog.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.lvBlog.RowHeadersDefaultCellStyle = dataGridViewCellStyle7;
             this.lvBlog.RowHeadersWidth = 4;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lvBlog.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lvBlog.RowsDefaultCellStyle = dataGridViewCellStyle8;
             this.lvBlog.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.lvBlog.Size = new System.Drawing.Size(1175, 273);
             this.lvBlog.TabIndex = 13;
-            lvBlog.CellFormatting += lvBlog_CellFormatting;
             // 
             // CrawlerForm
             // 
@@ -524,6 +524,7 @@ namespace TumblTwo
             this.Controls.Add(this.tBlogUrl);
             this.Controls.Add(this.label1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "CrawlerForm";
             this.Text = "TumblTwo - A Tumblr Image Crawler - Version 1.0.7";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnFormClosing);

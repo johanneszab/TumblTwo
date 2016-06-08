@@ -33,22 +33,26 @@ namespace TumblTwo
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.timer1 = new Timer(this.components);
-            base.SuspendLayout();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SplashScreen));
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.SuspendLayout();
+            // 
+            // timer1
+            // 
             this.timer1.Enabled = true;
-            this.timer1.Interval = 0x5dc;
-            this.timer1.Tick += new EventHandler(this.SplashScreen_Click);
-            base.AutoScaleDimensions = new SizeF(6f, 13f);
-//            base.AutoScaleMode = AutoScaleMode.Font;
-            //this.BackgroundImage = TumblTwo.Properties.Resources.TumblrLogo;
-            base.ClientSize = new Size(0x18f, 400);
-//            base.FormBorderStyle = FormBorderStyle.None;
-            base.Name = "SplashScreen";
-//            base.SizeGripStyle = SizeGripStyle.Hide;
-            base.StartPosition = FormStartPosition.CenterParent;
+            this.timer1.Interval = 1500;
+            this.timer1.Tick += new System.EventHandler(this.SplashScreen_Click);
+            // 
+            // SplashScreen
+            // 
+            this.ClientSize = new System.Drawing.Size(399, 400);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Name = "SplashScreen";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "SplashScreen";
-            base.Click += new EventHandler(this.SplashScreen_Click);
-            base.ResumeLayout(false);
+            this.Click += new System.EventHandler(this.SplashScreen_Click);
+            this.ResumeLayout(false);
+
         }
 
         #endregion

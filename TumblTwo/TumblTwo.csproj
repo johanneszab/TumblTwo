@@ -70,8 +70,7 @@
     <RootNamespace>TumblTwo</RootNamespace>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>Resources\Tumblr.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
@@ -227,15 +226,21 @@
     <None Include="Resources\Stop.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\TumblTwo.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\Settings.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\TumblrLogo.png" />
+    <None Include="Resources\Clipboard.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\clipboard.png" />
+    <None Include="Resources\AddQueue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\RemoveBlog.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\RemoveQueue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Tumblr.ico" />
   </ItemGroup>
 </Project>

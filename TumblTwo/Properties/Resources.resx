@@ -124,6 +124,9 @@
   <data name="AddBlog" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\AddBlog.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="AddQueue" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\AddQueue.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Clipboard" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\clipboard.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -136,8 +139,11 @@
   <data name="Pause" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Pause.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Remove" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Remove.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="RemoveBlog" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\RemoveBlog.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="RemoveQueue" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\RemoveQueue.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Resume" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Resume.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -150,5 +156,8 @@
   </data>
   <data name="Stop" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Stop.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Tumblr" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Tumblr.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
