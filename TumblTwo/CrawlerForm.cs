@@ -1195,10 +1195,10 @@ namespace TumblTwo
                 }
                 activeCrawlList.Clear();
             }
-            if (bin.Count != 0)
-                {
-                    bin.Clear();
-                }
+            //if (bin.Count != 0)
+            //    {
+            //        bin.Clear();
+            //    }
             //lvQueue.Items.Clear();
             pictureList.Clear();
         }
