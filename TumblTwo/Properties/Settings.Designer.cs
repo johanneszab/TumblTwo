@@ -214,5 +214,41 @@ namespace TumblTwo.Properties {
                 this["configCheckMirror"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1080")]
+        public int configVideoSize {
+            get {
+                return ((int)(this["configVideoSize"]));
+            }
+            set {
+                this["configVideoSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool configDownloadImage {
+            get {
+                return ((bool)(this["configDownloadImage"]));
+            }
+            set {
+                this["configDownloadImage"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool configDownloadVideo {
+            get {
+                return ((bool)(this["configDownloadVideo"]));
+            }
+            set {
+                this["configDownloadVideo"] = value;
+            }
+        }
     }
 }

@@ -49,8 +49,12 @@
             this.cbPicturePreview = new System.Windows.Forms.CheckBox();
             this.panelSettingsGeneral = new System.Windows.Forms.Panel();
             this.bChooseDownloadLocation = new System.Windows.Forms.Button();
-            this.tbDownloadLocation = new System.Windows.Forms.TextBox();
             this.lbDownloadLocation = new System.Windows.Forms.Label();
+            this.cbDownloadVideos = new System.Windows.Forms.CheckBox();
+            this.cbDownloadImages = new System.Windows.Forms.CheckBox();
+            this.lbVideoSize = new System.Windows.Forms.Label();
+            this.cbVideosize = new System.Windows.Forms.ComboBox();
+            this.tbDownloadLocation = new System.Windows.Forms.TextBox();
             this.gbSettingsGeneral.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudParallelImageDownloads)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudSimultaneousDownloads)).BeginInit();
@@ -68,7 +72,7 @@
             treeNode1.Text = "General";
             this.tvSettings.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             treeNode1});
-            this.tvSettings.Size = new System.Drawing.Size(205, 438);
+            this.tvSettings.Size = new System.Drawing.Size(205, 478);
             this.tvSettings.TabIndex = 0;
             // 
             // gbSettingsGeneral
@@ -78,6 +82,8 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gbSettingsGeneral.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gbSettingsGeneral.BackColor = System.Drawing.SystemColors.Window;
+            this.gbSettingsGeneral.Controls.Add(this.cbDownloadImages);
+            this.gbSettingsGeneral.Controls.Add(this.cbDownloadVideos);
             this.gbSettingsGeneral.Controls.Add(this.cbCheckMirror);
             this.gbSettingsGeneral.Controls.Add(this.nudParallelImageDownloads);
             this.gbSettingsGeneral.Controls.Add(this.lbParallelImageDownloads);
@@ -87,8 +93,10 @@
             this.gbSettingsGeneral.Controls.Add(this.chkGif);
             this.gbSettingsGeneral.Controls.Add(this.buttonCancel);
             this.gbSettingsGeneral.Controls.Add(this.buttonOk);
+            this.gbSettingsGeneral.Controls.Add(this.cbVideosize);
             this.gbSettingsGeneral.Controls.Add(this.cbImagesize);
             this.gbSettingsGeneral.Controls.Add(this.nudSimultaneousDownloads);
+            this.gbSettingsGeneral.Controls.Add(this.lbVideoSize);
             this.gbSettingsGeneral.Controls.Add(this.lbImageSize);
             this.gbSettingsGeneral.Controls.Add(this.lbSimultaneousDownloads);
             this.gbSettingsGeneral.Controls.Add(this.cbRemoveFinished);
@@ -96,7 +104,7 @@
             this.gbSettingsGeneral.Controls.Add(this.panelSettingsGeneral);
             this.gbSettingsGeneral.Location = new System.Drawing.Point(223, 12);
             this.gbSettingsGeneral.Name = "gbSettingsGeneral";
-            this.gbSettingsGeneral.Size = new System.Drawing.Size(499, 438);
+            this.gbSettingsGeneral.Size = new System.Drawing.Size(499, 478);
             this.gbSettingsGeneral.TabIndex = 1;
             this.gbSettingsGeneral.TabStop = false;
             this.gbSettingsGeneral.Text = "General";
@@ -104,7 +112,7 @@
             // cbCheckMirror
             // 
             this.cbCheckMirror.AutoSize = true;
-            this.cbCheckMirror.Location = new System.Drawing.Point(12, 229);
+            this.cbCheckMirror.Location = new System.Drawing.Point(12, 276);
             this.cbCheckMirror.Name = "cbCheckMirror";
             this.cbCheckMirror.Size = new System.Drawing.Size(448, 17);
             this.cbCheckMirror.TabIndex = 16;
@@ -118,7 +126,7 @@
             this.nudParallelImageDownloads.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.nudParallelImageDownloads.BackColor = System.Drawing.SystemColors.Menu;
-            this.nudParallelImageDownloads.Location = new System.Drawing.Point(305, 292);
+            this.nudParallelImageDownloads.Location = new System.Drawing.Point(305, 339);
             this.nudParallelImageDownloads.Minimum = new decimal(new int[] {
             1,
             0,
@@ -136,7 +144,7 @@
             // lbParallelImageDownloads
             // 
             this.lbParallelImageDownloads.AutoSize = true;
-            this.lbParallelImageDownloads.Location = new System.Drawing.Point(9, 294);
+            this.lbParallelImageDownloads.Location = new System.Drawing.Point(9, 341);
             this.lbParallelImageDownloads.Name = "lbParallelImageDownloads";
             this.lbParallelImageDownloads.Size = new System.Drawing.Size(278, 13);
             this.lbParallelImageDownloads.TabIndex = 14;
@@ -147,7 +155,7 @@
             this.cbParallelCrawl.AutoSize = true;
             this.cbParallelCrawl.Checked = true;
             this.cbParallelCrawl.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbParallelCrawl.Location = new System.Drawing.Point(12, 205);
+            this.cbParallelCrawl.Location = new System.Drawing.Point(12, 252);
             this.cbParallelCrawl.Name = "cbParallelCrawl";
             this.cbParallelCrawl.Size = new System.Drawing.Size(127, 17);
             this.cbParallelCrawl.TabIndex = 13;
@@ -160,7 +168,7 @@
             this.cbCheckStatus.AutoSize = true;
             this.cbCheckStatus.Checked = true;
             this.cbCheckStatus.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbCheckStatus.Location = new System.Drawing.Point(12, 181);
+            this.cbCheckStatus.Location = new System.Drawing.Point(12, 228);
             this.cbCheckStatus.Name = "cbCheckStatus";
             this.cbCheckStatus.Size = new System.Drawing.Size(189, 17);
             this.cbCheckStatus.TabIndex = 12;
@@ -173,7 +181,7 @@
             this.cbDeleteIndexOnly.AutoSize = true;
             this.cbDeleteIndexOnly.Checked = true;
             this.cbDeleteIndexOnly.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbDeleteIndexOnly.Location = new System.Drawing.Point(12, 158);
+            this.cbDeleteIndexOnly.Location = new System.Drawing.Point(12, 205);
             this.cbDeleteIndexOnly.Name = "cbDeleteIndexOnly";
             this.cbDeleteIndexOnly.Size = new System.Drawing.Size(264, 17);
             this.cbDeleteIndexOnly.TabIndex = 11;
@@ -184,7 +192,7 @@
             // chkGif
             // 
             this.chkGif.AutoSize = true;
-            this.chkGif.Location = new System.Drawing.Point(12, 134);
+            this.chkGif.Location = new System.Drawing.Point(12, 181);
             this.chkGif.Name = "chkGif";
             this.chkGif.Size = new System.Drawing.Size(85, 17);
             this.chkGif.TabIndex = 10;
@@ -195,7 +203,7 @@
             // buttonCancel
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCancel.Location = new System.Drawing.Point(334, 409);
+            this.buttonCancel.Location = new System.Drawing.Point(334, 449);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 9;
@@ -206,7 +214,7 @@
             // buttonOk
             // 
             this.buttonOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOk.Location = new System.Drawing.Point(414, 409);
+            this.buttonOk.Location = new System.Drawing.Point(414, 449);
             this.buttonOk.Name = "buttonOk";
             this.buttonOk.Size = new System.Drawing.Size(75, 23);
             this.buttonOk.TabIndex = 8;
@@ -227,7 +235,7 @@
             "250",
             "100",
             "75"});
-            this.cbImagesize.Location = new System.Drawing.Point(305, 322);
+            this.cbImagesize.Location = new System.Drawing.Point(305, 369);
             this.cbImagesize.Name = "cbImagesize";
             this.cbImagesize.Size = new System.Drawing.Size(170, 21);
             this.cbImagesize.TabIndex = 7;
@@ -237,7 +245,7 @@
             this.nudSimultaneousDownloads.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.nudSimultaneousDownloads.BackColor = System.Drawing.SystemColors.Menu;
-            this.nudSimultaneousDownloads.Location = new System.Drawing.Point(305, 261);
+            this.nudSimultaneousDownloads.Location = new System.Drawing.Point(305, 308);
             this.nudSimultaneousDownloads.Minimum = new decimal(new int[] {
             1,
             0,
@@ -255,7 +263,7 @@
             // lbImageSize
             // 
             this.lbImageSize.AutoSize = true;
-            this.lbImageSize.Location = new System.Drawing.Point(9, 325);
+            this.lbImageSize.Location = new System.Drawing.Point(9, 372);
             this.lbImageSize.Name = "lbImageSize";
             this.lbImageSize.Size = new System.Drawing.Size(113, 13);
             this.lbImageSize.TabIndex = 5;
@@ -264,7 +272,7 @@
             // lbSimultaneousDownloads
             // 
             this.lbSimultaneousDownloads.AutoSize = true;
-            this.lbSimultaneousDownloads.Location = new System.Drawing.Point(9, 263);
+            this.lbSimultaneousDownloads.Location = new System.Drawing.Point(9, 310);
             this.lbSimultaneousDownloads.Name = "lbSimultaneousDownloads";
             this.lbSimultaneousDownloads.Size = new System.Drawing.Size(193, 13);
             this.lbSimultaneousDownloads.TabIndex = 4;
@@ -273,7 +281,7 @@
             // cbRemoveFinished
             // 
             this.cbRemoveFinished.AutoSize = true;
-            this.cbRemoveFinished.Location = new System.Drawing.Point(12, 110);
+            this.cbRemoveFinished.Location = new System.Drawing.Point(12, 157);
             this.cbRemoveFinished.Name = "cbRemoveFinished";
             this.cbRemoveFinished.Size = new System.Drawing.Size(169, 17);
             this.cbRemoveFinished.TabIndex = 3;
@@ -286,7 +294,7 @@
             this.cbPicturePreview.AutoSize = true;
             this.cbPicturePreview.Checked = true;
             this.cbPicturePreview.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbPicturePreview.Location = new System.Drawing.Point(12, 86);
+            this.cbPicturePreview.Location = new System.Drawing.Point(12, 133);
             this.cbPicturePreview.Name = "cbPicturePreview";
             this.cbPicturePreview.Size = new System.Drawing.Size(146, 17);
             this.cbPicturePreview.TabIndex = 2;
@@ -317,6 +325,62 @@
             this.bChooseDownloadLocation.UseVisualStyleBackColor = true;
             this.bChooseDownloadLocation.Click += new System.EventHandler(this.bChooseDownloadLocation_Click);
             // 
+            // lbDownloadLocation
+            // 
+            this.lbDownloadLocation.AutoSize = true;
+            this.lbDownloadLocation.Location = new System.Drawing.Point(3, 13);
+            this.lbDownloadLocation.Name = "lbDownloadLocation";
+            this.lbDownloadLocation.Size = new System.Drawing.Size(102, 13);
+            this.lbDownloadLocation.TabIndex = 0;
+            this.lbDownloadLocation.Text = "Download Location:";
+            // 
+            // cbDownloadVideos
+            // 
+            this.cbDownloadVideos.AutoSize = true;
+            this.cbDownloadVideos.Location = new System.Drawing.Point(12, 110);
+            this.cbDownloadVideos.Name = "cbDownloadVideos";
+            this.cbDownloadVideos.Size = new System.Drawing.Size(203, 17);
+            this.cbDownloadVideos.TabIndex = 17;
+            this.cbDownloadVideos.Text = "Download videos (tumblr.com hosted)";
+            this.cbDownloadVideos.UseVisualStyleBackColor = true;
+            this.cbDownloadVideos.CheckedChanged += new System.EventHandler(this.cbDownloadVideos_CheckedChanged);
+            // 
+            // cbDownloadImages
+            // 
+            this.cbDownloadImages.AutoSize = true;
+            this.cbDownloadImages.Checked = true;
+            this.cbDownloadImages.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbDownloadImages.Location = new System.Drawing.Point(12, 87);
+            this.cbDownloadImages.Name = "cbDownloadImages";
+            this.cbDownloadImages.Size = new System.Drawing.Size(110, 17);
+            this.cbDownloadImages.TabIndex = 18;
+            this.cbDownloadImages.Text = "Download images";
+            this.cbDownloadImages.UseVisualStyleBackColor = true;
+            this.cbDownloadImages.CheckedChanged += new System.EventHandler(this.cbDownloadImages_CheckedChanged);
+            // 
+            // lbVideoSize
+            // 
+            this.lbVideoSize.AutoSize = true;
+            this.lbVideoSize.Location = new System.Drawing.Point(9, 399);
+            this.lbVideoSize.Name = "lbVideoSize";
+            this.lbVideoSize.Size = new System.Drawing.Size(111, 13);
+            this.lbVideoSize.TabIndex = 5;
+            this.lbVideoSize.Text = "Videosize (max. width)";
+            // 
+            // cbVideosize
+            // 
+            this.cbVideosize.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbVideosize.BackColor = System.Drawing.SystemColors.Menu;
+            this.cbVideosize.FormattingEnabled = true;
+            this.cbVideosize.Items.AddRange(new object[] {
+            "1080",
+            "480"});
+            this.cbVideosize.Location = new System.Drawing.Point(305, 396);
+            this.cbVideosize.Name = "cbVideosize";
+            this.cbVideosize.Size = new System.Drawing.Size(170, 21);
+            this.cbVideosize.TabIndex = 7;
+            // 
             // tbDownloadLocation
             // 
             this.tbDownloadLocation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -329,21 +393,12 @@
             this.tbDownloadLocation.Text = global::TumblTwo.Properties.Settings.Default.configDownloadLocation;
             this.tbDownloadLocation.TextChanged += new System.EventHandler(this.tbDownloadLocation_TextChanged);
             // 
-            // lbDownloadLocation
-            // 
-            this.lbDownloadLocation.AutoSize = true;
-            this.lbDownloadLocation.Location = new System.Drawing.Point(3, 13);
-            this.lbDownloadLocation.Name = "lbDownloadLocation";
-            this.lbDownloadLocation.Size = new System.Drawing.Size(102, 13);
-            this.lbDownloadLocation.TabIndex = 0;
-            this.lbDownloadLocation.Text = "Download Location:";
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.ClientSize = new System.Drawing.Size(734, 461);
+            this.ClientSize = new System.Drawing.Size(734, 501);
             this.Controls.Add(this.gbSettingsGeneral);
             this.Controls.Add(this.tvSettings);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -385,5 +440,9 @@
         private System.Windows.Forms.NumericUpDown nudParallelImageDownloads;
         private System.Windows.Forms.Label lbParallelImageDownloads;
         private System.Windows.Forms.CheckBox cbCheckMirror;
+        private System.Windows.Forms.CheckBox cbDownloadImages;
+        private System.Windows.Forms.CheckBox cbDownloadVideos;
+        private System.Windows.Forms.ComboBox cbVideosize;
+        private System.Windows.Forms.Label lbVideoSize;
     }
 }

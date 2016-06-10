@@ -72,6 +72,7 @@ namespace TumblTwo
             this.nudSimultaneousDownloads.Value = Convert.ToDecimal(Properties.Settings.Default.configSimultaneousDownloads);
             this.nudParallelImageDownloads.Value = Convert.ToDecimal(Properties.Settings.Default.configParallelImageDownloads);
             this.cbImagesize.SelectedItem = Convert.ToString(Properties.Settings.Default.configImageSize);
+            this.cbVideosize.SelectedItem = Convert.ToString(Properties.Settings.Default.configVideoSize);
             this.tbDownloadLocation.Text = Properties.Settings.Default.configDownloadLocation;
             this.cbPicturePreview.Checked = Properties.Settings.Default.configPreviewVisible;
             this.cbRemoveFinished.Checked = Properties.Settings.Default.configRemoveFinishedBlogs;
@@ -80,6 +81,8 @@ namespace TumblTwo
             this.cbCheckStatus.Checked = Properties.Settings.Default.configCheckStatusAtStartup;
             this.cbParallelCrawl.Checked = Properties.Settings.Default.configParallelCrawl;
             this.cbCheckMirror.Checked = Properties.Settings.Default.configCheckMirror;
+            this.cbDownloadImages.Checked = Properties.Settings.Default.configDownloadImage;
+            this.cbDownloadVideos.Checked = Properties.Settings.Default.configDownloadVideo;
         }
 
         static void Loaded_PropertyChanged(
@@ -110,6 +113,7 @@ namespace TumblTwo
             Properties.Settings.Default.configSimultaneousDownloads = Convert.ToInt32(this.nudSimultaneousDownloads.Value);
             Properties.Settings.Default.configParallelImageDownloads = Convert.ToInt32(this.nudParallelImageDownloads.Value);
             Properties.Settings.Default.configImageSize = Convert.ToInt32(this.cbImagesize.SelectedItem);
+            Properties.Settings.Default.configVideoSize = Convert.ToInt32(this.cbVideosize.SelectedItem);
             Properties.Settings.Default.Save();
         }
 
@@ -181,6 +185,30 @@ namespace TumblTwo
             else
             {
                 Properties.Settings.Default.configCheckMirror = false;
+            }
+        }
+
+        private void cbDownloadImages_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.cbDownloadImages.Checked)
+            {
+                Properties.Settings.Default.configDownloadImage = true;
+            }
+            else
+            {
+                Properties.Settings.Default.configDownloadImage = false;
+            }
+        }
+
+        private void cbDownloadVideos_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.cbDownloadVideos.Checked)
+            {
+                Properties.Settings.Default.configDownloadVideo = true;
+            }
+            else
+            {
+                Properties.Settings.Default.configDownloadVideo = false;
             }
         }
     }

@@ -923,21 +923,52 @@ namespace TumblTwo
                         {
                             XDocument document = null;
                             document = XDocument.Load(GetApiUrl(blog.Url) + (i * 50).ToString() + "&num=50");
-                            newUrls = (from n in document.Descendants("post")
-                                        where
 
-                                                // Identify Posts
-                                                n.Elements("photo-url").Where(x => x.Attribute("max-width").Value == Properties.Settings.Default.configImageSize.ToString()).Any() &&
-                                                !n.Elements("photo-url").Where(x => x.Value == "www.tumblr.com").Any() ||
+                            if (Properties.Settings.Default.configDownloadImage)
+                            {
 
-                                                // Identify Photosets
-                                                n.Elements("photoset").Where(photoset => photoset.Descendants("photo-url")
-                                                    .Any(photourl => (string)photourl.Attribute("max-width").Value
-                                                        == Properties.Settings.Default.configImageSize.ToString() &&
-                                                        photourl.Value != "www.tumblr.com")).Any()
-                                        from m in n.Descendants("photo-url")
-                                        where m.Attribute("max-width").Value == Properties.Settings.Default.configImageSize.ToString()
-                                        select (string)m).ToList();
+                                newUrls = (from n in document.Descendants("post")
+                                           where
+
+                                                   // Identify Posts
+                                                   n.Elements("photo-url").Where(x => x.Attribute("max-width").Value == Properties.Settings.Default.configImageSize.ToString()).Any() &&
+                                                   !n.Elements("photo-url").Where(x => x.Value == "www.tumblr.com").Any() ||
+
+                                                   // Identify Photosets
+                                                   n.Elements("photoset").Where(photoset => photoset.Descendants("photo-url")
+                                                       .Any(photourl => (string)photourl.Attribute("max-width").Value
+                                                           == Properties.Settings.Default.configImageSize.ToString() &&
+                                                           photourl.Value != "www.tumblr.com")).Any()
+                                           from m in n.Descendants("photo-url")
+                                           where m.Attribute("max-width").Value == Properties.Settings.Default.configImageSize.ToString()
+                                           select (string)m).ToList();
+                            }
+                            if (Properties.Settings.Default.configDownloadVideo)
+                            {
+                                foreach (var post in (from data in document.Descendants("post") where data.Attribute("type").Value == "video" select data))
+                                {
+                                    var videoUrl = post.Descendants("video-player").Where(x => x.Value.Contains("<source src=")).Select(result =>
+                                    System.Text.RegularExpressions.Regex.Match(
+                                              result.Value, "<source src=\"(.*)\" type=\"video/mp4\">").Groups[1].Value).ToList();
+
+                                    foreach (string video in videoUrl)
+                                    {
+                                        if (Properties.Settings.Default.configVideoSize == 1080)
+                                        {
+                                            Monitor.Enter(urlList);
+                                            urlList.Add(video.Replace("/480", "") + ".mp4");
+                                            Monitor.Exit(urlList);
+                                        }
+                                        else if (Properties.Settings.Default.configVideoSize == 480)
+                                        {
+                                            Monitor.Enter(urlList);
+                                            urlList.Add("http://vt.tumblr.com/" + video.Replace("/480", "").Split('/').Last() + "_480.mp4");
+                                            Monitor.Exit(urlList);
+                                        }
+                                    }
+                                }
+                            }
+
                         }
                         catch (Exception e)
                         {
@@ -952,23 +983,55 @@ namespace TumblTwo
                         {
                             XDocument document = null;
                             document = XDocument.Load(GetApiUrl(blog.Url) + (i * 50).ToString() + "&num=50");
-                            newUrls = (from n in document.Descendants("post")
 
-                                            // Identify Posts
-                                        where n.Elements("photo-url").Where(x => x.Attribute("max-width").Value == Properties.Settings.Default.configImageSize.ToString()).Any() &&
-                                                !n.Elements("photo-url").Where(x => x.Value == "www.tumblr.com").Any() &&
-                                                n.Elements("tag").Where(x => tags.Contains(x.Value)).Any() ||
+                            if (Properties.Settings.Default.configDownloadImage)
+                            {
+                                newUrls = (from n in document.Descendants("post")
 
-                                                // Identify Photosets
-                                                n.Elements("photoset").Where(photoset => photoset.Descendants("photo-url")
-                                                .Any(photourl => (string)photourl.Attribute("max-width").Value
-                                                == Properties.Settings.Default.configImageSize.ToString() &&
-                                                photourl.Value != "www.tumblr.com")).Any() &&
-                                                n.Elements("tag").Where(x => tags.Contains(x.Value)).Any()
+                                               // Identify Posts
+                                           where n.Elements("photo-url").Where(x => x.Attribute("max-width").Value == Properties.Settings.Default.configImageSize.ToString()).Any() &&
+                                                   !n.Elements("photo-url").Where(x => x.Value == "www.tumblr.com").Any() &&
+                                                   n.Elements("tag").Where(x => tags.Contains(x.Value)).Any() ||
 
-                                        from m in n.Descendants("photo-url")
-                                        where m.Attribute("max-width").Value == Properties.Settings.Default.configImageSize.ToString()
-                                        select (string)m).ToList();
+                                                   // Identify Photosets
+                                                   n.Elements("photoset").Where(photoset => photoset.Descendants("photo-url")
+                                                   .Any(photourl => (string)photourl.Attribute("max-width").Value
+                                                   == Properties.Settings.Default.configImageSize.ToString() &&
+                                                   photourl.Value != "www.tumblr.com")).Any() &&
+                                                   n.Elements("tag").Where(x => tags.Contains(x.Value)).Any()
+
+                                           from m in n.Descendants("photo-url")
+                                           where m.Attribute("max-width").Value == Properties.Settings.Default.configImageSize.ToString()
+                                           select (string)m).ToList();
+                            }
+                            if (Properties.Settings.Default.configDownloadVideo)
+                            {
+                                foreach (var post in (from data in document.Descendants("post")
+                                                      where data.Attribute("type").Value == "video" &&
+                                                      data.Descendants("tag").Where(x => tags.Contains(x.Value, StringComparer.OrdinalIgnoreCase)).Any()
+                                                      select data))
+                                {
+                                    var videoUrl = post.Descendants("video-player").Where(x => x.Value.Contains("<source src=")).Select(result =>
+                                    System.Text.RegularExpressions.Regex.Match(
+                                              result.Value, "<source src=\"(.*)\" type=\"video/mp4\">").Groups[1].Value).ToList();
+
+                                    foreach (string video in videoUrl)
+                                    {
+                                        if (Properties.Settings.Default.configVideoSize == 1080)
+                                        {
+                                            Monitor.Enter(urlList);
+                                            urlList.Add(video.Replace("/480", "") + ".mp4");
+                                            Monitor.Exit(urlList);
+                                        }
+                                        else if (Properties.Settings.Default.configVideoSize == 480)
+                                        {
+                                            Monitor.Enter(urlList);
+                                            urlList.Add("http://vt.tumblr.com/" + video.Replace("/480", "").Split('/').Last() + "_480.mp4");
+                                            Monitor.Exit(urlList);
+                                        }
+                                    }
+                                }
+                            }
                         }
                         catch (Exception e)
                         {
